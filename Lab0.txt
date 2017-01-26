@@ -1,1 +1,1 @@
-In this project, I will be developing a compiler in Javascript.
+In this project, I will be developing a compiler in Python.
