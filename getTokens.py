@@ -23,15 +23,18 @@ def writeTokens(fileList):
     lineNum = 1
     #print(fileList[0:])
     for c in fileList:
-        #print(lineNum, c)
-        lineNum = lineNum + 1
+
+        # Increments line number everytime a \n or new line character is entered
+        if c is "\n":
+            lineNum = lineNum + 1
+        
         if re.match(r'[0-9]', c, 0):
             num = token('integer', lineNum)
-            print('int', c)
+            print('int', c, lineNum)
             tokens.append(num)
         elif re.match(r'[a-zA-Z]', c, 0):
             alpha = token('alphabetic', lineNum)
-            print('alpha', c)
+            print('alpha', c, lineNum)
             tokens.append(alpha)
     #for a in range(0,len(tokens),1):
     #    print(tokens[0].kind)
