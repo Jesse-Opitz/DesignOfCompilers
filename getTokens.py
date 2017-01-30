@@ -31,8 +31,14 @@ def writeTokens(fileList):
             alpha = token('alphabetic', c, lineNum)
             #print('alpha', c)
             tokens.append(alpha)
+        elif c is ' ':
+            token('space', 't_space', lineNum)
         elif c is '\n':
             lineNum = lineNum + 1
+        elif c is '$':
+            end = token('program', c, lineNum)
+            tokens.append(end)
+
     for a in range(0,len(tokens),1):
         print(resultFile.write(tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '\n'))
     

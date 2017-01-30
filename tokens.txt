@@ -18,3 +18,4 @@ integer 3 2
 integer 4 2
 alphabetic i 3
 alphabetic f 3
+program $ 3
