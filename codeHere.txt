@@ -1,3 +1,5 @@
 here is some code
 12	34
-if()$
+if(true){
+
+}$

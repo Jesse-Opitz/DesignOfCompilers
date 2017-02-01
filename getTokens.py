@@ -31,8 +31,18 @@ def writeTokens(fileList):
             alpha = token('alphabetic', c, lineNum)
             #print('alpha', c)
             tokens.append(alpha)
+        #elif re.match(r'[a-zA-Z][0-9a-zA-Z]+', c, 0):
+        #    keyWord = token('keyWord', c, lineNum)
+        #    tokens.append(keyWord)
+        elif c is '{':
+            opBracket = token('opBracket', c, lineNum)
+            tokens.append(opBracket)
+        elif c is '}':
+            clBracket = token('clBracket', c, lineNum)
+            tokens.append(clBracket)
         elif c is ' ':
-            token('space', 't_space', lineNum)
+            space = token('whiteSpace', 't_space', lineNum)
+            tokens.append(space)
         elif c is '\n':
             lineNum = lineNum + 1
         elif c is '$':
