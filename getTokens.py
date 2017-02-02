@@ -1,3 +1,4 @@
+#Compiler using if statements as opposed to DFA
 import re
 
 def main():
