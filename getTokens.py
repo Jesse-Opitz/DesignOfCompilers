@@ -3,7 +3,7 @@ import re
 def main():
     #file = input('Which file would you like to compile?');
     file = 'codeHere.txt'
-    brokenText = createList(file)    
+    brokenText = createList(file)
     writeTokens(brokenText)
     
 
@@ -11,6 +11,7 @@ def createList(fileName):
     inFile = open(fileName, 'rU')
     chars = []
     for line in inFile:
+        #chars.append(line)
         for c in line:
             chars.append(c)
     return chars
@@ -22,22 +23,23 @@ def writeTokens(fileList):
     tokens = []
     lineNum = 1
     for c in fileList:
-        #print(lineNum, c)
-        if re.match(r'[0-9]', c, 0):
+        print(lineNum, c)
+        if re.match('[0-9]', c, 0):
             num = token('integer', c, lineNum)
             #print('int', c)
             tokens.append(num)
-        elif re.match(r'[a-zA-Z]', c, 0):
+        elif re.match('[a-zA-Z]', c, 0):
             alpha = token('alphabetic', c, lineNum)
             #print('alpha', c)
             tokens.append(alpha)
-        #elif re.match(r'[a-zA-Z][0-9a-zA-Z]+', c, 0):
-        #    keyWord = token('keyWord', c, lineNum)
-        #    tokens.append(keyWord)
-        elif c is '{':
+#key words aren't recognized
+        elif re.match(r'/([a-zA-Z])*/g', c, 0):
+            keyWord = token('keyWord', c, lineNum)
+            tokens.append(keyWord)
+        elif c is '{':#re.match(r'/[{]/g', c, 0):  
             opBracket = token('opBracket', c, lineNum)
             tokens.append(opBracket)
-        elif c is '}':
+        elif c is '}':#re.match(r'/[}]/g', c, 0):
             clBracket = token('clBracket', c, lineNum)
             tokens.append(clBracket)
         elif c is ' ':
@@ -50,7 +52,7 @@ def writeTokens(fileList):
             tokens.append(end)
 
     for a in range(0,len(tokens),1):
-        print(resultFile.write(tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '\n'))
+        resultFile.write(tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '\n')
     
     resultFile.close()
 
