@@ -6,7 +6,7 @@ def main():
     brokenText = createList(file)
     writeTokens(brokenText)
     
-
+# Creates a list of every character in a file
 def createList(fileName):
     inFile = open(fileName, 'rU')
     chars = []
@@ -18,16 +18,20 @@ def createList(fileName):
 
 # '/n' is new line
 # '/t' is tab
+# Goes through a list for specific grammer
 def writeTokens(fileList):
     resultFile = open('tokens.txt', 'w')
     tokens = []
     lineNum = 1
     tempChar = []
+    specialStatements['if', 'while', 'print', 'int', 'string', 'boolean', 'false', 'true']
     for c in fileList:
         #print(lineNum, c)
         if not (re.match('[0-9a-zA-Z]', c, 0)):
             if len(tempChar) > 1:
                 tempWord = ''.join(tempChar)
+                # Use a binary search to see if the word is a special word
+                # and not a variable name
                 keyWord = token('keyWord', tempWord, lineNum)
                 tokens.append(keyWord)
                 tempChar = []
@@ -75,6 +79,7 @@ def writeTokens(fileList):
     
     resultFile.close()
 
+# Tokens are the objects the lexor produces for the parser to read
 class token:
     def __init__(self, kind, character, lineNum):
         self.kind = kind
