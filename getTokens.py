@@ -22,20 +22,32 @@ def writeTokens(fileList):
     resultFile = open('tokens.txt', 'w')
     tokens = []
     lineNum = 1
+    tempChar = []
     for c in fileList:
         print(lineNum, c)
+        if not (re.match('[0-9a-zA-Z]', c, 0)):
+            if len(tempChar) > 1:
+                tempWord = ''.join(tempChar)
+                keyWord = token('keyWord', tempWord, lineNum)
+                tokens.append(keyWord)
+                tempChar = []
+        
         if re.match('[0-9]', c, 0):
             num = token('integer', c, lineNum)
             #print('int', c)
             tokens.append(num)
+            if len(tempChar) > 0:
+                tempChar.append(str(c))
         elif re.match('[a-zA-Z]', c, 0):
             alpha = token('alphabetic', c, lineNum)
             #print('alpha', c)
             tokens.append(alpha)
-#key words aren't recognized
-        elif re.match(r'/([a-zA-Z])*/g', c, 0):
-            keyWord = token('keyWord', c, lineNum)
-            tokens.append(keyWord)
+            tempChar.append(c)
+# key words aren't recognized b/c file is being read line by line
+# can't read multiple letters at once
+        #elif re.match(r'/([a-zA-Z])*/g', c, 0):
+        #    keyWord = token('keyWord', c, lineNum)
+        #    tokens.append(keyWord)
         elif c is '{':#re.match(r'/[{]/g', c, 0):  
             opBracket = token('opBracket', c, lineNum)
             tokens.append(opBracket)
