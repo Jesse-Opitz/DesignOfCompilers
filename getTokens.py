@@ -24,7 +24,7 @@ def writeTokens(fileList):
     tokens = []
     lineNum = 1
     tempChar = []
-    specialStatements['if', 'while', 'print', 'int', 'string', 'boolean', 'false', 'true']
+    specialStatements = ['if', 'while', 'print', 'int', 'string', 'boolean', 'false', 'true']
     for c in fileList:
         #print(lineNum, c)
         if not (re.match('[0-9a-zA-Z]', c, 0)):
