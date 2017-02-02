@@ -1,8 +1,10 @@
 alphabetic h 1
 alphabetic e 1
+integer 9 1
 alphabetic r 1
+integer 0 1
 alphabetic e 1
-keyWord here 1
+keyWord he9r0e 1
 whiteSpace t_space 1
 alphabetic i 1
 alphabetic s 1
@@ -26,11 +28,13 @@ integer 4 2
 alphabetic i 3
 alphabetic f 3
 keyWord if 3
+opParen ( 3
 alphabetic t 3
 alphabetic r 3
 alphabetic u 3
 alphabetic e 3
 keyWord true 3
+clParen ) 3
 opBracket { 3
 clBracket } 5
 program $ 5

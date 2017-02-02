@@ -24,7 +24,7 @@ def writeTokens(fileList):
     lineNum = 1
     tempChar = []
     for c in fileList:
-        print(lineNum, c)
+        #print(lineNum, c)
         if not (re.match('[0-9a-zA-Z]', c, 0)):
             if len(tempChar) > 1:
                 tempWord = ''.join(tempChar)
@@ -54,6 +54,12 @@ def writeTokens(fileList):
         elif c is '}':#re.match(r'/[}]/g', c, 0):
             clBracket = token('clBracket', c, lineNum)
             tokens.append(clBracket)
+        elif c is '(':
+            opParen = token('opParen', c, lineNum)
+            tokens.append(opParen)
+        elif c is ')':
+            clParen = token('clParen', c, lineNum)
+            tokens.append(clParen)
         elif c is ' ':
             space = token('whiteSpace', 't_space', lineNum)
             tokens.append(space)
@@ -64,6 +70,7 @@ def writeTokens(fileList):
             tokens.append(end)
 
     for a in range(0,len(tokens),1):
+        print(tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '')
         resultFile.write(tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '\n')
     
     resultFile.close()
