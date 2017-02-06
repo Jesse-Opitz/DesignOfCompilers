@@ -6,7 +6,7 @@ def main():
     #file = input('Which file would you like to compile?');
     file = 'codeHere.txt'
     #Fix checkChars
-    if True: #checkChars(open(file, 'r')):
+    if checkChars(open(file, 'r')):
         wordList = createList(file)
         #print(str(brokenText))
         writeTokens(wordList)
@@ -26,16 +26,17 @@ def createList(file):
     return chars
 
 def checkChars(file):
-    validChar = 'abcdefghijklmnopqrstuvwxyz0123456789$""(){}!= \n\t'
+    validChar = 'abcdefghijklmnopqrstuvwxyz0123456789$""(){}!= \n\t+'
     lineNum = 1
     position = 1
-    for c in file:
-        if c is '\n':
-            lineNum = lineNum + 1
-        if c not in validChar:
-            print('Error: Unexpected character', c, 'at line', str(lineNum), 'position', str(position))
-            #return False
-        position = position + 1
+    for line in file:
+        for c in line:
+            if c is '\n':
+                lineNum = lineNum + 1
+            if c not in validChar:
+                print('Error: Unexpected character', c, 'at line', str(lineNum), 'position', str(position))
+                #return False
+            position = position + 1
     return True
 
 
@@ -59,7 +60,7 @@ def writeTokens(wordList):
     parenPattern = r'[(]|[)]'
     operatorPattern = r'[+]'
     eopPattern = r'[$]'
-    blankSpacePattern = r'[ |\n|\t]'
+    blankSpacePattern = r'[ ]|[\n]|[\t]'
     
     line = 0
     word = 0
