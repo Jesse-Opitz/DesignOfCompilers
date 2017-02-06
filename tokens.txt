@@ -1,0 +1,6 @@
+keyword int 1
+char a 1
+char a 2
+digit 1 2
+keyword print 3
+char a 3

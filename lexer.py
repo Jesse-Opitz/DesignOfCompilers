@@ -26,25 +26,46 @@ def createList(file):
 # '/t' is tab
 # Goes through a list for specific grammer
 # Line numbers start at 0 because we are programmers
-def writeTokens(charList):
+def writeTokens(wordList):
     resultFile = open('tokens.txt', 'w')
     tokens = []
     lineNum = 1
-    seperators = [' ', '\n', '\t', '=', '==']
-    specialStatements = ['if', 'while', 'print', 'int', 'string', 'boolean', 'false', 'true']
+    keywords = ['if', 'while', 'print', 'int', 'string', 'boolean', 'false', 'true']
+    charPattern = r'[a-z]'
+    numPattern = r'[0-9]'
+    keyWordPattern = r'[a-z][a-z]+'
+    assignPattern = '='
+    comparePattern = r'[!][=]|[=][=]'
     line = 0
     word = 0
-    while line < len(charList)-1:
-        print(charList[line])
+    while line < len(wordList):
+        #print(wordList[line], line)
+        #print(len(wordList[line]))
+        for word in range(0, len(wordList[line]), 1):                
+            uncheckedWord = wordList[line][word]
+            #print(uncheckedWord)
+            if uncheckedWord in keywords:
+                newTok = token('keyword', uncheckedWord, line)
+                tokens.append(newTok)
+            elif re.match(charPattern, uncheckedWord, 0):
+                newTok = token('char', uncheckedWord, line)
+                tokens.append(newTok)
+            elif re.match(numPattern, uncheckedWord, 0):
+                newTok = token('digit', uncheckedWord, line)
+                tokens.append(newTok)
+            #doesn't work vv
+            elif re.match(comparePattern, uncheckedWord, 0):
+                newTok = token('comparison', uncheckedWord, 0)
+                tokens.append(newTok)
         line = line + 1
-        #while word < len(charList[0:]) - 1 :
-            #word = word + 1
-            #print(charList[line][word])
+            
+        
 
-    #for a in range(0,len(tokens),1):
-        #print(tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '')
-        #resultFile.write(tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '\n')
-    
+    for a in range(0,len(tokens),1):
+        print('Lexer -->', tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '')
+        resultFile.write(tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '\n')
+
+    print('Lexer --> Complete')
     resultFile.close()
 
 # Tokens are the objects the lexor produces for the parser to read
