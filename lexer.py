@@ -5,7 +5,8 @@ def main():
     
     #file = input('Which file would you like to compile?');
     file = 'codeHere.txt'
-    if checkChars(open(file, 'r')):
+    #Fix checkChars
+    if True: #checkChars(open(file, 'r')):
         wordList = createList(file)
         #print(str(brokenText))
         writeTokens(wordList)
@@ -21,7 +22,7 @@ def createList(file):
     chars = []
     for line in inFile:
         chars.append(pattern.findall(line))
-        
+    inFile.close()
     return chars
 
 def checkChars(file):
@@ -46,18 +47,19 @@ def writeTokens(wordList):
     resultFile = open('tokens.txt', 'w')
     tokens = []
     lineNum = 1
+    
+    # Patterns
     keywords = ['if', 'while', 'print', 'int', 'string', 'boolean', 'false', 'true']
     charPattern = r'[a-z]'
     numPattern = r'[0-9]'
     keyWordPattern = r'[a-z][a-z]+'
-    assignPattern = '='
+    assignPattern = r'[=]'
     comparePattern = r'[!][=]|[=][=]'
-
-    # Need to add
     bracketPattern = r'[{]|[}]'
     parenPattern = r'[(]|[)]'
-    
-    eop = '$'
+    operatorPattern = r'[+]'
+    eopPattern = r'[$]'
+    blankSpacePattern = r'[ |\n|\t]'
     
     line = 0
     word = 0
@@ -82,14 +84,30 @@ def writeTokens(wordList):
             elif re.match(assignPattern, uncheckedWord, 0):
                 newTok = token('assign', uncheckedWord, line)
                 tokens.append(newTok)
-            
+            elif re.match(bracketPattern, uncheckedWord, 0):
+                newTok = token('bracket', uncheckedWord, line)
+                tokens.append(newTok)
+            elif re.match(parenPattern, uncheckedWord, 0):
+                newTok = token('paren', uncheckedWord, line)
+                tokens.append(newTok)
+            elif re.match(operatorPattern, uncheckedWord, 0):
+                newTok = token('operator', uncheckedWord, line)
+                tokens.append(newTok)
+            elif re.match(eopPattern, uncheckedWord, 0):
+                newTok = token('endProgram', uncheckedWord, line)
+                tokens.append(newTok)
+            elif re.match(blankSpacePattern, uncheckedWord, 0):
+                newTok = token('blankSpaces', '\space', line)
+                tokens.append(newTok)
+            else:
+                print('Error: unexpected syntax', uncheckedWord, 'on line', line)
         line = line + 1
             
         
 
     for a in range(0,len(tokens),1):
-        print('Lexer -->', tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '')
-        resultFile.write(tokens[a].kind + ' ' + tokens[a].character + ' ' + str(tokens[a].lineNum) + '\n')
+        print('Lexer -->', 'Line:', str(tokens[a].lineNum), tokens[a].kind + ' ' + tokens[a].character + ' ')
+        resultFile.write(str(tokens[a].lineNum) + ' ' + tokens[a].kind + ' ' + tokens[a].character + '\n')
 
     print('Lexer --> Complete')
     resultFile.close()
