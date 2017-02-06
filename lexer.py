@@ -2,11 +2,15 @@
 import re
 
 def main():
+    
     #file = input('Which file would you like to compile?');
     file = 'codeHere.txt'
-    brokenText = createList(file)
-    #print(str(brokenText))
-    writeTokens(brokenText)
+    if checkChars(open(file, 'r')):
+        wordList = createList(file)
+        #print(str(brokenText))
+        writeTokens(wordList)
+
+
     
 # Creates a list of every character in a file
 def createList(file):
@@ -20,6 +24,18 @@ def createList(file):
         
     return chars
 
+def checkChars(file):
+    validChar = 'abcdefghijklmnopqrstuvwxyz0123456789$""(){}!= \n\t'
+    lineNum = 1
+    position = 1
+    for c in file:
+        if c is '\n':
+            lineNum = lineNum + 1
+        if c not in validChar:
+            print('Error: Unexpected character', c, 'at line', str(lineNum), 'position', str(position))
+            #return False
+        position = position + 1
+    return True
 
 
 # '/n' is new line
@@ -36,6 +52,13 @@ def writeTokens(wordList):
     keyWordPattern = r'[a-z][a-z]+'
     assignPattern = '='
     comparePattern = r'[!][=]|[=][=]'
+
+    # Need to add
+    bracketPattern = r'[{]|[}]'
+    parenPattern = r'[(]|[)]'
+    
+    eop = '$'
+    
     line = 0
     word = 0
     while line < len(wordList):
