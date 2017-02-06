@@ -54,8 +54,12 @@ def writeTokens(wordList):
                 newTok = token('digit', uncheckedWord, line)
                 tokens.append(newTok)
             elif re.match(comparePattern, uncheckedWord, 0):
-                newTok = token('compare', uncheckedWord, 0)
+                newTok = token('compare', uncheckedWord, line)
                 tokens.append(newTok)
+            elif re.match(assignPattern, uncheckedWord, 0):
+                newTok = token('assign', uncheckedWord, line)
+                tokens.append(newTok)
+            
         line = line + 1
             
         
