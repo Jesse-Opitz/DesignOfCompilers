@@ -1,5 +1,6 @@
-he9r0e is some code
-12	34
-if(true){
+{
+    int a
+    a = 1
+    print(a)
 
-}$
+} $
