@@ -6,10 +6,16 @@ def main():
     #file = input('Which file would you like to compile?');
     file = 'codeHere.txt'
     #Fix checkChars
-    if checkChars(open(file, 'r')):
+    errors = []
+    e = 0
+    if checkChars(open(file, 'r'), errors):
         wordList = createList(file)
         #print(str(brokenText))
-        writeTokens(wordList)
+        writeTokens(wordList, errors)
+    #print('Errors: ' + str(errors))
+    while e < len(errors):
+        print(errors[e])
+        e = e + 1
 
 
     
@@ -25,18 +31,21 @@ def createList(file):
     inFile.close()
     return chars
 
-def checkChars(file):
+def checkChars(file, errors):
     validChar = 'abcdefghijklmnopqrstuvwxyz0123456789$""(){}!= \n\t+'
     lineNum = 1
-    position = 1
+    #Would add position, but I am not sure how to implement it in writeTokens
+    #position = 1
     for line in file:
         for c in line:
             if c is '\n':
                 lineNum = lineNum + 1
             if c not in validChar:
-                print('Error: Unexpected character', c, 'at line', str(lineNum), 'position', str(position))
+                errorLine = 'Error: Unexpected character ' + str(c) + ' at line' + str(lineNum)
+                errors.append(errorLine)
+                #print('Error: Unexpected character', c, 'at line', str(lineNum)
                 #return False
-            position = position + 1
+            #position = position + 1
     return True
 
 
@@ -44,7 +53,7 @@ def checkChars(file):
 # '/t' is tab
 # Goes through a list for specific grammer
 # Line numbers start at 0 because we are programmers
-def writeTokens(wordList):
+def writeTokens(wordList, errors):
     resultFile = open('tokens.txt', 'w')
     tokens = []
     lineNum = 1
@@ -70,9 +79,14 @@ def writeTokens(wordList):
         for word in range(0, len(wordList[line]), 1):                
             uncheckedWord = wordList[line][word]
             #print(uncheckedWord)
-            if uncheckedWord in keywords:
-                newTok = token('keyword', uncheckedWord, line)
-                tokens.append(newTok)
+            if re.match(keyWordPattern, uncheckedWord, 0):
+                if uncheckedWord in keywords:
+                    newTok = token('keyword', uncheckedWord, line)
+                    tokens.append(newTok)
+                else:
+                    #print('Error: unexpected syntax "', uncheckedWord, '" on line', line)
+                    errorLine = 'Error: Unexpected syntax ' + str(uncheckedWord) + ' at line' + str(lineNum)
+                    errors.append(errorLine)
             elif re.match(charPattern, uncheckedWord, 0):
                 newTok = token('char', uncheckedWord, line)
                 tokens.append(newTok)

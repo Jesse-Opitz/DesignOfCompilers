@@ -1,8 +1,6 @@
 0 bracket {
 0 blankSpaces \space
 1 blankSpaces \space
-1 keyword int
-1 char a
 1 blankSpaces \space
 2 blankSpaces \space
 2 char a
