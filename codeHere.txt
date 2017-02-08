@@ -2,9 +2,9 @@
 	inta
 	a = 1
 	print(a)
-	@
+	print("$ alan")
 	b = 2
-	print(b)
+	print(b)@
 	a + b == 3
 	a != b
 

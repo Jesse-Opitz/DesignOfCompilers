@@ -24,10 +24,12 @@ def createList(file):
     inFile = open(file, 'r')
     #chars = [re.findall(r'[a-z][a-z]+|[a-z]|[0-9]|[=][=]|[(){}=]|[!][=]|["][a-z]+["]|[\n]|[\t]|[+]|[$]',line) 
     #        for line in open(file)]
-    pattern = re.compile(r'[a-z][a-z]+|[a-z]|[0-9]|[=][=]|[(){}=]|[!][=]|["][a-z]+["]|[\n]|[\t]|[+]|[$]')
+    pattern = re.compile(r'[a-z][a-z]+|[a-z]|[0-9]|[=][=]|[(){}=]|[!][=]|["]|[ ]|[\n]|[\t]|[+]|[$]')
     chars = []
     for line in inFile:
         chars.append(pattern.findall(line))
+
+    #print(chars)
     inFile.close()
     return chars
 
@@ -57,6 +59,7 @@ def writeTokens(wordList, errors):
     resultFile = open('tokens.txt', 'w')
     tokens = []
     lineNum = 1
+    quoteCount = 0
     
     # Patterns
     keywords = ['if', 'while', 'print', 'int', 'string', 'boolean', 'false', 'true']
@@ -69,7 +72,8 @@ def writeTokens(wordList, errors):
     parenPattern = r'[(]|[)]'
     operatorPattern = r'[+]'
     eopPattern = r'[$]'
-    blankSpacePattern = r'[ ]|[\n]|[\t]'
+    quotePattern = r'["]'
+    nonTokenBlankSpacePattern = r'[\n]|[\t]|[ ]'
     
     line = 0
     word = 0
@@ -79,7 +83,13 @@ def writeTokens(wordList, errors):
         for word in range(0, len(wordList[line]), 1):                
             uncheckedWord = wordList[line][word]
             #print(uncheckedWord)
-            if re.match(keyWordPattern, uncheckedWord, 0):
+            if quoteCount % 2 == 1:
+                #print(uncheckedWord)
+                for c in uncheckedWord:
+                    if c is not '"':
+                        newTok = token('char', c, line)
+                        tokens.append(newTok)
+            if re.match(keyWordPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 if uncheckedWord in keywords:
                     newTok = token('keyword', uncheckedWord, line)
                     tokens.append(newTok)
@@ -87,42 +97,46 @@ def writeTokens(wordList, errors):
                     #print('Error: unexpected syntax "', uncheckedWord, '" on line', line)
                     errorLine = 'Error: Unexpected syntax ' + str(uncheckedWord) + ' at line' + str(lineNum)
                     errors.append(errorLine)
-            elif re.match(charPattern, uncheckedWord, 0):
+            elif re.match(charPattern, uncheckedWord, 0)  and quoteCount % 2 == 0:
                 newTok = token('char', uncheckedWord, line)
                 tokens.append(newTok)
-            elif re.match(numPattern, uncheckedWord, 0):
+            elif re.match(numPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 newTok = token('digit', uncheckedWord, line)
                 tokens.append(newTok)
-            elif re.match(comparePattern, uncheckedWord, 0):
+            elif re.match(comparePattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 newTok = token('compare', uncheckedWord, line)
                 tokens.append(newTok)
-            elif re.match(assignPattern, uncheckedWord, 0):
+            elif re.match(assignPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 newTok = token('assign', uncheckedWord, line)
                 tokens.append(newTok)
-            elif re.match(bracketPattern, uncheckedWord, 0):
+            elif re.match(bracketPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 newTok = token('bracket', uncheckedWord, line)
                 tokens.append(newTok)
-            elif re.match(parenPattern, uncheckedWord, 0):
+            elif re.match(parenPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 newTok = token('paren', uncheckedWord, line)
                 tokens.append(newTok)
-            elif re.match(operatorPattern, uncheckedWord, 0):
+            elif re.match(operatorPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 newTok = token('operator', uncheckedWord, line)
                 tokens.append(newTok)
-            elif re.match(eopPattern, uncheckedWord, 0):
+            elif re.match(quotePattern, uncheckedWord, 0):
+                quoteCount = quoteCount + 1
+                newTok = token('quote', uncheckedWord, line)
+                tokens.append(newTok)
+            elif re.match(eopPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 newTok = token('endProgram', uncheckedWord, line)
                 tokens.append(newTok)
-            elif re.match(blankSpacePattern, uncheckedWord, 0):
-                newTok = token('blankSpaces', '\space', line)
-                tokens.append(newTok)
+            elif re.match(nonTokenBlankSpacePattern, uncheckedWord, 0):
+                continue
             else:
-                print('Error: unexpected syntax', uncheckedWord, 'on line', line)
+                if quoteCount % 2 == 0:
+                    print('Error: unexpected syntax', uncheckedWord, 'on line', line)
         line = line + 1
             
         
 
     for a in range(0,len(tokens),1):
-        print('Lexer -->', 'Line:', str(tokens[a].lineNum), tokens[a].kind + ' ' + tokens[a].character + ' ')
-        resultFile.write(str(tokens[a].lineNum) + ' ' + tokens[a].kind + ' ' + tokens[a].character + '\n')
+        print('Lexer -->', 'Line: ' + str(tokens[a].lineNum) + ' ' + tokens[a].kind + ' ' + str(tokens[a].character))
+        resultFile.write(str(tokens[a].lineNum) + ' ' + tokens[a].kind + ' ' + str(tokens[a].character) + '\n')
 
     print('Lexer --> Complete')
     resultFile.close()
