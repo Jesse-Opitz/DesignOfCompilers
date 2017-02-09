@@ -89,8 +89,12 @@ def writeTokens(wordList, errors):
                 #print(uncheckedWord)
                 for c in uncheckedWord:
                     if c is not '"':
-                        newTok = token('char', c, line)
-                        tokens.append(newTok)
+                        if c is ' ':
+                            newTok = token('char', 'space', line)
+                            tokens.append(newTok)
+                        else:
+                            newTok = token('char', c, line)
+                            tokens.append(newTok)
             if re.match(keyWordPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 if uncheckedWord in keywords:
                     newTok = token('keyword', uncheckedWord, line)

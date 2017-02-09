@@ -18,4 +18,6 @@ Three, Mac or Linux
 
 After running the program you will be able to type in the name of a text file with code that you wish to execute the lexer upon. NOTE: The code file MUST be inside the same directory as the python file, otherwise you must enter a full path to that file.
 
+When the lexer is complete, the tokens will be printed to screen and saved in the tokens.txt file.
+
 There is a sample file codeHere.txt that I used while testing the compiler.
