@@ -81,33 +81,19 @@ def writeTokens(wordList, errors):
     line = 0
     word = 0
     while line < len(wordList):
+        print(line, wordList[line])
         #print(wordList[line], line)
         #print(len(wordList[line]))
-        for word in range(0, len(wordList[line]), 1):                
+        beforeQuote = True
+        for word in range(0, len(wordList[line]), 1):
             uncheckedWord = wordList[line][word]
             #print(uncheckedWord)
-            if quoteCount % 2 == 1:
-                #print(uncheckedWord)
-                for c in uncheckedWord:
-                    if c is not '"':
-                        if c is ' ':
-                            newTok = token('char', 'space', line)
-                            tokens.append(newTok)
-                        elif c is '$':
-                            errorLine = 'Error: Invalid Character ' + str(uncheckedWord) + ' at line' + str(lineNum)
-                            errors.append(errorLine)
-                        elif re.match(invalStrBlanks, c, 0):
-                            errorLine = 'Error: Invalid Character ' + str(uncheckedWord) + ' at line' + str(lineNum)
-                            errors.append(errorLine)
-                        else:
-                            newTok = token('char', c, line)
-                            tokens.append(newTok)
             if re.match(keyWordPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 if uncheckedWord in keywords:
                     newTok = token('keyword', uncheckedWord, line)
                     tokens.append(newTok)
                 else:
-                    #print('Error: unexpected syntax "', uncheckedWord, '" on line', line)
+                    print('Error: unexpected syntax "', uncheckedWord, '" on line', line)
                     errorLine = 'Error: Unexpected syntax ' + str(uncheckedWord) + ' at line' + str(lineNum)
                     errors.append(errorLine)
             elif re.match(charPattern, uncheckedWord, 0)  and quoteCount % 2 == 0:
@@ -140,9 +126,27 @@ def writeTokens(wordList, errors):
                 tokens.append(newTok)
             elif re.match(nonTokenBlankSpacePattern, uncheckedWord, 0):
                 continue
-            else:
-                if quoteCount % 2 == 0:
-                    print('Error: unexpected syntax', uncheckedWord, 'on line', line)
+            elif quoteCount % 2 == 1:
+                #print(uncheckedWord)
+                for c in uncheckedWord:
+                    if c is '"':
+                        beforeQuote = False
+                    elif c is not '"':
+                        if re.match(r'[a-z]', c, 0):
+                            print('Here1 ' + str(line))
+                            newTok = token('char', c, line)
+                            print('Here2 ' + str(line))
+                            tokens.append(newTok)
+                        elif c is ' ':
+                            newTok = token('char', '\s', line)
+                            tokens.append(newTok)
+                        else:
+                            errorLine = 'Error: Unexpected syntax ' + str(uncheckedWord) + ' at line ' + str(lineNum)
+                            errors.append(errorLine)
+                    print(errorLine)
+                else:
+                    if quoteCount % 2 == 0:
+                        print('Error: unexpected syntax', uncheckedWord, 'on line ', line)
         line = line + 1
             
         
