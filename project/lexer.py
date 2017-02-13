@@ -76,6 +76,7 @@ def writeTokens(wordList, errors):
     eopPattern = r'[$]'
     quotePattern = r'["]'
     nonTokenBlankSpacePattern = r'[\n]|[\t]|[ ]'
+    invalStrBlanks = r'[\n]|[\t]'
     
     line = 0
     word = 0
@@ -92,6 +93,12 @@ def writeTokens(wordList, errors):
                         if c is ' ':
                             newTok = token('char', 'space', line)
                             tokens.append(newTok)
+                        elif c is '$':
+                            errorLine = 'Error: Invalid Character ' + str(uncheckedWord) + ' at line' + str(lineNum)
+                            errors.append(errorLine)
+                        elif re.match(invalStrBlanks, c, 0):
+                            errorLine = 'Error: Invalid Character ' + str(uncheckedWord) + ' at line' + str(lineNum)
+                            errors.append(errorLine)
                         else:
                             newTok = token('char', c, line)
                             tokens.append(newTok)
