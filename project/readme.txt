@@ -1,4 +1,4 @@
-This program uses Python 3. Version 2.7 will return errors for some features.
+This program uses Python 3.0 or above. **Version 2.7 will return errors for some features.
 
 lexer.py is the python 3.X file containing the code for Project One, creating the lexer of the compiler.  The compiler will run all the way through and list any errors that occured at the end of execution.  Inta is an issue because it is not the correct grammar and my compiler will be similar to Jave because I have not used much of any other object-oriented languages.
 
