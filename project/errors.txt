@@ -1,0 +1,30 @@
+Error: Unexpected character @ at line6
+Error: Unexpected character ~ at line18
+Error: Unexpected character @ at line18
+Error: Unexpected character # at line18
+Error: Unexpected character % at line18
+Error: Unexpected character ^ at line18
+Error: Unexpected character & at line18
+Error: Unexpected character * at line18
+Error: Unexpected character _ at line18
+Error: Unexpected character | at line18
+Error: Unexpected character : at line18
+Error: Unexpected character < at line18
+Error: Unexpected character > at line18
+Error: Unexpected character ? at line18
+Error: Unexpected character [ at line18
+Error: Unexpected character ] at line18
+Error: Unexpected character ; at line18
+Error: Unexpected character ' at line18
+Error: Unexpected character , at line18
+Error: Unexpected character . at line18
+Error: Unexpected character / at line18
+Error: Unexpected syntax inta at line 1
+Error: Unexpected syntax in a string, $ at line 6
+Error: Unexpected syntax in a string, { at line 6
+Error: Unexpected syntax in a string, } at line 6
+Error: Unexpected syntax in a string, $ at line 11
+Error: Unexpected \n in a string, at line 12
+Error: Unexpected tab in a string, at line 13
+Error: Unexpected syntax bool at line 18
+Error: Unexpected syntax ean at line 18
