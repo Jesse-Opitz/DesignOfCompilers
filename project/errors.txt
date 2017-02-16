@@ -23,6 +23,9 @@ Error: Unexpected syntax inta at line 1
 Error: Unexpected syntax in a string, $ at line 6
 Error: Unexpected syntax in a string, { at line 6
 Error: Unexpected syntax in a string, } at line 6
+Error: Unexpected syntax in a string, 4 at line 6
+Error: Unexpected syntax in a string, 5 at line 6
+Error: Unexpected syntax in a string, 6 at line 6
 Error: Unexpected syntax in a string, $ at line 11
 Error: Unexpected \n in a string, at line 12
 Error: Unexpected tab in a string, at line 13
