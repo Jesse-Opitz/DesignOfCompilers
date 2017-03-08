@@ -1,6 +1,8 @@
 #Compiler using if statements as opposed to DFA
 import re
 
+tokens = []
+
 def main():
     
     file = input('Which file would you like to compile?');
@@ -20,7 +22,7 @@ def main():
         e = e + 1
     errorFile.close()
 
-    input('Press enter to end')
+    input('Press enter to end lexer and continue to the parser.')
 
 # Creates a list of every character in a file
 def createList(file):
@@ -60,7 +62,6 @@ def checkChars(file, errors):
 # Line numbers start at 0 because we are programmers
 def writeTokens(wordList, errors):
     resultFile = open('tokens.txt', 'w')
-    tokens = []
     lineNum = 1
     quoteCount = 0
     
