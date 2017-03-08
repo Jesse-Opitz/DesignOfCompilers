@@ -3,20 +3,22 @@ import os
 from lexer import token
 from lexer import tokens
 
-print(tokens[1].kind)
-
 def main():
     runParse = False
-    
+
+    # Checks if errors file is empty
+    # If errors file is empty, lexer had no errors
     if(os.stat("errors.txt").st_size == 0):
         runParse = True
 
+    # Parse if there are no errors in the lexer
     if(runParse):
-        a = 0
-        while a < len(tokens):
-            print(tokens[a].kind)
-            a = a + 1
-        
+        # P for pointer
+        p = 0
+        while p < len(tokens):
+            parseStart(tokens[p].kind)
+            p = p + 1
+    # Do not parse, error in lexer
     else:
         print("Error in lexer, can not run parse.")
 
@@ -26,8 +28,8 @@ def match(tokenChar, expectedChar):
     
     return False
 
-def parseStart(tokenVal):
-    parseBlock(tokenVal)
+def parseStart(token):
+    parseBlock(token)
     match("$", "$")
 
 #def parseBlock(tokenVal):
