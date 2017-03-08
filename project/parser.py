@@ -31,48 +31,25 @@ def match(token, expected, p):
     return False
 # Begin parse: Block $
 def parseStart(token, p):
-    # Triggers
-    pBlock = False
-    ep = False
     
     # Parse for Block
     if(parseBlock(token, p)):
-       pBlock = True
-
-    # Parse for end of program
-    if (match(token.kind, 'endProgram', p)):
-       ep = True
-    else:
-       print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token.character + ".")
-
-    # Both block and end of program are correct, parse is successful
-    if(pBlock and ep):
-        print("Parse successful")
-    else:
-        print("Parse failed")
+        if (match(token.kind, 'endProgram', p)):
+            print("Parse Successful!")
+        else:
+           print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token.character + ".")
 
 # Block Parse: { StatementList }
 def parseBlock(token, p):
-    # Triggers
-    opBrack = False
-    sL = False
-    clBrack = False
-    
+
     if(match(token.character, '{', p)):
-        opBrack = True
+        if(parseStatementList(token, p)):
+            if(match(token.character, '}', p)):
+                return True
+            else:
+                   print("Error on line " + str(token.lineNum) + ". Expecting '}', got " + token.character + ".")
     else:
        print("Error on line " + str(token.lineNum) + ". Expecting '{', got '" + token.character + "'.")
-
-    if(parseStatementList(token, p)):
-        sL = True
-
-    if(match(token.character, '}', p)):
-        clBrack = True
-    else:
-       print("Error on line " + str(token.lineNum) + ". Expecting '}', got " + token.character + ".")
-
-    if(opBrack and sL and clBrack):
-        return True
 
     return False
 
@@ -90,133 +67,73 @@ def parseStatement(token, p):
         return True
     elif(parseAssignmentStatement(token, p)):
         return True
-    #elif(parseVarDecl(token, p)):
-    #    return True
-    #elif(parseWhileStatement(token, p)):
-    #    return True
-    #elif(parseIfStatement(token, p)):
-    #    return True
-    #elif(parseBlock(token, p)):
-    #    return True
+    elif(parseVarDecl(token, p)):
+        return True
+    elif(parseWhileStatement(token, p)):
+        return True
+    elif(parseIfStatement(token, p)):
+        return True
+    elif(parseBlock(token, p)):
+        return True
 
     return False
 
 # PrintStatement Parse: print ( Expr )
 def parsePrintStatement(token, p):
-    #Triggers
-    prnt = False
-    opParen = False
-    expr = False
-    clParen = False
- 
     if(match(token.character, 'print', p)):
-        p = True
+        if(match(token.character, '(', p)):
+            if(parseExpr(token, p)):
+                    if(match(token.character, ')', p)):
+                        return True
+                    else:
+                        print("Error on line " + str(token.lineNum) + ". Expecting ')', got " + token.character + ".")
+        else:
+           print("Error on line " + str(token.lineNum) + ". Expecting '(', got " + token.character + ".")
     else:
        print("Error on line " + str(token.lineNum) + ". Expecting 'print', got " + token.character + ".")
-
-    if(match(token.character, '(', p)):
-        opParen = True
-    else:
-       print("Error on line " + str(token.lineNum) + ". Expecting '(', got " + token.character + ".")
-
-    if(parseExpr(token, p)):
-        expr = True
-
-    if(match(token.character, ')', p)):
-        clParen = True
-    else:
-        print("Error on line " + str(token.lineNum) + ". Expecting ')', got " + token.character + ".")
-
-    if(prnt and opParen and expr and clParen):
-        return True
 
     return False
 
 # AssignmentStatement Parse: Id = Expr
 def parseAssignmentStatement(token, p):
-    # Triggers
-    idBool = False
-    assign = False
-    expr = False
-
     if(parseId(token, p)):
-        idBool = True
-
-    if(match(token.kind, 'assign', p)):
-        assign = True
-    else:
-        print("Error on line " + str(token.lineNum) + ". Expecting '=', got " + token.character + ".")
-
-    if(parseExpr(token,p)):
-        expr = True
-
-    if(idBool and assign and expr):
-        return True
+        if(match(token.character, '=', p)):
+            if(parseExpr(token,p)):
+                return True
+        else:
+            print("Error on line " + str(token.lineNum) + ". Expecting '=', got " + token.character + ".")
 
     return False
 
 #VarDecl Parse: type Id
 def parseVarDecl(token, p):
-    # Triggers
-    typeBool = False
-    idBool = False
-
     if(match(token.kind, 'type', p)):
-        typeBool = True
+        if(parseId(token, p)):
+            return True
     else:
         print("Error on line " + str(token.lineNum) + ". Expecting 'int', 'string' or 'boolean', got " + token.character + ".")
-
-    if(parseId(token, p)):
-        idBool = True
-
-    if(typeBool and idBool):
-        return True
 
     return False
 
 # WhileStatement Parse: while BooleanExpr Block
 def parseWhileStatement(token, p):
-        # Triggers
-    whileBool = False
-    booleanExpr = False
-    block = False
-
     if(match(token.character, 'while', p)):
-        whileBool = True
+        if(parseBooleanExpr(token, p)):
+            if(parseBlock(token, p)):
+                return True
     else:
         print("Error on line " + str(token.lineNum) + ". Expecting 'while', got " + token.character + ".")
-
-    if(parseBooleanExpr(token, p)):
-        booleanExpr = True
-
-    if(parseBlock(token, p)):
-        block = True
-
-    if( whileBool and booleanExpr and block):
-        return True
 
     return False
 
 # IfStatement Parse: if BooleanExpr Block
 def parseIfStatement(token, p):
-    # Triggers
-    ifBool = False
-    booleanExpr = False
-    block = False
-
     if(match(token.character, 'if')):
-        ifBool = True
+        if(parseBooleanExpr(token, p)):
+            if(parseBlock(token, p)):
+                return True
     else:
         print("Error on line " + str(token.lineNum) + ". Expecting 'if', got " + token.character + ".")
-
-    if(parseBooleanExpr(token, p)):
-        booleanExpr = True
-
-    if(parseBlock(token, p)):
-        block = True
-
-    if(ifBool and booleanExpr and block):
-        return True
 
     return False
 
@@ -262,55 +179,30 @@ def parseStringExpr(token, p):
     clQuote = False
 
     if(match(token.character, '"', p)):
-        opQuote = True
+        if(parseCharList(token, p)):
+            if(match(token.character, '"', p)):
+                return True
+            else:
+                print("Error on line " + str(token.lineNum) + '. Expecting \'"\', got ' + token.character + ".")
     else:
         print("Error on line " + str(token.lineNum) + '. Expecting \'"\', got ' + token.character + ".")
-
-    if(parseCharList(token, p)):
-        charList = True
-
-    if(match(token.character, '"', p)):
-        clQuote = True
-    else:
-        print("Error on line " + str(token.lineNum) + '. Expecting \'"\', got ' + token.character + ".")
-
-    if(opQuote and charList and clQuote):
-        return True
 
     return False
 
 # BooleanExpr Parse: ( Expr boolop Expr )
 def parseBooleanExpr(token, p):
-    # Triggers
-    opParen = False
-    expr1 = False
-    boolop = False
-    expr2 = False
-    clParen = False
-    
     if(match(token.character, '(', p)):
-        opParen = True
+        if(parseExpr(token, p)):
+            if(match(token.kind, 'compare', p)):
+                if(parseExpr(token, p)):
+                    if(match(token.character, ')', p)):
+                        return True
+                    else:
+                        print("Error on line " + str(token.lineNum) + ". Expecting ')', got " + token.character + ".")
+            else:
+                print("Error on line " + str(token.lineNum) + ". Expecting '==' or '!=', got " + token.character + ".")
     else:
         print("Error on line " + str(token.lineNum) + ". Expecting '(', got " + token.character + ".")
-
-    if(parseExpr(token, p)):
-        expr1 = True
-
-    if(match(token.kind, 'compare', p)):
-        boolop = True
-    else:
-        print("Error on line " + str(token.lineNum) + ". Expecting '==' or '!=', got " + token.character + ".")
-
-    if(parseExpr(token, p)):
-        expr2 = True
-
-    if(match(token.character, ')', p)):
-        clParen = True
-    else:
-        print("Error on line " + str(token.lineNum) + ". Expecting ')', got " + token.character + ".")
-
-    if(opParen and expr1 and boolop and expr2 and clParen):
-        return True
 
     return False
 
