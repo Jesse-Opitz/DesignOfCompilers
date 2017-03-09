@@ -66,7 +66,8 @@ def writeTokens(wordList, errors):
     quoteCount = 0
     
     # Patterns
-    keywords = ['if', 'while', 'print', 'int', 'string', 'boolean', 'false', 'true']
+    keywords = ['if', 'while', 'print', 'false', 'true']
+    types = ['int', 'string', 'boolean']
     charPattern = r'[a-z]'
     numPattern = r'[0-9]'
     keyWordPattern = r'[a-z][a-z]+'
@@ -93,6 +94,9 @@ def writeTokens(wordList, errors):
             if re.match(keyWordPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 if uncheckedWord in keywords:
                     newTok = token('keyword', uncheckedWord, line)
+                    tokens.append(newTok)
+                elif uncheckedWord in types:
+                    newTok = token('type', uncheckedWord, line)
                     tokens.append(newTok)
                 else:
                     #print('Error: unexpected syntax "', uncheckedWord, '" on line', line)

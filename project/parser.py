@@ -43,7 +43,7 @@ def parseStart(token):
 
 # Block Parse: { StatementList }
 def parseBlock(token):
-    print('parse block')
+    print('parse block', token[p].kind)
     if(match(token[p].character, '{')):
         if(parseStatementList(token)):
             if(match(token[p].character, '}')):
@@ -57,7 +57,7 @@ def parseBlock(token):
 
 # StatementList Parse: Statement StatementList OR Epsilon/Lambda
 def parseStatementList(token):
-    print('parse SL')
+    print('parse SL', token[p].kind)
     if(parseStatement(token)):
         parseStatementList(token)
     else:
@@ -66,7 +66,7 @@ def parseStatementList(token):
 
 # Statement Parse: PrintStatement OR AssignemntStatement OR VarDecl OR WhileStatement OR IfStatement OR Block
 def parseStatement(token):
-    print('parse S')
+    print('parse S', token[p].kind)
     if(parsePrintStatement(token)):
         return True
     elif(parseAssignmentStatement(token)):
@@ -84,14 +84,14 @@ def parseStatement(token):
 
 # PrintStatement Parse: print ( Expr )
 def parsePrintStatement(token):
-    print('parse PS')
+    print('parse PS', token[p].kind)
     if(match(token[p].character, 'print')):
         if(match(token[p].character, '(')):
             if(parseExpr(token)):
-                    if(match(token[p].character, ')')):
-                        return True
-                    else:
-                        print("Error on line " + str(token[p].lineNum) + ". Expecting ')', got " + token[p].character + ".")
+                if(match(token[p].character, ')')):
+                    return True
+                else:
+                    print("Error on line " + str(token[p].lineNum) + ". Expecting ')', got " + token[p].character + ".")
         else:
            print("Error on line " + str(token[p].lineNum) + ". Expecting '(', got " + token[p].character + ".")
     #else:
@@ -101,7 +101,7 @@ def parsePrintStatement(token):
 
 # AssignmentStatement Parse: Id = Expr
 def parseAssignmentStatement(token):
-    print('parse AS')
+    print('parse AS', token[p].kind)
     if(parseId(token)):
         if(match(token[p].character, '=')):
             if(parseExpr(token)):
@@ -113,8 +113,8 @@ def parseAssignmentStatement(token):
 
 #VarDecl Parse: type Id
 def parseVarDecl(token):
-    print('parse VD')
-    if(match(token[p].kind, 'type')):
+    print('parse VD', token[p].kind)
+    if(match(token[p].kind, 'keyword')):
         if(parseId(token)):
             return True
     #else:
@@ -124,7 +124,7 @@ def parseVarDecl(token):
 
 # WhileStatement Parse: while BooleanExpr Block
 def parseWhileStatement(token):
-    print('parse WS')
+    print('parse WS', token[p].kind)
     if(match(token[p].character, 'while')):
         if(parseBooleanExpr(token)):
             if(parseBlock(token)):
@@ -136,7 +136,7 @@ def parseWhileStatement(token):
 
 # IfStatement Parse: if BooleanExpr Block
 def parseIfStatement(token):
-    print('parse IS')
+    print('parse IS', token[p].kind)
     if(match(token[p].character, 'if')):
         if(parseBooleanExpr(token)):
             if(parseBlock(token)):
@@ -148,7 +148,7 @@ def parseIfStatement(token):
 
 # Expr Parse: IntExpr OR StringExpr OR BooleanExpr OR Id
 def parseExpr(token):
-    print('parse E')
+    print('parse E', token[p].kind)
     if(parseIntExpr(token)):
         return True
     elif(parseStringExpr(token)):
@@ -162,7 +162,7 @@ def parseExpr(token):
 
 # IntExpr Parse: digit intop Expr OR digit
 def parseIntExpr(token):
-    print('parse IE')
+    print('parse IE', token[p].kind)
     # Triggers
     digitBool = False
     
@@ -184,7 +184,7 @@ def parseIntExpr(token):
 
 # StringExpr Parse: " CharList "
 def parseStringExpr(token):
-    print('parse SE')
+    print('parse SE', token[p].kind)
     if(match(token[p].character, '"')):
         if(parseCharList(token)):
             if(match(token[p].character, '"')):
@@ -198,7 +198,7 @@ def parseStringExpr(token):
 
 # BooleanExpr Parse: ( Expr boolop Expr )
 def parseBooleanExpr(token):
-    print('parse BE')
+    print('parse BE', token[p].kind)
     if(match(token[p].character, '(')):
         if(parseExpr(token)):
             if(match(token[p].kind, 'compare')):
@@ -217,7 +217,7 @@ def parseBooleanExpr(token):
 # Id Parse: char
 # Did not return parseChar(token) because I only want to return True or False, not a possible error message
 def parseId(token):
-    print('parse ID')
+    print('parse ID', token[p].kind)
     if(parseChar(token)):
         return True
     
@@ -226,7 +226,7 @@ def parseId(token):
 # CharList Parse: char CharList OR space CharList OR Epsilon/Lambda
 # I will not need to verify 'space CharList' b/c spaces inside strings are recognized as char's in my lexer
 def parseCharList(token):
-    print('parse CL')
+    print('parse CL', token[p].kind)
     if(match(token[p].kind, 'char')):
         if(parse(charList(token))):
                  return True
@@ -235,7 +235,7 @@ def parseCharList(token):
         return True
 # Char Parse: a-z
 def parseChar(token):
-    print('parse C')
+    print('parse C', token[p].kind)
     if(match(token[p].kind, 'char')):
         return True
 
@@ -244,11 +244,11 @@ def parseChar(token):
 # IntOp Parse: +
 # This is here in case the language needs more operators
 def parseIntOp(token):
-    print('parse IO')
+    print('parse IO', token[p].kind)
     if(match(token[p].kind, 'operator')):
         return True
-    else: # Will need to add operators to error message if more operators are added
-        print("Error on line " + str(token[p].lineNum) + ". Expecting '+', got " + token[p].character + ".")
+    #else: # Will need to add operators to error message if more operators are added
+        #print("Error on line " + str(token[p].lineNum) + ". Expecting '+', got " + token[p].character + ".")
 
     return False
 
