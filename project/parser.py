@@ -111,7 +111,7 @@ def parseVarDecl(token):
         if(parseId(token)):
             return True
     else:
-        print("Error on line " + str(token[p].lineNum) + ". Expecting 'int', 'string' or 'boolean', got " + token.character + ".")
+        print("Error on line " + str(token[p].lineNum) + ". Expecting 'int', 'string' or 'boolean', got " + token[p].character + ".")
 
     return False
 
