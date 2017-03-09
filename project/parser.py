@@ -4,9 +4,8 @@ from lexer import token
 from lexer import tokens
 # P for pointer, global variable
 p = 0
-
+a = 0
 def main():
-    global p
     runParse = False
 
     # Checks if errors file is empty
@@ -24,14 +23,12 @@ def main():
         print("Error in lexer, can not run parse.")
 
 def match(token, expected):
-    global p
     if token == expected:
         print('matched', token, 'p is ', p)
-        if p < len(tokens):
-            p = p + 1
         return True
 
     return False
+
 # Begin parse: Block $
 def parseStart(token):
     # Parse for Block
@@ -40,24 +37,30 @@ def parseStart(token):
             print("Parse Complete!")
         else:
            print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
-
+           
 # Block Parse: { StatementList }
 def parseBlock(token):
+    global p
+    
     print('parse block', token[p].kind, token[p].character)
+    
     if(match(token[p].character, '{')):
+        p = p + 1
         if(parseStatementList(token)):
             if(match(token[p].character, '}')):
+                p = p + 1
                 return True
             else:
                    print("Error on line " + str(token[p].lineNum) + ". Expecting '}', got " + token[p].character + ".")
-    #else:
-       #print("Error on line " + str(token[p].lineNum) + ". Expecting '{', got '" + token[p].character + "'.")
+    else:
+       print("Error on line " + str(token[p].lineNum) + ". Expecting '{', got '" + token[p].character + "'.")
 
     return False
 
 # StatementList Parse: Statement StatementList OR Epsilon/Lambda
 def parseStatementList(token):
     print('parse SL', token[p].kind, token[p].character)
+    
     if(parseStatement(token)):
         parseStatementList(token)
     else:
@@ -67,10 +70,10 @@ def parseStatementList(token):
 # Statement Parse: PrintStatement OR AssignemntStatement OR VarDecl OR WhileStatement OR IfStatement OR Block
 def parseStatement(token):
     print('parse S', token[p].kind, token[p].character)
+    
     if(parsePrintStatement(token)):
         return True
     if(parseAssignmentStatement(token)):
-        print('AS True')
         return True
     if(parseVarDecl(token)):
         return True
@@ -85,11 +88,17 @@ def parseStatement(token):
 
 # PrintStatement Parse: print ( Expr )
 def parsePrintStatement(token):
+    global p
+    
     print('parse PS', token[p].kind, token[p].character)
+    
     if(match(token[p].character, 'print')):
+        p = p + 1
         if(match(token[p].character, '(')):
+            p = p + 1
             if(parseExpr(token)):
                 if(match(token[p].character, ')')):
+                    p = p + 1
                     return True
                 else:
                     print("Error on line " + str(token[p].lineNum) + ". Expecting ')', got " + token[p].character + ".")
@@ -102,20 +111,29 @@ def parsePrintStatement(token):
 
 # AssignmentStatement Parse: Id = Expr
 def parseAssignmentStatement(token):
+    global a
+    global p
+    
     print('parse AS', token[p].kind, token[p].character)
+    
     if(parseId(token)):
         if(match(token[p].character, '=')):
+            p = p + 1
+            print('we match:-----------', token[p].character)
             if(parseExpr(token)):
                 return True
-        #else:
-            #print("Error on line " + str(token[p].lineNum) + ". Expecting '=', got " + token[p].character + ".")
+                #print("Error on line " + str(token[p].lineNum) + ". Expecting '=', got " + token[p].character + ".")
+        else:
+            p = p - 1
 
     return False
 
 #VarDecl Parse: type Id
 def parseVarDecl(token):
+    global p
     print('parse VD', token[p].kind, token[p].character)
     if(match(token[p].kind, 'type')):
+        p = p + 1
         if(parseId(token)):
             return True
     #else:
@@ -125,8 +143,10 @@ def parseVarDecl(token):
 
 # WhileStatement Parse: while BooleanExpr Block
 def parseWhileStatement(token):
+    global p
     print('parse WS', token[p].kind, token[p].character)
     if(match(token[p].character, 'while')):
+        p = p + 1
         if(parseBooleanExpr(token)):
             if(parseBlock(token)):
                 return True
@@ -137,8 +157,10 @@ def parseWhileStatement(token):
 
 # IfStatement Parse: if BooleanExpr Block
 def parseIfStatement(token):
+    global p
     print('parse IS', token[p].kind, token[p].character)
     if(match(token[p].character, 'if')):
+        p = p + 1
         if(parseBooleanExpr(token)):
             if(parseBlock(token)):
                 return True
@@ -163,21 +185,23 @@ def parseExpr(token):
 
 # IntExpr Parse: digit intop Expr OR digit
 def parseIntExpr(token):
+    global a
+    global p
+    
     print('parse IE', token[p].kind, token[p].character)
+    
     # Triggers
     digitBool = False
     
     if(match(token[p].kind, 'digit')):
         digitBool = True
+        p = p + 1
         # Checks for intop Expr, if they are there, return True
         if(parseIntOp(token)):
             if(parseExpr(token)):
                 return True
     #else:
         #print("Error on line " + str(token[p].lineNum) + ". Expecting a digit 0-9, got " + token[p].character + ".")
-
-    
-
 
     # Since intop Expr is not there, we only need to check the digit
     if(digitBool):
@@ -187,10 +211,13 @@ def parseIntExpr(token):
 
 # StringExpr Parse: " CharList "
 def parseStringExpr(token):
+    global p
     print('parse SE', token[p].kind, token[p].character)
     if(match(token[p].character, '"')):
+        p = p + 1
         if(parseCharList(token)):
             if(match(token[p].character, '"')):
+                p = p + 1
                 return True
             else:
                 print("Error on line " + str(token[p].lineNum) + '. Expecting \'"\', got ' + token[p].character + ".")
@@ -201,12 +228,16 @@ def parseStringExpr(token):
 
 # BooleanExpr Parse: ( Expr boolop Expr )
 def parseBooleanExpr(token):
+    global p
     print('parse BE', token[p].kind, token[p].character)
     if(match(token[p].character, '(')):
+        p = p + 1
         if(parseExpr(token)):
             if(match(token[p].kind, 'compare')):
+                p = p + 1
                 if(parseExpr(token)):
                     if(match(token[p].character, ')')):
+                        p = p + 1
                         return True
                     else:
                         print("Error on line " + str(token[p].lineNum) + ". Expecting ')', got " + token[p].character + ".")
@@ -222,7 +253,6 @@ def parseBooleanExpr(token):
 def parseId(token):
     print('parse ID', token[p].kind, token[p].character)
     if(parseChar(token)):
-        print('PI true')
         return True
     
     return False
@@ -230,17 +260,21 @@ def parseId(token):
 # CharList Parse: char CharList OR space CharList OR Epsilon/Lambda
 # I will not need to verify 'space CharList' b/c spaces inside strings are recognized as char's in my lexer
 def parseCharList(token):
+    global p
     print('parse CL', token[p].kind, token[p].character)
     if(match(token[p].kind, 'char')):
+        p = p + 1
         if(parseCharList(token)):
-                 return True
+            return True
     else:
         # Epsilon/Lambda
         return True
 # Char Parse: a-z
 def parseChar(token):
+    global p
     print('parse C', token[p].kind, token[p].character)
     if(match(token[p].kind, 'char')):
+        p = p + 1
         return True
 
     return False
@@ -248,8 +282,10 @@ def parseChar(token):
 # IntOp Parse: +
 # This is here in case the language needs more operators
 def parseIntOp(token):
+    global p
     print('parse IO', token[p].kind, token[p].character)
     if(match(token[p].kind, 'operator')):
+        p = p + 1
         return True
     #else: # Will need to add operators to error message if more operators are added
         #print("Error on line " + str(token[p].lineNum) + ". Expecting '+', got " + token[p].character + ".")
