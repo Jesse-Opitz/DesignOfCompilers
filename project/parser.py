@@ -17,7 +17,7 @@ def main():
     # Parse if there are no errors in the lexer
 
     if(runParse):
-        parseStart(tokens[p])
+        parseStart(tokens)
             
     # Do not parse, error in lexer
     else:
@@ -43,7 +43,7 @@ def parseStart(token):
 # Block Parse: { StatementList }
 def parseBlock(token):
     if(match(token[p].character, '{')):
-        if(parseStatementList(token[p])):
+        if(parseStatementList(token)):
             if(match(token[p].character, '}')):
                 return True
             else:
@@ -55,25 +55,25 @@ def parseBlock(token):
 
 # StatementList Parse: Statement StatementList OR Epsilon/Lambda
 def parseStatementList(token):
-    if(parseStatement(token[p])):
-        parseStatementList(token[p])
+    if(parseStatement(token)):
+        parseStatementList(token)
     else:
         # Epsilon/Lambda, could be nothing
         return True
 
 # Statement Parse: PrintStatement OR AssignemntStatement OR VarDecl OR WhileStatement OR IfStatement OR Block
 def parseStatement(token):
-    if(parsePrintStatement(token[p])):
+    if(parsePrintStatement(token)):
         return True
-    elif(parseAssignmentStatement(token[p])):
+    elif(parseAssignmentStatement(token)):
         return True
-    elif(parseVarDecl(token[p])):
+    elif(parseVarDecl(token)):
         return True
-    elif(parseWhileStatement(token[p])):
+    elif(parseWhileStatement(token)):
         return True
-    elif(parseIfStatement(token[p])):
+    elif(parseIfStatement(token)):
         return True
-    elif(parseBlock(token[p])):
+    elif(parseBlock(token)):
         return True
 
     return False
@@ -82,7 +82,7 @@ def parseStatement(token):
 def parsePrintStatement(token):
     if(match(token[p].character, 'print')):
         if(match(token[p].character, '(')):
-            if(parseExpr(token[p])):
+            if(parseExpr(token)):
                     if(match(token[p].character, ')')):
                         return True
                     else:
@@ -96,9 +96,9 @@ def parsePrintStatement(token):
 
 # AssignmentStatement Parse: Id = Expr
 def parseAssignmentStatement(token):
-    if(parseId(token[p])):
+    if(parseId(token)):
         if(match(token[p].character, '=')):
-            if(parseExpr(token[p])):
+            if(parseExpr(token)):
                 return True
         else:
             print("Error on line " + str(token[p].lineNum) + ". Expecting '=', got " + token[p].character + ".")
@@ -108,7 +108,7 @@ def parseAssignmentStatement(token):
 #VarDecl Parse: type Id
 def parseVarDecl(token):
     if(match(token[p].kind, 'type')):
-        if(parseId(token[p])):
+        if(parseId(token)):
             return True
     else:
         print("Error on line " + str(token[p].lineNum) + ". Expecting 'int', 'string' or 'boolean', got " + token.character + ".")
@@ -118,8 +118,8 @@ def parseVarDecl(token):
 # WhileStatement Parse: while BooleanExpr Block
 def parseWhileStatement(token):
     if(match(token[p].character, 'while')):
-        if(parseBooleanExpr(token[p])):
-            if(parseBlock(token[p])):
+        if(parseBooleanExpr(token)):
+            if(parseBlock(token)):
                 return True
     else:
         print("Error on line " + str(token[p].lineNum) + ". Expecting 'while', got " + token[p].character + ".")
@@ -129,8 +129,8 @@ def parseWhileStatement(token):
 # IfStatement Parse: if BooleanExpr Block
 def parseIfStatement(token):
     if(match(token[p].character, 'if')):
-        if(parseBooleanExpr(token[p])):
-            if(parseBlock(token[p])):
+        if(parseBooleanExpr(token)):
+            if(parseBlock(token)):
                 return True
     else:
         print("Error on line " + str(token[p].lineNum) + ". Expecting 'if', got " + token[p].character + ".")
@@ -139,13 +139,13 @@ def parseIfStatement(token):
 
 # Expr Parse: IntExpr OR StringExpr OR BooleanExpr OR Id
 def parseExpr(token):
-    if(parseIntExpr(token[p])):
+    if(parseIntExpr(token)):
         return True
-    elif(parseStringExpr(token[p])):
+    elif(parseStringExpr(token)):
         return True
-    elif(parseBooleanExpr(token[p])):
+    elif(parseBooleanExpr(token)):
         return True
-    elif(parseId(token[p])):
+    elif(parseId(token)):
         return True
 
     return False
@@ -161,8 +161,8 @@ def parseIntExpr(token):
         print("Error on line " + str(token[p].lineNum) + ". Expecting a digit 0-9, got " + token[p].character + ".")
 
     # Checks for intop Expr, if they are there, return True
-    if(parseIntOp(token[p])):
-        if(parseExpr(token[p])):
+    if(parseIntOp(token)):
+        if(parseExpr(token)):
             return True
 
     # Since intop Expr is not there, we only need to check the digit
@@ -174,7 +174,7 @@ def parseIntExpr(token):
 # StringExpr Parse: " CharList "
 def parseStringExpr(token):
     if(match(token[p].character, '"')):
-        if(parseCharList(token[p])):
+        if(parseCharList(token)):
             if(match(token[p].character, '"')):
                 return True
             else:
@@ -187,9 +187,9 @@ def parseStringExpr(token):
 # BooleanExpr Parse: ( Expr boolop Expr )
 def parseBooleanExpr(token):
     if(match(token[p].character, '(')):
-        if(parseExpr(token[p])):
+        if(parseExpr(token)):
             if(match(token[p].kind, 'compare')):
-                if(parseExpr(token[p])):
+                if(parseExpr(token)):
                     if(match(token[p].character, ')')):
                         return True
                     else:
@@ -204,7 +204,7 @@ def parseBooleanExpr(token):
 # Id Parse: char
 # Did not return parseChar(token) because I only want to return True or False, not a possible error message
 def parseId(token):
-    if(parseChar(token[p])):
+    if(parseChar(token)):
         return True
     
     return False
@@ -213,7 +213,7 @@ def parseId(token):
 # I will not need to verify 'space CharList' b/c spaces inside strings are recognized as char's in my lexer
 def parseCharList(token):
     if(match(token[p].kind, 'char')):
-        if(parse(charList(token[p]))):
+        if(parse(charList(token))):
                  return True
     else:
         # Epsilon/Lambda
