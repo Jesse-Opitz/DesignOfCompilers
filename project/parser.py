@@ -24,7 +24,7 @@ def main():
 
 def match(token, expected):
     if token == expected:
-        print('matched', token, 'p is ', p)
+        print('matched', token, 'p is ', p, str(tokens[p].kind), str(tokens[p].character))
         return True
 
     return False
@@ -51,7 +51,10 @@ def parseBlock(token):
                 p = p + 1
                 return True
             else:
+
                    print("Error on line " + str(token[p].lineNum) + ". Expecting '}', got " + token[p].character + ".")
+        else:
+            print('parseStatementList false')
     else:
        print("Error on line " + str(token[p].lineNum) + ". Expecting '{', got '" + token[p].character + "'.")
 
@@ -60,12 +63,26 @@ def parseBlock(token):
 # StatementList Parse: Statement StatementList OR Epsilon/Lambda
 def parseStatementList(token):
     print('parse SL', token[p].kind, token[p].character)
-    
-    if(parseStatement(token)):
-        parseStatementList(token)
+    correctStartSet = ['keyword','char','type', 'digit', '"', '(', '==', '!=']
+    if token[p].kind in correctStartSet:
+        if(parseStatement(token)):
+            if(parseStatementList(token)):
+                return True
+            else:
+                print('False Statement List')
+                return False
+        else:
+            print('False Statement')
+            return False
     else:
-        # Epsilon/Lambda, could be nothing
         return True
+        
+    
+    #if(parseStatement(token)):
+    #    parseStatementList(token)
+    #else:
+        # Epsilon/Lambda, could be nothing
+    #    return True
 
 # Statement Parse: PrintStatement OR AssignemntStatement OR VarDecl OR WhileStatement OR IfStatement OR Block
 def parseStatement(token):
@@ -119,7 +136,6 @@ def parseAssignmentStatement(token):
     if(parseId(token)):
         if(match(token[p].character, '=')):
             p = p + 1
-            print('we match:-----------', token[p].character)
             if(parseExpr(token)):
                 return True
                 #print("Error on line " + str(token[p].lineNum) + ". Expecting '=', got " + token[p].character + ".")
