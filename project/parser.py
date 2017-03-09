@@ -69,15 +69,16 @@ def parseStatement(token):
     print('parse S', token[p].kind, token[p].character)
     if(parsePrintStatement(token)):
         return True
-    elif(parseAssignmentStatement(token)):
+    if(parseAssignmentStatement(token)):
+        print('AS True')
         return True
-    elif(parseVarDecl(token)):
+    if(parseVarDecl(token)):
         return True
-    elif(parseWhileStatement(token)):
+    if(parseWhileStatement(token)):
         return True
-    elif(parseIfStatement(token)):
+    if(parseIfStatement(token)):
         return True
-    elif(parseBlock(token)):
+    if(parseBlock(token)):
         return True
 
     return False
@@ -221,6 +222,7 @@ def parseBooleanExpr(token):
 def parseId(token):
     print('parse ID', token[p].kind, token[p].character)
     if(parseChar(token)):
+        print('PI true')
         return True
     
     return False
