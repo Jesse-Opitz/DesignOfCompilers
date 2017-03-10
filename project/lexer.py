@@ -66,8 +66,9 @@ def writeTokens(wordList, errors):
     quoteCount = 0
     
     # Patterns
-    keywords = ['if', 'while', 'print', 'false', 'true']
+    keywords = ['if', 'while', 'print']
     types = ['int', 'string', 'boolean']
+    boolval = ['false', 'true']
     charPattern = r'[a-z]'
     numPattern = r'[0-9]'
     keyWordPattern = r'[a-z][a-z]+'
@@ -97,6 +98,9 @@ def writeTokens(wordList, errors):
                     tokens.append(newTok)
                 elif uncheckedWord in types:
                     newTok = token('type', uncheckedWord, line)
+                    tokens.append(newTok)
+                elif uncheckedWord in boolval:
+                    newTok = token('boolval', uncheckedWord, line)
                     tokens.append(newTok)
                 else:
                     #print('Error: unexpected syntax "', uncheckedWord, '" on line', line)

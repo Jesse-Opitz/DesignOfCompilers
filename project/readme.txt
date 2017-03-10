@@ -36,3 +36,9 @@ sudo pip install treelib
 IF pip does not run, you must go to the python folder where pip is located, open a terminal window there and then try the command.
 
 Due to parser limitations and time restraints, the parser can only parse 1 program at a time, no matter how many programs are in the text file.
+
+***Not yet implemented:
+
+python parser.py testCode.txt
+ - The code will prompt for which text file you wish to run and as long as that text file is in the same file as the lexer, it should run.  However it does not take in standard input
+   from the command line yet.  It will be fixed in future versions, I just do not have the time to do it for this project.
