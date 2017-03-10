@@ -2,7 +2,7 @@
 import os
 from lexer import token
 from lexer import tokens
-from treelib import Node, Tree
+from tinytree import *
 import sys
 
 # P for pointer, global variable
@@ -67,14 +67,14 @@ def match(token, expected):
 # Begin parse: Block $
 def parseStart(token):
     global cst
-    cst.create_node("Start", "start") # root node
+    #cst.create_node("Start", "start") # root node
     # Parse for Block
     if(parseBlock(token)):
         if (match(token[p].kind, 'endProgram')):
-            cst.create_node("EOP", "EOP", parent="block1")
-            cst.create_node("$", "endProgram", parent="EOP")
+            #cst.create_node("EOP", "EOP", parent="block1")
+            #cst.create_node("$", "endProgram", parent="EOP")
             print("Parse Complete!")
-            cst.show()
+            #cst.show()
         else:
             print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
             endParse()
@@ -86,31 +86,32 @@ def parseBlock(token):
     global blockNum
     global blockParent
     global brackCount
+
     
     print('parse block', token[p].kind, token[p].character)
     parseBlockFirstSet = ['{']
     if token[p].character in parseBlockFirstSet:
-        blockNum = blockNum + 1
-        if(blockNum > 1):
-            cst.create_node("Block", "block" + str(blockNum), parent='statement' + str(stmtNum))
-        else:
-            cst.create_node("Block", "block" + str(blockNum), parent='start')
+        #blockNum = blockNum + 1
+        #if(blockNum > 1):
+            #cst.create_node("Block", "block" + str(blockNum), parent='statement' + str(stmtNum))
+        #else:
+            #cst.create_node("Block", "block" + str(blockNum), parent='start')
         if(match(token[p].character, '{')):
-            brackNum = brackNum + 1
-            cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum))
-            cst.create_node("{", "opBracket" + str(brackNum), parent="bracket" + str(brackNum), data=[token[p].character,token[p].lineNum])
-            brackCount = brackCount + 1
+            #brackNum = brackNum + 1
+            #cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum))
+            #cst.create_node("{", "opBracket" + str(brackNum), parent="bracket" + str(brackNum), data=[token[p].character,token[p].lineNum])
+            #brackCount = brackCount + 1
             p = p + 1
             if(parseStatementList(token)):
                 if(match(token[p].character, '}')):
-                    brackNum = brackNum + 1
-                    if(brackCount % 2 == 1):
-                        cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum))
-                    else:
-                        cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum - 1))
-                    brackCount = brackCount + 1
-                    cst.create_node("}", "clBracket" + str(brackNum), parent="bracket" + str(brackNum), data=[token[p].character,token[p].lineNum])
-                    brackNum = brackNum + 1
+                    #brackNum = brackNum + 1
+                    #if(brackCount % 2 == 1):
+                    #    cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum))
+                    #else:
+                    #    cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum - 1))
+                    #brackCount = brackCount + 1
+                    #cst.create_node("}", "clBracket" + str(brackNum), parent="bracket" + str(brackNum), data=[token[p].character,token[p].lineNum])
+                    #brackNum = brackNum + 1
                     p = p + 1
                     return True
                 else:
@@ -156,7 +157,7 @@ def parseStatement(token):
     print('parse S', token[p].kind, token[p].character)
     statementListFirstSet = ['keyword','char','type', 'quote', '{']
     if token[p].kind in statementListFirstSet or token[p].character in statementListFirstSet:
-        cst.create_node("Statement", "statement" + str(stmtNum), parent='block' + str(blockNum))
+        #cst.create_node("Statement", "statement" + str(stmtNum), parent='block' + str(blockNum))
         if(parsePrintStatement(token)):
             return True
         if(parseAssignmentStatement(token)):
@@ -186,18 +187,18 @@ def parsePrintStatement(token):
     
     printStatementFirstSet = ['print']
     if token[p].character in printStatementFirstSet:
-        printStmtNum = printStmtNum + 1
-        cst.create_node("printStatement", "printStatement" + str(printStmtNum), parent='statement' + str(stmtNum))
+        #printStmtNum = printStmtNum + 1
+        #cst.create_node("printStatement", "printStatement" + str(printStmtNum), parent='statement' + str(stmtNum))
         if(match(token[p].character, 'print')):
             keywordNum = keywordNum + 1
-            cst.create_node("print", "keyword" + str(keywordNum), parent='printStatement' + str(printStmtNum))
+            #cst.create_node("print", "keyword" + str(keywordNum), parent='printStatement' + str(printStmtNum))
             p = p + 1
             if(match(token[p].character, '(')):
                 p = p + 1
                 if(parseExpr(token)):
                     if(match(token[p].character, ')')):
-                        keywordNum = keywordNum + 1
-                        printNum = printNum + 1
+                        #keywordNum = keywordNum + 1
+                        #printNum = printNum + 1
                         p = p + 1
                         return True
                     else:
