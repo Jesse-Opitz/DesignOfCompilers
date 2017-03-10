@@ -167,6 +167,8 @@ def parsePrintStatement(token):
     global cst
     global p
     global printStmtNum
+    global keywordNum
+    global printNum
     
     print('parse PS', token[p].kind, token[p].character)
     
