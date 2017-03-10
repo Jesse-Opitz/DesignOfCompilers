@@ -1,6 +1,9 @@
 1 bracket {
-1 char a
-1 assign =
-1 digit 2
-1 bracket }
-1 endProgram $
+2 bracket {
+2 keyword print
+3 paren (
+3 char a
+3 paren )
+4 bracket }
+5 bracket }
+5 endProgram $

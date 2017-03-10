@@ -9,6 +9,32 @@ import sys
 p = 0
 blockNum = 0
 brackNum = 0
+stmtListNum = 0
+stmtNum = 0
+printStmtNum = 0
+printNum = 0
+parenNum = 0
+assignNum = 0
+varDeclNum = 0
+typeNum = 0
+exprNum = 0
+whileNum = 0
+boolExprNum = 0
+ifstmtNum = 0
+intExprNum = 0
+digitNum = 0
+intopNum = 0
+strExprNum = 0
+boolExprNum = 0
+idNum = 0
+quoteNum = 0
+charListNum = 0
+boolOpNum = 0
+boolValNum = 0
+charNum = 0
+keywordNum = 0
+
+blockParent = 'start'
 
 cst = Tree()
 
@@ -48,38 +74,43 @@ def parseStart(token):
             cst.create_node("$", "endProgram", parent="EOP")
             print("Parse Complete!")
         else:
-           print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
-
+            print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
+            endParse()
 # Block Parse: { StatementList }
 def parseBlock(token):
     global p
     global cst
     global brackNum
+    global blockNum
+    global blockParent
     
     print('parse block', token[p].kind, token[p].character)
     parseBlockFirstSet = ['{']
     if token[p].character in parseBlockFirstSet:
-        cst.create_node("Block", "block" + str(blockNum), parent="start")
+        blockNum = blockNum + 1
+        cst.create_node("Block", "block" + str(blockNum), parent=blockParent)
         if(match(token[p].character, '{')):
+            brackNum = brackNum + 1
             cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum))
             cst.create_node("{", "opBracket" + str(brackNum), parent="bracket" + str(brackNum))
-            brackNum = brackNum + 1
             p = p + 1
             if(parseStatementList(token)):
                 if(match(token[p].character, '}')):
+                    brackNum = brackNum + 1
                     cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum))
                     cst.create_node("}", "clBracket" + str(brackNum), parent="bracket" + str(brackNum))
                     brackNum = brackNum + 1
                     p = p + 1
                     return True
                 else:
-
-                       print("Error on line " + str(token[p].lineNum) + ". Expecting '}', got " + token[p].character + ".")
+                    print("Error on line " + str(token[p].lineNum) + ". Expecting '}', got " + token[p].character + ".")
+                    endParse()
             else:
                 print('parseStatementList false')
+                endParse()
         else:
-           print("Error on line " + str(token[p].lineNum) + ". Expecting '{', got '" + token[p].character + "'.")
-    
+            print("Error on line " + str(token[p].lineNum) + ". Expecting '{', got '" + token[p].character + "'.")
+            endParse()
     return False
 
 # StatementList Parse: Statement StatementList OR Epsilon/Lambda
@@ -88,8 +119,8 @@ def parseStatementList(token):
     
     print('parse SL', token[p].kind, token[p].character)
     
-    statementListFirstSet = ['keyword','char','type', 'digit', '"', '(', '==', '!=']
-    if token[p].kind in statementListFirstSet:
+    statementListFirstSet = ['keyword','char','type', 'digit', '"', '(', '==', '!=', '{']
+    if token[p].kind in statementListFirstSet or token[p].character in statementListFirstSet:
         if(parseStatement(token)):
             if(parseStatementList(token)):
                 return True
@@ -107,9 +138,12 @@ def parseStatementList(token):
 # Statement Parse: PrintStatement OR AssignemntStatement OR VarDecl OR WhileStatement OR IfStatement OR Block
 def parseStatement(token):
     global cst
+    global stmtNum
     print('parse S', token[p].kind, token[p].character)
     statementListFirstSet = ['keyword','char','type', 'quote', '{']
     if token[p].kind in statementListFirstSet or token[p].character in statementListFirstSet:
+        cst.create_node("Statement", "statement" + str(stmtNum), parent='opBracket' + str(brackNum))
+        stmtNum = stmtNum + 1
         if(parsePrintStatement(token)):
             return True
         if(parseAssignmentStatement(token)):
@@ -121,6 +155,7 @@ def parseStatement(token):
         if(parseIfStatement(token)):
             return True
         if(parseBlock(token)):
+            blockParent = 'stmt' + str(stmtNum)
             return True
     else:
         print('Error on line', str(token[p].lineNum), ': Expecting a keyword, char, type, quote or start brace, got:', token[p].character)
@@ -131,17 +166,21 @@ def parseStatement(token):
 def parsePrintStatement(token):
     global cst
     global p
+    global printStmtNum
     
     print('parse PS', token[p].kind, token[p].character)
     
     printStatementFirstSet = ['print']
     if token[p].character in printStatementFirstSet:
+        cst.create_node("printStatement", "printStatement" + str(printStmtNum), parent='opBracket' + str(brackNum))
         if(match(token[p].character, 'print')):
             p = p + 1
             if(match(token[p].character, '(')):
                 p = p + 1
                 if(parseExpr(token)):
                     if(match(token[p].character, ')')):
+                        keywordNum = keywordNum + 1
+                        printNum = printNum + 1
                         p = p + 1
                         return True
                     else:
@@ -190,6 +229,7 @@ def parseVarDecl(token):
 def parseWhileStatement(token):
     global cst
     global p
+    global blockNum
     print('parse WS', token[p].kind, token[p].character)
     whileStatementFirstSet = ['while']
     if token[p].character in whileStatementFirstSet:
