@@ -2,6 +2,8 @@
 import os
 from lexer import token
 from lexer import tokens
+import treelib
+
 # P for pointer, global variable
 p = 0
 a = 0
@@ -37,34 +39,35 @@ def parseStart(token):
             print("Parse Complete!")
         else:
            print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
-           
+
 # Block Parse: { StatementList }
 def parseBlock(token):
     global p
     
     print('parse block', token[p].kind, token[p].character)
-    
-    if(match(token[p].character, '{')):
-        p = p + 1
-        if(parseStatementList(token)):
-            if(match(token[p].character, '}')):
-                p = p + 1
-                return True
+    parseBlockFirstSet = ['{']
+    if token[p].character in parseBlockFirstSet:
+        if(match(token[p].character, '{')):
+            p = p + 1
+            if(parseStatementList(token)):
+                if(match(token[p].character, '}')):
+                    p = p + 1
+                    return True
+                else:
+
+                       print("Error on line " + str(token[p].lineNum) + ". Expecting '}', got " + token[p].character + ".")
             else:
-
-                   print("Error on line " + str(token[p].lineNum) + ". Expecting '}', got " + token[p].character + ".")
+                print('parseStatementList false')
         else:
-            print('parseStatementList false')
-    else:
-       print("Error on line " + str(token[p].lineNum) + ". Expecting '{', got '" + token[p].character + "'.")
-
+           print("Error on line " + str(token[p].lineNum) + ". Expecting '{', got '" + token[p].character + "'.")
+    
     return False
 
 # StatementList Parse: Statement StatementList OR Epsilon/Lambda
 def parseStatementList(token):
     print('parse SL', token[p].kind, token[p].character)
-    correctStartSet = ['keyword','char','type', 'digit', '"', '(', '==', '!=']
-    if token[p].kind in correctStartSet:
+    StatementListFirstSet = ['keyword','char','type', 'digit', '"', '(', '==', '!=']
+    if token[p].kind in StatementListFirstSet:
         if(parseStatement(token)):
             if(parseStatementList(token)):
                 return True
@@ -139,8 +142,8 @@ def parseAssignmentStatement(token):
             if(parseExpr(token)):
                 return True
                 #print("Error on line " + str(token[p].lineNum) + ". Expecting '=', got " + token[p].character + ".")
-        else:
-            p = p - 1
+        #else:
+            #p = p - 1
 
     return False
 
