@@ -26,16 +26,10 @@ There is a sample file codeHere.txt that I used while testing the compiler.
 
 Parser Instructions:
 
-The parser uses a special library called treelib that must be installed via pip.  Pip is downloaded by default with python.  The website for the programs documentation is 
-https://github.com/caesar0301/treelib/blob/master/README.md.
+tree.py and node.py credits go to Brett Kromkamp
 
-To install treelib type into a terminal: 
-
-sudo pip install treelib
-
-IF pip does not run, you must go to the python folder where pip is located, open a terminal window there and then try the command.
-
-Due to parser limitations and time restraints, the parser can only parse 1 program at a time, no matter how many programs are in the text file.
+Website:
+http://www.quesucede.com/page/show/id/python-3-tree-implementation#tree-class
 
 ***Not yet implemented:
 
