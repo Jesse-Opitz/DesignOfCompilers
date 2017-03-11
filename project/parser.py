@@ -28,7 +28,6 @@ intExprNum = 0
 digitNum = 0
 intopNum = 0
 strExprNum = 0
-boolExprNum = 0
 idNum = 0
 quoteNum = 0
 charListNum = 0
@@ -39,10 +38,11 @@ keywordNum = 0
 
 brackCount = 0
 
-blockParent = 'Start'
+blockParent = ''
 exprParent = ''
 idParent = ''
 charParent = ''
+boolExprParent = ''
 
 cst = Tree()
 
@@ -62,6 +62,8 @@ def main():
     else:
         print("Error in lexer, can not run parse.")
 
+    input("Press any key to end program")
+
 def match(token, expected):
     if token == expected:
         print('matched', token, 'p is ', p, str(tokens[p].kind), str(tokens[p].character))
@@ -72,14 +74,16 @@ def match(token, expected):
 # Begin parse: Block $
 def parseStart(token):
     global cst
+    global blockParent
     #cst.create_node("Start", "start") # root node
     cst.add_node("Start") # root node
+    blockParent = 'Start'
     # Parse for Block
     if(parseBlock(token)):
         if (match(token[p].kind, 'endProgram')):
             #cst.create_node("EOP", "EOP", parent="block1")
             #cst.create_node("$", "endProgram", parent="EOP")
-            cst.add_node(str(token[p].lineNum) + token[p].character, "Start")
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Start")
             print("Parse Complete!")
             #cst.show()
             cst.display("Start")
@@ -106,7 +110,8 @@ def parseBlock(token):
         #else:
             #cst.create_node("Block", "block" + str(blockNum), parent='start')
         if(match(token[p].character, '{')):
-            cst.add_node(str(token[p].lineNum) + token[p].character, "Block" + str(blockNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
+            
             brackNum = brackNum + 1 
             #cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum))
             #cst.create_node("{", "opBracket" + str(brackNum), parent="bracket" + str(brackNum), data=[token[p].character,token[p].lineNum])
@@ -117,10 +122,10 @@ def parseBlock(token):
                     
                     #cst.add_node(str(token[p].lineNum) + token[p].character, "Block")
                     #brackNum = brackNum + 1
-                    #if(brackCount % 2 == 1):
-                    cst.add_node(str(token[p].lineNum) + token[p].character, "Block" + str(blockNum))
-                    #else:
-                        #cst.add_node(str(token[p].lineNum) + token[p].character, "Block" + str(blockNum - 1))
+                    if(brackCount % 2 == 0):
+                        cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
+                    else:
+                        cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum - 1))
                     #    cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum - 1))
                     #brackCount = brackCount + 1
                     #cst.create_node("}", "clBracket" + str(brackNum), parent="bracket" + str(brackNum), data=[token[p].character,token[p].lineNum])
@@ -192,7 +197,9 @@ def parseStatement(token):
             stmtListNum = stmtListNum + 1
             return True
         if(parseBlock(token)):
-            blockParent = "Statement" + str(stmtNum)
+            print('HERE --------------', blockParent)
+            blockParent = "StatementList" + str(stmtListNum)
+            print('HERE2 --------------', blockParent)
             stmtListNum = stmtListNum + 1
             return True
     else:
@@ -219,15 +226,15 @@ def parsePrintStatement(token):
         if(match(token[p].character, 'print')):
             #keywordNum = keywordNum + 1
             #cst.create_node("print", "keyword" + str(keywordNum), parent='printStatement' + str(printStmtNum))
-            cst.add_node(str(token[p].lineNum) + token[p].character, "PrintStmt" + str(printStmtNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
             p = p + 1
             if(match(token[p].character, '(')):
-                cst.add_node(str(token[p].lineNum) + token[p].character, "PrintStmt" + str(printStmtNum))
+                cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
                 p = p + 1
                 exprParent = "PrintStmt" + str(printStmtNum)
                 if(parseExpr(token)):
                     if(match(token[p].character, ')')):
-                        cst.add_node(str(token[p].lineNum) + token[p].character, "PrintStmt" + str(printStmtNum))
+                        cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
                         printStmtNum = printStmtNum + 1
                         #keywordNum = keywordNum + 1
                         #printNum = printNum + 1
@@ -257,7 +264,7 @@ def parseAssignmentStatement(token):
         cst.add_node("AssignmentStmt" + str(assignNum), "PrintStmt" + str(printStmtNum))
         if(parseId(token)):
             if(match(token[p].character, '=')):
-                cst.add_node(str(token[p].lineNum) + token[p].character, "PrintStmt" + str(printStmtNum))
+                cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
                 p = p + 1
                 exprParent = "AssignmentStmt" + str(assignNum)
                 if(parseExpr(token)):
@@ -280,7 +287,7 @@ def parseVarDecl(token):
         idParent = "VarDecl" + str(varDeclNum)
         cst.add_node("VarDecl" + str(varDeclNum), "Statement" + str(stmtNum))
         if(match(token[p].kind, 'type')):
-            cst.add_node(str(token[p].lineNum) + token[p].character, "VarDecl" + str(varDeclNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "VarDecl" + str(varDeclNum))
             p = p + 1
             if(parseId(token)):
                 return True
@@ -294,6 +301,7 @@ def parseWhileStatement(token):
     global cst
     global p
     global whileNum
+    global boolExprParent
     
     print('parse WS', token[p].kind, token[p].character)
     
@@ -302,8 +310,9 @@ def parseWhileStatement(token):
         whileNum = whileNum + 1
         cst.add_node("WhileStmt" + str(whileNum), "Statement" + str(stmtNum))
         if(match(token[p].character, 'while')):
-            cst.add_node(str(token[p].lineNum) + token[p].character, "WhileStmt" + str(whileNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "WhileStmt" + str(whileNum))
             p = p + 1
+            boolExprParent = "WhileStmt" + str(whileNum)
             if(parseBooleanExpr(token)):
                 if(parseBlock(token)):
                     return True
@@ -317,14 +326,17 @@ def parseIfStatement(token):
     global cst
     global p
     global ifStmtNum
+    global boolExprParent
+    
     print('parse IS', token[p].kind, token[p].character)
     ifStatementFirstSet = ['if']
     if token[p].character in ifStatementFirstSet:
         ifStmtNum = ifStmtNum + 1
         cst.add_node("ifStmt" + str(ifStmtNum), "Statement" + str(stmtNum))
         if(match(token[p].character, 'if')):
-            cst.add_node(str(token[p].lineNum) + token[p].character, "ifStmt" + str(ifStmtNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "ifStmt" + str(ifStmtNum))
             p = p + 1
+            boolExprParent = "ifStmt" + str(ifStmtNum)
             if(parseBooleanExpr(token)):
                 if(parseBlock(token)):
                     return True
@@ -337,10 +349,13 @@ def parseIfStatement(token):
 def parseExpr(token):
     global cst
     global idParent
+    global exprNum
     print('parse E', token[p].kind, token[p].character)
     exprFirstSet = ['digit', 'quote', '(', 'boolval', 'char']
     if(token[p].character in exprFirstSet or token[p].kind in exprFirstSet):
+        exprNum = exprNum + 1
         idParent = "Expr" + str(exprNum)
+        boolExprParent = "Expr" + str(exprNum)
         cst.add_node("Expr" + str(exprNum), exprParent)
         if(parseIntExpr(token)):
             return True
@@ -368,7 +383,7 @@ def parseIntExpr(token):
     if(token[p].kind in intExprFirstSet):
         cst.add_node("IntExpr" + str(intExprNum),"Expr" + str(exprNum))
         if(match(token[p].kind, 'digit')):
-            cst.add_node(str(token[p].lineNum) + token[p].character, "IntExpr" + str(intExprNum))
+            cst.add_node(str(token[p].lineNum)+ ',' + token[p].character, "IntExpr" + str(intExprNum))
             digitBool = True
             p = p + 1
             # Checks for intop Expr, if they are there, return True
@@ -396,11 +411,11 @@ def parseStringExpr(token):
     if(token[p].character in strExprFirstSet):
         cst.add_node("stringExpr" + str(strExprNum), "Expr" + str(exprNum))
         if(match(token[p].character, '"')):
-            cst.add_node(str(token[p].lineNum) + token[p].character, "stringExpr" + str(strExprNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "stringExpr" + str(strExprNum))
             p = p + 1
             if(parseCharList(token)):
                 if(match(token[p].character, '"')):
-                    cst.add_node(str(token[p].lineNum) + token[p].character, "stringExpr" + str(strExprNum))
+                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "stringExpr" + str(strExprNum))
                     p = p + 1
                     return True
                 else:
@@ -415,24 +430,26 @@ def parseBooleanExpr(token):
     global cst
     global p
     global boolExprNum
+    global exprNum
+    global exprParent
+    
     print('parse BE', token[p].kind, token[p].character)
 
     boolExprFirstSet = ['(', 'true', 'false']
     if(token[p].character in boolExprFirstSet):
         boolExprNum = boolExprNum + 1
-        cst.add_node("boolExpr" + str(boolExprNum), "Expr" + str(exprNum))
+        cst.add_node("boolExpr" + str(boolExprNum), boolExprParent)
         if(match(token[p].character, '(')):
-            cst.add_node(str(token[p].lineNum) + token[p].character, "boolExpr" + str(boolExprNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "boolExpr" + str(boolExprNum))
             p = p + 1
-            print('in paren')
+            exprParent = "boolExpr" + str(boolExprNum)
             if(parseExpr(token)):
-                print('no comp')
                 if(match(token[p].kind, 'compare')):
-                    cst.add_node(str(token[p].lineNum) + token[p].character, "boolExpr" + str(boolExprNum))
+                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "boolExpr" + str(boolExprNum))
                     p = p + 1
                     if(parseExpr(token)):
                         if(match(token[p].character, ')')):
-                            cst.add_node(str(token[p].lineNum) + token[p].character, "boolExpr" + str(boolExprNum))
+                            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "boolExpr" + str(boolExprNum))
                             p = p + 1
                             return True
                         else:
@@ -485,7 +502,7 @@ def parseCharList(token):
 
                                       )
         if(match(token[p].kind, 'char')):
-            cst.add_node(str(token[p].lineNum) + token[p].character, "CharList" + str(charListNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "CharList" + str(charListNum))
             p = p + 1
             if(parseCharList(token)):
                 return True
@@ -504,7 +521,7 @@ def parseChar(token):
     if(token[p].kind in charFirstSet):
         cst.add_node('char' + str(charNum), charParent)
         if(match(token[p].kind, 'char')):
-            cst.add_node(str(token[p].lineNum) + token[p].character, 'char' + str(charNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, 'char' + str(charNum))
             p = p + 1
             return True
 
@@ -519,7 +536,7 @@ def parseIntOp(token):
     print('parse IO', token[p].kind, token[p].character)
     
     if(match(token[p].kind, 'operator')):
-        cst.add_node(str(token[p].lineNum) + token[p].character, 'intExpr' + str(intExprNum))
+        cst.add_node(str(token[p].lineNum) + ',' + token[p].character, 'intExpr' + str(intExprNum))
         p = p + 1
         return True
     elif(token[p].kind is 'assign'):
