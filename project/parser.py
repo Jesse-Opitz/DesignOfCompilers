@@ -58,6 +58,8 @@ def main():
     # Parse if there are no errors in the lexer
     if(runParse):
         parseStart(tokens)
+        if(os.stat("errors.txt").st_size == 0):
+            cst.display("Start")
     # Do not parse, error in lexer
     else:
         print("Error in lexer, can not run parse.")
@@ -85,8 +87,7 @@ def parseStart(token):
             #cst.create_node("$", "endProgram", parent="EOP")
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Start")
             print("Parse Complete!")
-            #cst.show()
-            cst.display("Start")
+            
         else:
             print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
             endParse()
@@ -548,6 +549,8 @@ def parseIntOp(token):
 
 def endParse():
     print('Parse Failed')
+    errorsFile = open('errors.txt', 'w')
+    errorsFile.write('Error in parse')
     sys.exit('Parse Failed')
 
 main()
