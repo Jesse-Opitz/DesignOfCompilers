@@ -64,7 +64,7 @@ def main():
     else:
         print("Error in lexer, can not run parse.")
 
-    input("Press any key to end program")
+    #input("Press any key to end program")
 
 def match(token, expected):
     if token == expected:

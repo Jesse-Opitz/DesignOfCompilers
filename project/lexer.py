@@ -22,7 +22,7 @@ def main():
         e = e + 1
     errorFile.close()
 
-    input('Press enter to end lexer and continue to the parser.')
+    #input('Press enter to end lexer and continue to the parser.')
 
 # Creates a list of every character in a file
 def createList(file):
