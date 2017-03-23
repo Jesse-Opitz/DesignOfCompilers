@@ -23,7 +23,7 @@ typeNum = 0
 exprNum = 0
 whileNum = 0
 boolExprNum = 0
-ifstmtNum = 0
+ifStmtNum = 0
 intExprNum = 0
 digitNum = 0
 intopNum = 0
@@ -35,6 +35,7 @@ boolOpNum = 0
 boolValNum = 0
 charNum = 0
 keywordNum = 0
+boolOpNum = 0
 
 brackCount = 0
 
@@ -101,8 +102,9 @@ def parseBlock(token):
     global blockParent
     global brackCount
     global maxBlock
-    maxBlock = maxBlock + 1
     
+    maxBlock = maxBlock + 1
+    #print('BlockParent =', blockParent)
     print('Parser --> Block', token[p].kind, token[p].character)
     parseBlockFirstSet = ['{']
     if token[p].character in parseBlockFirstSet:
@@ -286,7 +288,7 @@ def parseWhileStatement(token):
     global p
     global whileNum
     global boolExprParent
-    global blockparent
+    global blockParent
     
     print('Parser --> While Statement', token[p].kind, token[p].character)
     
@@ -300,6 +302,7 @@ def parseWhileStatement(token):
             boolExprParent = "WhileStmt" + str(whileNum)
             if(parseBooleanExpr(token)):
                 blockParent = "WhileStmt" + str(whileNum)
+                #print("Here -----------------", blockParent)
                 if(parseBlock(token)):
                     return True
         else:
@@ -313,6 +316,7 @@ def parseIfStatement(token):
     global p
     global ifStmtNum
     global boolExprParent
+    global blockParent
     
     print('Parser --> If Statement', token[p].kind, token[p].character)
     ifStatementFirstSet = ['if']
@@ -337,6 +341,8 @@ def parseExpr(token):
     global cst
     global idParent
     global exprNum
+    global boolExprParent
+    
     print('Parser --> Expr', token[p].kind, token[p].character)
     exprFirstSet = ['digit', 'quote', '(', 'boolval', 'char']
     if(token[p].character in exprFirstSet or token[p].kind in exprFirstSet):
@@ -419,24 +425,28 @@ def parseBooleanExpr(token):
     global boolExprNum
     global exprNum
     global exprParent
+    global boolOpNum
+    global boolValNum
     
     print('Parser --> Boolean Expr', token[p].kind, token[p].character)
 
     boolExprFirstSet = ['(', 'true', 'false']
     if(token[p].character in boolExprFirstSet):
         boolExprNum = boolExprNum + 1
-        cst.add_node("boolExpr" + str(boolExprNum), boolExprParent)
+        cst.add_node("BoolExpr" + str(boolExprNum), boolExprParent)
         if(match(token[p].character, '(')):
-            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "boolExpr" + str(boolExprNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolExpr" + str(boolExprNum))
             p = p + 1
-            exprParent = "boolExpr" + str(boolExprNum)
+            exprParent = "BoolExpr" + str(boolExprNum)
             if(parseExpr(token)):
                 if(match(token[p].kind, 'compare')):
-                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "boolExpr" + str(boolExprNum))
+                    cst.add_node("BoolOp" + str(boolOpNum), "BoolExpr" + str(boolExprNum))
+                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolOp" + str(boolOpNum))
+                    boolOpNum = boolOpNum + 1
                     p = p + 1
                     if(parseExpr(token)):
                         if(match(token[p].character, ')')):
-                            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "boolExpr" + str(boolExprNum))
+                            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolExpr" + str(boolExprNum))
                             p = p + 1
                             return True
                         else:
@@ -446,6 +456,9 @@ def parseBooleanExpr(token):
                     print("Error on line " + str(token[p].lineNum) + ". Expecting '==' or '!=', got " + token[p].character + ".")
                     endParse()
         elif(match(token[p].kind, 'boolval')):
+            cst.add_node("BoolExpr" + str(boolExprNum), boolExprParent)
+            cst.add_node("BoolVal" + str(boolValNum), "BoolExpr" + str(boolExprNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolVal" + str(boolValNum))
             p = p + 1
             return True
         else:
