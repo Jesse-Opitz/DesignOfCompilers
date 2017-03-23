@@ -59,8 +59,10 @@ def main():
 
     # Parse if there are no errors in the lexer
     if(runParse):
+        print("\n")
         parseStart(tokens)
         if(os.stat("errors.txt").st_size == 0):
+            print("\nCST Below\n")
             cst.display("Start")
     # Do not parse, error in lexer
     else:
@@ -70,7 +72,7 @@ def main():
 
 def match(token, expected):
     if token == expected:
-        print('matched', token, 'p is ', p, str(tokens[p].kind), str(tokens[p].character))
+        print('Parser --> Matched:', token, 'p is ', p, str(tokens[p].kind), str(tokens[p].character))
         return True
 
     return False
@@ -84,8 +86,8 @@ def parseStart(token):
     # Parse for Block
     if(parseBlock(token)):
         if (match(token[p].kind, 'endProgram')):
-            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Start")
-            print("Parse Complete!")
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block1")
+            print("Parser --> Complete")
             
         else:
             print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
@@ -101,7 +103,7 @@ def parseBlock(token):
     global maxBlock
     maxBlock = maxBlock + 1
     
-    print('parse block', token[p].kind, token[p].character)
+    print('Parser --> Block', token[p].kind, token[p].character)
     parseBlockFirstSet = ['{']
     if token[p].character in parseBlockFirstSet:
         blockNum = blockNum + 1
@@ -133,7 +135,7 @@ def parseStatementList(token):
     global cst
     global stmtListNum
     
-    print('parse SL', token[p].kind, token[p].character)
+    print('Parser --> Statement List ', token[p].kind, token[p].character)
     
     statementListFirstSet = ['keyword','char','type', 'digit', '"', '(', '==', '!=', '{']
     if token[p].kind in statementListFirstSet or token[p].character in statementListFirstSet:
@@ -160,7 +162,7 @@ def parseStatement(token):
     global stmtListNum
     global blockParent
     
-    print('parse S', token[p].kind, token[p].character)
+    print('Parser --> Statement ', token[p].kind, token[p].character)
     statementListFirstSet = ['keyword','char','type', 'quote', '{']
     if token[p].kind in statementListFirstSet or token[p].character in statementListFirstSet:
         #cst.create_node("Statement", "statement" + str(stmtNum), parent='block' + str(blockNum))
@@ -204,7 +206,7 @@ def parsePrintStatement(token):
     global printNum
     global exprParent
     
-    print('parse PS', token[p].kind, token[p].character)
+    print('Parser --> Print Statement', token[p].kind, token[p].character)
     
     printStatementFirstSet = ['print']
     if token[p].character in printStatementFirstSet:
@@ -238,7 +240,7 @@ def parseAssignmentStatement(token):
     global exprParent
     global idParent
     
-    print('parse AS', token[p].kind, token[p].character)
+    print('Parser --> Assignment Statement', token[p].kind, token[p].character)
     printStatementFirstSet = ['char']
     if token[p].kind in printStatementFirstSet:
         idParent = "AssignmentStmt" + str(assignNum)
@@ -263,7 +265,7 @@ def parseVarDecl(token):
     global varDeclNum
     global idParent
     
-    print('parse VD', token[p].kind, token[p].character)
+    print('Parser --> VarDecl', token[p].kind, token[p].character)
     varDeclFirstSet = ['type']
     if token[p].kind in varDeclFirstSet:
         idParent = "VarDecl" + str(varDeclNum)
@@ -286,7 +288,7 @@ def parseWhileStatement(token):
     global boolExprParent
     global blockparent
     
-    print('parse WS', token[p].kind, token[p].character)
+    print('Parser --> While Statement', token[p].kind, token[p].character)
     
     whileStatementFirstSet = ['while']
     if token[p].character in whileStatementFirstSet:
@@ -312,7 +314,7 @@ def parseIfStatement(token):
     global ifStmtNum
     global boolExprParent
     
-    print('parse IS', token[p].kind, token[p].character)
+    print('Parser --> If Statement', token[p].kind, token[p].character)
     ifStatementFirstSet = ['if']
     if token[p].character in ifStatementFirstSet:
         ifStmtNum = ifStmtNum + 1
@@ -335,7 +337,7 @@ def parseExpr(token):
     global cst
     global idParent
     global exprNum
-    print('parse E', token[p].kind, token[p].character)
+    print('Parser --> Expr', token[p].kind, token[p].character)
     exprFirstSet = ['digit', 'quote', '(', 'boolval', 'char']
     if(token[p].character in exprFirstSet or token[p].kind in exprFirstSet):
         exprNum = exprNum + 1
@@ -362,7 +364,7 @@ def parseIntExpr(token):
     # Triggers
     digitBool = False
 
-    print('parse IE', token[p].kind, token[p].character)
+    print('Parser --> Int Expr', token[p].kind, token[p].character)
     
     intExprFirstSet = ['digit']
     if(token[p].kind in intExprFirstSet):
@@ -390,7 +392,7 @@ def parseStringExpr(token):
     global cst
     global p
 
-    print('parse SE', token[p].kind, token[p].character)
+    print('Parser --> String Expr', token[p].kind, token[p].character)
 
     strExprFirstSet = ['"']
     if(token[p].character in strExprFirstSet):
@@ -418,7 +420,7 @@ def parseBooleanExpr(token):
     global exprNum
     global exprParent
     
-    print('parse BE', token[p].kind, token[p].character)
+    print('Parser --> Boolean Expr', token[p].kind, token[p].character)
 
     boolExprFirstSet = ['(', 'true', 'false']
     if(token[p].character in boolExprFirstSet):
@@ -458,7 +460,7 @@ def parseId(token):
     global idNum
     global charParent
     
-    print('parse ID', token[p].kind, token[p].character)
+    print('Parser --> ID', token[p].kind, token[p].character)
     
     idFirstSet = ['char']
     if(token[p].kind in idFirstSet):
@@ -477,7 +479,7 @@ def parseCharList(token):
     global p
     global charListNum
     
-    print('parse CL', token[p].kind, token[p].character)
+    print('Parser --> CharList', token[p].kind, token[p].character)
 
     charListFirstSet = ['char']
     if(token[p].kind in charListFirstSet):
@@ -500,7 +502,7 @@ def parseChar(token):
     global cst
     global p
     
-    print('parse C', token[p].kind, token[p].character)
+    print('Parser --> Char', token[p].kind, token[p].character)
     
     charFirstSet = ['char']
     if(token[p].kind in charFirstSet):
@@ -518,7 +520,7 @@ def parseIntOp(token):
     global cst
     global p
     
-    print('parse IO', token[p].kind, token[p].character)
+    print('Parser --> Int Op', token[p].kind, token[p].character)
     
     if(match(token[p].kind, 'operator')):
         cst.add_node(str(token[p].lineNum) + ',' + token[p].character, 'intExpr' + str(intExprNum))
