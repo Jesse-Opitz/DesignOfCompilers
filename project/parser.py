@@ -434,6 +434,7 @@ def parseBooleanExpr(token):
     if(token[p].character in boolExprFirstSet):
         boolExprNum = boolExprNum + 1
         cst.add_node("BoolExpr" + str(boolExprNum), boolExprParent)
+        originalBoolExprNum = boolExprNum
         if(match(token[p].character, '(')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolExpr" + str(boolExprNum))
             p = p + 1
@@ -444,9 +445,10 @@ def parseBooleanExpr(token):
                     cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolOp" + str(boolOpNum))
                     boolOpNum = boolOpNum + 1
                     p = p + 1
+                    exprParent = "BoolExpr" + str(boolExprNum)
                     if(parseExpr(token)):
                         if(match(token[p].character, ')')):
-                            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolExpr" + str(boolExprNum))
+                            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolExpr" + str(originalBoolExprNum))
                             p = p + 1
                             return True
                         else:
@@ -456,7 +458,6 @@ def parseBooleanExpr(token):
                     print("Error on line " + str(token[p].lineNum) + ". Expecting '==' or '!=', got " + token[p].character + ".")
                     endParse()
         elif(match(token[p].kind, 'boolval')):
-            cst.add_node("BoolExpr" + str(boolExprNum), boolExprParent)
             cst.add_node("BoolVal" + str(boolValNum), "BoolExpr" + str(boolExprNum))
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolVal" + str(boolValNum))
             p = p + 1
