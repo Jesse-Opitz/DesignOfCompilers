@@ -105,32 +105,22 @@ def parseBlock(token):
     parseBlockFirstSet = ['{']
     if token[p].character in parseBlockFirstSet:
         blockNum = blockNum + 1
+        print('BlockParent =', blockParent)
         cst.add_node("Block" + str(blockNum), blockParent)
-        #if(blockNum > 1):
-            #cst.create_node("Block", "block" + str(blockNum), parent='statement' + str(stmtNum))
-        #else:
-            #cst.create_node("Block", "block" + str(blockNum), parent='start')
         if(match(token[p].character, '{')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
             
             brackNum = brackNum + 1 
-            #cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum))
-            #cst.create_node("{", "opBracket" + str(brackNum), parent="bracket" + str(brackNum), data=[token[p].character,token[p].lineNum])
-            #brackCount = brackCount + 1
+
             p = p + 1
             if(parseStatementList(token)):
                 if(match(token[p].character, '}')):
                     
-                    #cst.add_node(str(token[p].lineNum) + token[p].character, "Block")
-                    #brackNum = brackNum + 1
-                    if(brackCount % 2 == 0):
-                        cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
-                    else:
-                        cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum - 1))
-                    #    cst.create_node("Bracket", "bracket" + str(brackNum), parent="block" + str(blockNum - 1))
-                    #brackCount = brackCount + 1
-                    #cst.create_node("}", "clBracket" + str(brackNum), parent="bracket" + str(brackNum), data=[token[p].character,token[p].lineNum])
-                    #brackNum = brackNum + 1
+                    #if(brackCount):
+                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
+                    #else:
+                        #cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum - 1))
+
                     p = p + 1
                     return True
                 else:
@@ -185,22 +175,25 @@ def parseStatement(token):
         if(parsePrintStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
+        print(' IS ---- 1 ')
         if(parseAssignmentStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
+        print(' IS ---- 2 ')
         if(parseVarDecl(token)):
             stmtListNum = stmtListNum + 1
             return True
+        print(' IS ---- 3 ')
         if(parseWhileStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
+        print(' IS ---- 4 ')
         if(parseIfStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
+        print(' IS ---- 5 ')
+        blockParent = "Statement" + str(stmtNum)
         if(parseBlock(token)):
-            print('HERE --------------', blockParent)
-            blockParent = "StatementList" + str(stmtListNum)
-            print('HERE2 --------------', blockParent)
             stmtListNum = stmtListNum + 1
             return True
     else:
@@ -303,6 +296,7 @@ def parseWhileStatement(token):
     global p
     global whileNum
     global boolExprParent
+    global blockparent
     
     print('parse WS', token[p].kind, token[p].character)
     
@@ -315,6 +309,7 @@ def parseWhileStatement(token):
             p = p + 1
             boolExprParent = "WhileStmt" + str(whileNum)
             if(parseBooleanExpr(token)):
+                blockParent = "WhileStmt" + str(whileNum)
                 if(parseBlock(token)):
                     return True
         else:
@@ -339,6 +334,7 @@ def parseIfStatement(token):
             p = p + 1
             boolExprParent = "ifStmt" + str(ifStmtNum)
             if(parseBooleanExpr(token)):
+                blockParent = "ifStmt" + str(ifStmtNum)
                 if(parseBlock(token)):
                     return True
         else:
