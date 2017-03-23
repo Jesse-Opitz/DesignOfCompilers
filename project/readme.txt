@@ -31,6 +31,12 @@ tree.py and node.py credits go to Brett Kromkamp
 Website:
 http://www.quesucede.com/page/show/id/python-3-tree-implementation#tree-class
 
+***How to Run Compiler:
+For now, type into terminal or cmd line:
+
+python parser.py
+
+
 ***Not yet implemented:
 
 python parser.py testCode.txt

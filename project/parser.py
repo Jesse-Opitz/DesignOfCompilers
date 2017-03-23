@@ -79,14 +79,11 @@ def match(token, expected):
 def parseStart(token):
     global cst
     global blockParent
-    #cst.create_node("Start", "start") # root node
     cst.add_node("Start") # root node
     blockParent = 'Start'
     # Parse for Block
     if(parseBlock(token)):
         if (match(token[p].kind, 'endProgram')):
-            #cst.create_node("EOP", "EOP", parent="block1")
-            #cst.create_node("$", "endProgram", parent="EOP")
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Start")
             print("Parse Complete!")
             
@@ -108,23 +105,16 @@ def parseBlock(token):
     parseBlockFirstSet = ['{']
     if token[p].character in parseBlockFirstSet:
         blockNum = blockNum + 1
-        print('BlockParent =', blockParent)
+        #print('BlockParent =', blockParent)
         cst.add_node("Block" + str(blockNum), blockParent)
         if(match(token[p].character, '{')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
-            
             brackNum = brackNum + 1 
-
             p = p + 1
             if(parseStatementList(token)):
-                if(match(token[p].character, '}')):
-                    
-                    #if(brackCount > brackCount/2):
+                if(match(token[p].character, '}')):                    
                     cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(maxBlock))
                     maxBlock = maxBlock - 1
-                    #else:
-                    #    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(maxBlock))
-
                     p = p + 1
                     return True
                 else:
@@ -179,23 +169,23 @@ def parseStatement(token):
         if(parsePrintStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
-        print(' IS ---- 1 ')
+        #print(' IS ---- 1 ')
         if(parseAssignmentStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
-        print(' IS ---- 2 ')
+        #print(' IS ---- 2 ')
         if(parseVarDecl(token)):
             stmtListNum = stmtListNum + 1
             return True
-        print(' IS ---- 3 ')
+        #print(' IS ---- 3 ')
         if(parseWhileStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
-        print(' IS ---- 4 ')
+        #print(' IS ---- 4 ')
         if(parseIfStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
-        print(' IS ---- 5 ')
+        #print(' IS ---- 5 ')
         blockParent = "Statement" + str(stmtNum)
         if(parseBlock(token)):
             stmtListNum = stmtListNum + 1
@@ -219,11 +209,7 @@ def parsePrintStatement(token):
     printStatementFirstSet = ['print']
     if token[p].character in printStatementFirstSet:
         cst.add_node("PrintStmt" + str(printStmtNum), "Statement" + str(stmtNum))
-        #printStmtNum = printStmtNum + 1
-        #cst.create_node("printStatement", "printStatement" + str(printStmtNum), parent='statement' + str(stmtNum))
         if(match(token[p].character, 'print')):
-            #keywordNum = keywordNum + 1
-            #cst.create_node("print", "keyword" + str(keywordNum), parent='printStatement' + str(printStmtNum))
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
             p = p + 1
             if(match(token[p].character, '(')):
@@ -234,8 +220,6 @@ def parsePrintStatement(token):
                     if(match(token[p].character, ')')):
                         cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
                         printStmtNum = printStmtNum + 1
-                        #keywordNum = keywordNum + 1
-                        #printNum = printNum + 1
                         p = p + 1
                         return True
                     else:
