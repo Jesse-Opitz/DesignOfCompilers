@@ -30,6 +30,9 @@ class Tree:
         if depth == _ROOT:
             print("{0}".format(identifier))
         else:
+            #Altered print statement from:
+            # print("\t"*depth, "{0}".format(identifier))
+            # to current print statement
             print("--|"*depth, "{0}".format(identifier))
 
         depth += 1

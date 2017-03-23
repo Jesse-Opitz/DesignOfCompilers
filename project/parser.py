@@ -38,6 +38,8 @@ keywordNum = 0
 
 brackCount = 0
 
+maxBlock = 0
+
 blockParent = ''
 exprParent = ''
 idParent = ''
@@ -99,7 +101,8 @@ def parseBlock(token):
     global blockNum
     global blockParent
     global brackCount
-
+    global maxBlock
+    maxBlock = maxBlock + 1
     
     print('parse block', token[p].kind, token[p].character)
     parseBlockFirstSet = ['{']
@@ -116,10 +119,11 @@ def parseBlock(token):
             if(parseStatementList(token)):
                 if(match(token[p].character, '}')):
                     
-                    #if(brackCount):
-                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
+                    #if(brackCount > brackCount/2):
+                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(maxBlock))
+                    maxBlock = maxBlock - 1
                     #else:
-                        #cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum - 1))
+                    #    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(maxBlock))
 
                     p = p + 1
                     return True
