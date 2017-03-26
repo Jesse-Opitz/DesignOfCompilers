@@ -27,7 +27,8 @@ ifStmtNum = 0
 intExprNum = 0
 digitNum = 0
 intopNum = 0
-strExprNum = 0
+# Changed after grading: strExprNum to stringExprNum
+stringExprNum = 0
 idNum = 0
 quoteNum = 0
 charListNum = 0
@@ -212,6 +213,7 @@ def parsePrintStatement(token):
     
     printStatementFirstSet = ['print']
     if token[p].character in printStatementFirstSet:
+        printStmtNum = printStmtNum + 1
         cst.add_node("PrintStmt" + str(printStmtNum), "Statement" + str(stmtNum))
         if(match(token[p].character, 'print')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
@@ -223,7 +225,6 @@ def parsePrintStatement(token):
                 if(parseExpr(token)):
                     if(match(token[p].character, ')')):
                         cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
-                        printStmtNum = printStmtNum + 1
                         p = p + 1
                         return True
                     else:
@@ -245,12 +246,13 @@ def parseAssignmentStatement(token):
     print('Parser --> Assignment Statement', token[p].kind, token[p].character)
     printStatementFirstSet = ['char']
     if token[p].kind in printStatementFirstSet:
-        idParent = "AssignmentStmt" + str(assignNum)
         assignNum = assignNum + 1
-        cst.add_node("AssignmentStmt" + str(assignNum), "PrintStmt" + str(printStmtNum))
+        # Changed assignment parent to statement
+        cst.add_node("AssignmentStmt" + str(assignNum), "Statement" + str(stmtNum))
+        idParent = "AssignmentStmt" + str(assignNum)
         if(parseId(token)):
             if(match(token[p].character, '=')):
-                cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
+                cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "AssignmentStmt" + str(assignNum))
                 p = p + 1
                 exprParent = "AssignmentStmt" + str(assignNum)
                 if(parseExpr(token)):
@@ -374,6 +376,8 @@ def parseIntExpr(token):
     
     intExprFirstSet = ['digit']
     if(token[p].kind in intExprFirstSet):
+        # Added intExprNum = intExprNum + 1
+        intExprNum = intExprNum + 1
         cst.add_node("IntExpr" + str(intExprNum),"Expr" + str(exprNum))
         if(match(token[p].kind, 'digit')):
             cst.add_node(str(token[p].lineNum)+ ',' + token[p].character, "IntExpr" + str(intExprNum))
@@ -397,18 +401,25 @@ def parseIntExpr(token):
 def parseStringExpr(token):
     global cst
     global p
+    # Changed after grading:
+    # Add 1 to stringExprNum
+    global stringExprNum
 
     print('Parser --> String Expr', token[p].kind, token[p].character)
 
     strExprFirstSet = ['"']
     if(token[p].character in strExprFirstSet):
-        cst.add_node("stringExpr" + str(strExprNum), "Expr" + str(exprNum))
+        # Change: Add 1 here
+        stringExprNum = stringExprNum + 1
+        # cst.add_node("stringExpr" + str(strExprNum), "Expr" + str(exprNum))
+        # Changed to cst.add_node("stringExpr" + str(stringExprNum), "Expr" + str(exprNum))
+        cst.add_node("stringExpr" + str(stringExprNum), "Expr" + str(exprNum))
         if(match(token[p].character, '"')):
-            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "stringExpr" + str(strExprNum))
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "stringExpr" + str(stringExprNum))
             p = p + 1
             if(parseCharList(token)):
                 if(match(token[p].character, '"')):
-                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "stringExpr" + str(strExprNum))
+                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "stringExpr" + str(stringExprNum))
                     p = p + 1
                     return True
                 else:
@@ -498,10 +509,8 @@ def parseCharList(token):
     charListFirstSet = ['char']
     if(token[p].kind in charListFirstSet):
         charListNum = charListNum + 1
-        cst.add_node("CharList" + str(charListNum), "StringExpr" + str(strExprNum))
-        charParent = "CharList" + str(charListNum
-
-                                      )
+        cst.add_node("CharList" + str(charListNum), "stringExpr" + str(stringExprNum))
+        charParent = "CharList" + str(charListNum)
         if(match(token[p].kind, 'char')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "CharList" + str(charListNum))
             p = p + 1
@@ -537,7 +546,8 @@ def parseIntOp(token):
     print('Parser --> Int Op', token[p].kind, token[p].character)
     
     if(match(token[p].kind, 'operator')):
-        cst.add_node(str(token[p].lineNum) + ',' + token[p].character, 'intExpr' + str(intExprNum))
+        # Changed: lower case I in intExpr to IntExpr
+        cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "IntExpr" + str(intExprNum))
         p = p + 1
         return True
     elif(token[p].kind is 'assign'):
