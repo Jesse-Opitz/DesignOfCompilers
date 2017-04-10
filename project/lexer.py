@@ -5,8 +5,8 @@ tokens = []
 
 def main():
     
-    file = input('Which file would you like to compile?');
-    #file = 'codeHere.txt'
+    #file = input('Which file would you like to compile?');
+    file = 'codeHere.txt'
     #Fix checkChars
     errors = []
     e = 0

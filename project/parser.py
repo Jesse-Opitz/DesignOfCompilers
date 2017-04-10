@@ -1,4 +1,5 @@
 # This will be the Parser for Design of Compilers
+
 import os
 import sys
 from lexer import token
@@ -36,7 +37,6 @@ boolOpNum = 0
 boolValNum = 0
 charNum = 0
 keywordNum = 0
-boolOpNum = 0
 
 brackCount = 0
 
@@ -94,6 +94,7 @@ def parseStart(token):
         else:
             print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
             endParse()
+
 # Block Parse: { StatementList }
 def parseBlock(token):
     global p
