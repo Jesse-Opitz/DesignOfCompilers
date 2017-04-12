@@ -1,8 +1,14 @@
 {
     int a
-    a = 0
+
+    a = 1
+
+    print(a)
+
     {
-      string a
-      a = "hello"
+        string b
     }
+    int c
+    int d
+    boolean e
 }$

@@ -9,7 +9,7 @@ p = 0
 # Pointer for scope
 #scope = -1
 
-# Numbers to keep names different
+# Numbers to keep unique names
 blockNum = -1
 brackNum = -1
 stmtListNum = -1
@@ -32,6 +32,7 @@ valNum = -1
 
 # Control Parents
 blockParent = "Root"
+exprParent = ""
 
 def main():
     global ast
@@ -54,7 +55,8 @@ def main():
 
 # Match tokens and prints out if there's a match
 def match(currTok, projectedTok):
-    if(currTok is projectedTok):
+    if(currTok is projectedTok or currTok == projectedTok):
+        print("Matched --> " + currTok)
         return True
     return False
 
@@ -67,11 +69,14 @@ def createAST():
 
     # Create root node
     ast.add_node('Root')
+
+    # Logic for block
     if match(tokens[p].character, '{'):
-        p = p + 1
         createBlock()
+        #createStatementList()
         if match(tokens[p].character, '}'):
             #scope = scope - 1
+            p = p + 1
             if match(tokens[p].character,'$'):
                 ast.add_node(tokens[p].character, 'Root')
             else:
@@ -93,15 +98,24 @@ def createBlock():
     # Add a block to the Tree
     print('Added block')
     ast.add_node('Block' + str(blockNum), blockParent)
+    p = p + 1
 
     createStatementList()
 
 
 def createStatementList():
-    firstSet = ('print', 'char', 'type', 'while', 'if', '{')
+    global p
+
+    firstSet = ('keyword', 'char', 'type', 'while', 'if', '{')
+
     print("In StatementList")
+    print('tokens --> ' + tokens[p].character)
+
     if(tokens[p].character in firstSet or tokens[p].kind in firstSet):
         createStatement()
+    else:
+        print(tokens[p].character)
+        print('AST Creation --> AST Complete')
 
 
 def createStatement():
@@ -109,7 +123,7 @@ def createStatement():
     global p
 
     print("In Statement")
-
+    print('tokens --> ' + tokens[p].character)
     # Go to print stmnt
     if match(tokens[p].character, 'print'):
         print('if print')
@@ -144,9 +158,20 @@ def createStatement():
 #-------
 def createPrintStmt():
     global printNum
+    global exprParent
+    global p
+
+    print("in print")
+    print('tokens --> ' + tokens[p].character)
 
     printNum = printNum + 1
     ast.add_node('Print' + str(printNum),'Block' + str(blockNum))
+
+    p = p + 2
+
+    print('tokens --> ' + tokens[p].character)
+    exprParent = 'Print' + str(printNum)
+    createExpr()
 
 #-------
 # When adding char to tree, it is added as <char>,<lineNum>,<uniqueID>
@@ -158,18 +183,22 @@ def createAssignmentStmt():
     global valNum
     global p
 
+    print('in assign')
+
     assignNum = assignNum + 1
     ast.add_node('Assign' + str(assignNum),'Block' + str(blockNum))
-
+    print('tokens --> ' + tokens[p].character)
     charNum = charNum + 1
     ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum)  + ',' + str(charNum) ,'Assign' + str(assignNum))
 
     p = p + 2
-
+    print('tokens --> ' + tokens[p].character)
     valNum = valNum + 1
     ast.add_node(str(tokens[p].character) + ',' + str(tokens[p].lineNum)  + ',' + str(valNum), 'Assign' + str(assignNum))
 
     p = p + 1
+    print('tokens --> ' + tokens[p].character)
+    createStatementList()
 
 #------
 # When adding varDecl to the tree, it is added as varDecl,<uniqueID>
@@ -182,18 +211,23 @@ def createVarDeclStmt():
     global charNum
     global p
 
+    print('in VarDecl')
+
     varDeclNum = varDeclNum + 1
     ast.add_node('varDecl' + ',' + str(varDeclNum), 'Block' + str(blockNum))
-
+    print('tokens --> ' + tokens[p].character)
     typeNum = typeNum + 1
     ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(typeNum), 'varDecl' + ',' + str(varDeclNum))
 
     p = p + 1
 
+    print('tokens --> ' + tokens[p].character)
     charNum = charNum + 1
     ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(charNum), 'varDecl' + ',' + str(varDeclNum))
 
     p = p + 1
+
+    createStatementList()
 
 #------
 def createWhileStmnt():
@@ -202,6 +236,8 @@ def createWhileStmnt():
     whileNum = whileNum + 1
     ast.add_node(tokens[p].character + str(whileNum), 'Block' + str(blockNum))
 
+
+
 #------
 def createIfStmnt():
     global ifStmtNum
@@ -209,5 +245,8 @@ def createIfStmnt():
     ifStmtNum = ifStmtNum + 1
     ast.add_node(tokens[p].character + str(ifStmtNum), 'Block' + str(blockNum))
 
+def createExpr():
+
+    exprFirstSet = ()
 
 main()

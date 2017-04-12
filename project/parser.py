@@ -2,7 +2,6 @@
 
 import os
 import sys
-from lexer import token
 from lexer import tokens
 # Code in tree is NOT mine
 # The website it is from is: http://www.quesucede.com/page/show/id/python-3-tree-implementation#tree-class
