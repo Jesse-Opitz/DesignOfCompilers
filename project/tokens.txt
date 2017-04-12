@@ -6,6 +6,8 @@
 4 digit 1
 5 keyword print
 6 paren (
+6 digit 1
+6 operator +
 6 char a
 6 paren )
 8 bracket {

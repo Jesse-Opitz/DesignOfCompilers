@@ -49,7 +49,7 @@ boolExprParent = ''
 
 cst = Tree()
 
-def main():
+def runParse():
     global cst
     runParse = False
 
@@ -563,4 +563,4 @@ def endParse():
     errorsFile.write('Error in parse')
     sys.exit('Parse Failed')
 
-main()
+runParse()

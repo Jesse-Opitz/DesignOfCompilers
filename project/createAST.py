@@ -74,16 +74,9 @@ def createAST():
     if match(tokens[p].character, '{'):
         createBlock()
         #createStatementList()
-        if match(tokens[p].character, '}'):
-            #scope = scope - 1
-            p = p + 1
-            if match(tokens[p].character,'$'):
-                ast.add_node(tokens[p].character, 'Root')
-            else:
-                blockNum = blockNum - 1
-                createStatementList()
-        else:
-            createStatementList()
+        if match(tokens[p].character,'$'):
+            ast.add_node(tokens[p].character, 'Root')
+
 
 def createBlock():
     #global scope
@@ -102,6 +95,10 @@ def createBlock():
 
     createStatementList()
 
+    # Add 1 to get past end bracket
+    p = p + 1
+
+    blockNum = blockNum - 1
 
 def createStatementList():
     global p
@@ -155,6 +152,12 @@ def createStatement():
         blockParent = "Block" + str(blockNum)
         createBlock()
 
+    createStatementList()
+
+#-------
+# Adds print to the AST as Print<uniqueID>
+# Changes parent of Expr to Print<uniqueID>
+# Adds Expr as child to print
 #-------
 def createPrintStmt():
     global printNum
@@ -167,11 +170,18 @@ def createPrintStmt():
     printNum = printNum + 1
     ast.add_node('Print' + str(printNum),'Block' + str(blockNum))
 
+    # Have to skip over open paren
     p = p + 2
 
     print('tokens --> ' + tokens[p].character)
+
+    # Changes parent of the expr to print
     exprParent = 'Print' + str(printNum)
+
     createExpr()
+
+    # Have to skip over closing paren
+    p = p + 1
 
 #-------
 # When adding char to tree, it is added as <char>,<lineNum>,<uniqueID>
@@ -198,7 +208,7 @@ def createAssignmentStmt():
 
     p = p + 1
     print('tokens --> ' + tokens[p].character)
-    createStatementList()
+    #createStatementList()
 
 #------
 # When adding varDecl to the tree, it is added as varDecl,<uniqueID>
@@ -227,7 +237,7 @@ def createVarDeclStmt():
 
     p = p + 1
 
-    createStatementList()
+    #createStatementList()
 
 #------
 def createWhileStmnt():
@@ -245,8 +255,90 @@ def createIfStmnt():
     ifStmtNum = ifStmtNum + 1
     ast.add_node(tokens[p].character + str(ifStmtNum), 'Block' + str(blockNum))
 
+#------
+# Figures out which expression it should go to
+#------
 def createExpr():
 
-    exprFirstSet = ()
+    print('in Expr')
+    print('tokens --> ' + tokens[p].character)
+
+    #exprFirstSet = ('digit', 'char', '"', '(', 'boolval')
+
+    if(tokens[p].kind == 'digit'):
+        createIntExpr()
+    elif(tokens[p].kind == 'char'):
+        createId()
+    elif(tokens[p].character == '"'):
+        createStringExpr()
+    elif(tokens[p].character == '(' or tokens[p].kind == 'boolval'):
+        createBoolExpr()
+
+#------
+# The only <operator> possible is +, in the AST it is changed to 'Add' to follow the principle that
+# a language should not be shown in the AST.
+#
+# Adds a <digit> <operator> <Expr> under exprParent
+# OR
+# Adds <digit> under exprParent
+#
+# Digit is added as <digit>,<lineNum>,<uniqueID>
+# Operator is added as Add,<lineNum>,<uniqueID>
+# Expr is added using createExpr function
+#------
+def createIntExpr():
+    global p
+    global digitNum
+    global idParent
+
+    print('in intExpr')
+    print('tokens --> ' + tokens[p].character)
+
+    if(tokens[p].kind == 'digit' and tokens[p + 1].kind == 'operator'):
+        # Add the digit to tree under exprParent
+        ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(digitNum), exprParent)
+
+        p = p + 1
+
+        # Add operator to tree under exprParent
+        # -- SINCE WE ONLY HAVE + OPERATOR ONLY HAS TO BE ADD
+        ast.add_node('Add ,' + str(tokens[p].lineNum) + ',' + str(digitNum), exprParent)
+
+        p = p + 1
+
+        # Must go back to Expr
+        createExpr()
+
+    elif(tokens[p].kind == 'digit'):
+        digitNum = digitNum + 1
+        ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(digitNum), exprParent)
+        p = p + 1
+
+#------
+# Adds the char ID under exprParent
+#------
+def createId():
+    global p
+    global charNum
+
+    print('in id')
+    print('tokens --> ' + tokens[p].character)
+
+    charNum = charNum + 1
+    # Add id under it's parent
+    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(charNum), exprParent)
+
+    p = p + 1
+
+#------
+def createStringExpr():
+    print('in string expr')
+    print('tokens --> ' + tokens[p].character)
+
+#------
+def createBoolExpr():
+    print('in bool expr')
+    print('tokens --> ' + tokens[p].character)
+
 
 main()
