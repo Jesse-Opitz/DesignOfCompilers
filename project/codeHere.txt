@@ -1,8 +1,10 @@
 {
     boolean a
     a = true
-    while(a == true){
-        string b
-        b = "hello"
+    {
+        string a
+        a = "hello"
+        print(a)
     }
+    print(a)
 }$

@@ -11,10 +11,7 @@ p = 0
 
 # Numbers to keep unique names
 blockNum = -1
-brackNum = -1
-stmtListNum = -1
 stmtNum = -1
-printStmtNum = -1
 printNum = -1
 parenNum = -1
 assignNum = -1
@@ -24,9 +21,7 @@ exprNum = -1
 whileNum = -1
 boolNum = -1
 ifStmtNum = -1
-intExprNum = -1
 digitNum = -1
-intopNum = -1
 charNum = -1
 valNum = -1
 stringNum = -1
