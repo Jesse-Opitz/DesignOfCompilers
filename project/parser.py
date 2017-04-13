@@ -47,24 +47,32 @@ idParent = ''
 charParent = ''
 boolExprParent = ''
 
+progNum = 0
+
 cst = Tree()
 
-def runParse():
+def runParse(tokens):
     global cst
-    runParse = False
+    canRunParse = False
 
     # Checks if errors file is empty
     # If errors file is empty, lexer had no errors
     if(os.stat("errors.txt").st_size == 0):
-        runParse = True
+        canRunParse = True
 
     # Parse if there are no errors in the lexer
-    if(runParse):
+    if(canRunParse):
         print("\n")
         parseStart(tokens)
         if(os.stat("errors.txt").st_size == 0):
             print("\nCST Below\n")
-            cst.display("Start")
+            i = 0
+
+            while(i <= progNum):
+                cst.display("Program" + str(i))
+                print("\n")
+                i = i + 1
+
     # Do not parse, error in lexer
     else:
         print("Error in lexer, can not run parse.")
@@ -82,13 +90,24 @@ def match(token, expected):
 def parseStart(token):
     global cst
     global blockParent
-    cst.add_node("Start") # root node
-    blockParent = 'Start'
+    global blockNum
+    global progNum
+    global p
+
+    cst.add_node("Program" + str(progNum)) # root node
+    blockParent = 'Program' + str(progNum)
     # Parse for Block
     if(parseBlock(token)):
         if (match(token[p].kind, 'endProgram')):
-            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block1")
-            print("Parser --> Complete")
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
+            print("Parser --> Complete for Program " + str(progNum))
+            try:
+                if(token[p+1].character == '{'):
+                    progNum = progNum + 1
+                    p = p + 1
+                    parseStart(token)
+            except IndexError:
+                pass
             
         else:
             print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
@@ -563,4 +582,5 @@ def endParse():
     errorsFile.write('Error in parse')
     sys.exit('Parse Failed')
 
-runParse()
+runParse(tokens)
+

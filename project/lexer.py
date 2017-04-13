@@ -3,15 +3,15 @@ import re
 
 tokens = []
 
-def main():
+def runLexer(codeFile='codeHere.txt'):
     
     #file = input('Which file would you like to compile?');
-    file = 'codeHere.txt'
+    #file = 'codeHere.txt'
     #Fix checkChars
     errors = []
     e = 0
-    if checkChars(open(file, 'r'), errors):
-        wordList = createList(file)
+    if checkChars(open(codeFile, 'r'), errors):
+        wordList = createList(codeFile)
         #print(str(brokenText))
         writeTokens(wordList, errors)
     #print('Errors: ' + str(errors))
@@ -22,6 +22,7 @@ def main():
         e = e + 1
     errorFile.close()
 
+    return tokens
     #input('Press enter to end lexer and continue to the parser.')
 
 # Creates a list of every character in a file
@@ -187,4 +188,4 @@ class token:
         self.lineNum = lineNum
         #self.position = position
 
-main()
+runLexer()

@@ -1,10 +1,17 @@
 {
     boolean a
-    a = true
+
     {
         string a
-        a = "hello"
-        print(a)
+
     }
     print(a)
+}$
+
+{
+
+    string b
+    b = "hello"
+    print(b)
+
 }$

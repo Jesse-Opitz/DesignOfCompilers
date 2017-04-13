@@ -1,5 +1,6 @@
 # This file will create the SymTree from the tokens
 from tree import *
+from node import *
 import os
 from lexer import tokens
 
@@ -16,7 +17,7 @@ scope = 0
 scopeParent = ""
 
 
-def main():
+def createSymbolTree():
     global SymTree
 
     runCreateSymTree = False
@@ -30,7 +31,7 @@ def main():
     # If there are no errors continue to SymTree creation
     if runCreateSymTree:
         # Start creating the SymTree
-        createSymTree()
+        runSymTree()
 
         # Displays the SymTree after completion
         SymTree.display('SymTree')
@@ -45,7 +46,7 @@ def match(currTok, projectedTok):
 
 
 # Function to begin recursively creating SymTree
-def createSymTree():
+def runSymTree():
     global SymTree
     global scopeParent
     global p
@@ -76,7 +77,7 @@ def createBlock():
         createBlock()
     elif match(tokens[p].kind, 'type') and match(tokens[p + 1].kind, 'char'):
         print('Symbol Tree --> Found varDecl, ' + str(tokens[p].character))
-        SymTree.add_node(tokens[p].character + ',' + tokens[p+1].character, "Scope" + str(scope))
+        SymTree.add_node(tokens[p].character + ',' + tokens[p+1].character + ',' + str(scope), "Scope" + str(scope))
         p = p + 1
         createBlock()
     elif match(tokens[p].character, '}'):
@@ -89,51 +90,4 @@ def createBlock():
         p = p + 1
         createBlock()
 
-'''
-#--------
-def createStatementList():
-
-#--------
-def createStatement():
-
-# -------
-def createPrintStmt():
-
-
-# -------
-def createAssignmentStmt():
-
-
-# ------
-def createVarDeclStmt():
-
-
-# ------
-def createWhileStmnt():
-
-
-# ------
-def createIfStmnt():
-
-
-# ------
-def createExpr():
-
-
-# ------
-def createIntExpr():
-
-
-# ------
-def createId():
-
-
-# ------
-def createStringExpr():
-
-
-# ------
-def createBoolExpr():
-'''
-
-main()
+createSymbolTree()
