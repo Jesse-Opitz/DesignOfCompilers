@@ -29,6 +29,7 @@ digitNum = -1
 intopNum = -1
 charNum = -1
 valNum = -1
+stringExprNum = -1
 
 # Control Parents
 blockParent = "Root"
@@ -76,6 +77,7 @@ def createAST():
         #createStatementList()
         if match(tokens[p].character,'$'):
             ast.add_node(tokens[p].character, 'Root')
+            print('AST Creation --> AST Complete\n')
 
 
 def createBlock():
@@ -110,10 +112,6 @@ def createStatementList():
 
     if(tokens[p].character in firstSet or tokens[p].kind in firstSet):
         createStatement()
-    else:
-        print(tokens[p].character)
-        print('AST Creation --> AST Complete')
-
 
 def createStatement():
     global blockParent
@@ -191,6 +189,7 @@ def createAssignmentStmt():
     global assignNum
     global charNum
     global valNum
+    global exprParent
     global p
 
     print('in assign')
@@ -202,11 +201,19 @@ def createAssignmentStmt():
     ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum)  + ',' + str(charNum) ,'Assign' + str(assignNum))
 
     p = p + 2
-    print('tokens --> ' + tokens[p].character)
-    valNum = valNum + 1
-    ast.add_node(str(tokens[p].character) + ',' + str(tokens[p].lineNum)  + ',' + str(valNum), 'Assign' + str(assignNum))
 
-    p = p + 1
+    exprParent = 'Assign' + str(assignNum)
+
+    # If value is a string
+    if tokens[p].character == '"':
+        createStringExpr()
+    # If value is a digit
+    elif tokens[p].kind == 'digit':
+        print('tokens --> ' + tokens[p].character)
+        valNum = valNum + 1
+        ast.add_node(str(tokens[p].character) + ',' + str(tokens[p].lineNum)  + ',' + str(valNum), 'Assign' + str(assignNum))
+        p = p + 1
+
     print('tokens --> ' + tokens[p].character)
     #createStatementList()
 
@@ -331,8 +338,26 @@ def createId():
     p = p + 1
 
 #------
+# Adds the string expression under exprParent
+#------
 def createStringExpr():
+    global p
+    global stringExprNum
+
     print('in string expr')
+    print('tokens --> ' + tokens[p].character)
+
+    # Skip open quote
+    p = p + 1
+
+    print('tokens --> ' + tokens[p].character)
+    # String goes to parent
+    stringExprNum = stringExprNum + 1
+    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(charNum), exprParent)
+
+    # Skip end quote
+    p = p + 2
+
     print('tokens --> ' + tokens[p].character)
 
 #------
