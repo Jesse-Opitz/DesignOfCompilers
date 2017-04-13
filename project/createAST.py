@@ -22,18 +22,20 @@ varDeclNum = -1
 typeNum = -1
 exprNum = -1
 whileNum = -1
-boolExprNum = -1
+boolNum = -1
 ifStmtNum = -1
 intExprNum = -1
 digitNum = -1
 intopNum = -1
 charNum = -1
 valNum = -1
-stringExprNum = -1
+stringNum = -1
+opNum = -1
 
 # Control Parents
 blockParent = "Root"
 exprParent = ""
+boolParent = ""
 
 def main():
     global ast
@@ -91,7 +93,7 @@ def createBlock():
     blockNum = blockNum + 1
 
     # Add a block to the Tree
-    print('Added block')
+    print('in block')
     ast.add_node('Block' + str(blockNum), blockParent)
     p = p + 1
 
@@ -190,6 +192,7 @@ def createAssignmentStmt():
     global charNum
     global valNum
     global exprParent
+    global boolParent
     global p
 
     print('in assign')
@@ -204,15 +207,19 @@ def createAssignmentStmt():
 
     exprParent = 'Assign' + str(assignNum)
 
+    print('tokens --> ' + tokens[p].character)
+
     # If value is a string
     if tokens[p].character == '"':
         createStringExpr()
     # If value is a digit
     elif tokens[p].kind == 'digit':
-        print('tokens --> ' + tokens[p].character)
         valNum = valNum + 1
         ast.add_node(str(tokens[p].character) + ',' + str(tokens[p].lineNum)  + ',' + str(valNum), 'Assign' + str(assignNum))
         p = p + 1
+    elif tokens[p].kind == 'boolval':
+        boolParent = exprParent
+        createBoolExpr()
 
     print('tokens --> ' + tokens[p].character)
     #createStatementList()
@@ -249,24 +256,60 @@ def createVarDeclStmt():
 #------
 def createWhileStmnt():
     global whileNum
+    global p
+    global blockParent
+    global boolParent
 
+    print('in while')
+    print('tokens --> ' + tokens[p].character)
     whileNum = whileNum + 1
     ast.add_node(tokens[p].character + str(whileNum), 'Block' + str(blockNum))
+
+    blockParent = tokens[p].character + str(whileNum)
+    boolParent = tokens[p].character + str(whileNum)
+
+    p = p + 1
+    print('tokens --> ' + tokens[p].character)
+    createBoolExpr()
+
+    createBlock()
 
 
 
 #------
+# Adds if statement tree under block
+#------
 def createIfStmnt():
     global ifStmtNum
+    global opNum
+    global boolParent
+    global blockParent
+    global p
 
+    print('in if')
+    print('tokens --> ' + tokens[p].character)
+
+    # Add if statement
     ifStmtNum = ifStmtNum + 1
-    ast.add_node(tokens[p].character + str(ifStmtNum), 'Block' + str(blockNum))
+    ast.add_node('if,' + str(tokens[p].lineNum) + ',' + str(ifStmtNum), 'Block' + str(blockNum))
+    boolParent = 'if,' + str(tokens[p].lineNum) + ',' + str(ifStmtNum)
+    blockParent = 'if,' + str(tokens[p].lineNum) + ',' + str(ifStmtNum)
+
+    p = p + 1
+    print('tokens --> ' + tokens[p].character)
+
+    createBoolExpr()
+
+    print('tokens --> ' + tokens[p].character)
+
+
+    createBlock()
 
 #------
 # Figures out which expression it should go to
 #------
 def createExpr():
-
+    global boolParent
     print('in Expr')
     print('tokens --> ' + tokens[p].character)
 
@@ -279,6 +322,7 @@ def createExpr():
     elif(tokens[p].character == '"'):
         createStringExpr()
     elif(tokens[p].character == '(' or tokens[p].kind == 'boolval'):
+        boolParent = exprParent
         createBoolExpr()
 
 #------
@@ -342,7 +386,7 @@ def createId():
 #------
 def createStringExpr():
     global p
-    global stringExprNum
+    global stringNum
 
     print('in string expr')
     print('tokens --> ' + tokens[p].character)
@@ -350,10 +394,10 @@ def createStringExpr():
     # Skip open quote
     p = p + 1
 
+    # String goes to exprParent
     print('tokens --> ' + tokens[p].character)
-    # String goes to parent
-    stringExprNum = stringExprNum + 1
-    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(charNum), exprParent)
+    stringNum = stringNum + 1
+    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(stringNum), exprParent)
 
     # Skip end quote
     p = p + 2
@@ -361,9 +405,59 @@ def createStringExpr():
     print('tokens --> ' + tokens[p].character)
 
 #------
+# Adds a bool expression that is either just <boolval> or (<expr><boolop><expr>)
+#------
 def createBoolExpr():
+    global p
+    global boolNum
+    global opNum
+    global exprParent
+    
     print('in bool expr')
     print('tokens --> ' + tokens[p].character)
+    if match(tokens[p].kind, 'boolval'):
+        boolNum = boolNum + 1
+        ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(boolNum), boolParent)
+        p = p + 1
+    elif match(tokens[p].character, '('):
+        # Skip (
+        p = p + 1
 
+        # Add isEq or isNotEq
+        # isEq is ==
+        # isNotEq is !=
+        print('tokens --> ' + tokens[p].character)
+        opNum = opNum + 1
+        if match(tokens[p + 1].character, '=='):
+            ast.add_node('isEq,' + str(tokens[p + 1].lineNum) + ',' + str(opNum), boolParent)
+            exprParent = 'isEq,' + str(tokens[p + 1].lineNum) + ',' + str(opNum)
+            # First Expr
+            createExpr()
+            p = p + 1
+        elif match(tokens[p + 3].character, '=='):
+            ast.add_node('isEq,' + str(tokens[p + 3].lineNum) + ',' + str(opNum), boolParent)
+            exprParent = 'isEq,' + str(tokens[p + 3].lineNum) + ',' + str(opNum)
+            # First Expr
+            createExpr()
+            p = p + 3
+        elif match(tokens[p + 1].character, '!='):
+            ast.add_node('isNotEq,' + str(tokens[p + 1].lineNum) + ',' + str(opNum), boolParent)
+            exprParent = 'isNotEq,' + str(tokens[p + 1].lineNum) + ',' + str(opNum)
+            # First Expr
+            createExpr()
+            p = p + 1
+        elif match(tokens[p + 3].character, '!='):
+            ast.add_node('isNotEq,' + str(tokens[p + 3].lineNum) + ',' + str(opNum), boolParent)
+            exprParent = 'isNotEq,' + str(tokens[p + 3].lineNum) + ',' + str(opNum)
+            # First Expr
+            createExpr()
+            p = p + 3
+
+        print('tokens --> ' + tokens[p].character)
+        # Add Expr
+        createExpr()
+
+        # Skip )
+        p = p + 1
 
 main()
