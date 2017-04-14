@@ -125,7 +125,7 @@ def createSymTree(tokens):
                     errorFile = open('errors.txt', 'w')
                     errorFile.write('Error while type checking')
                     exit()
-            if(re.search(stringTypePattern, node))and re.search(r'[,]' + str(scope), node):
+            elif(re.search(stringTypePattern, node))and re.search(r'[,]' + str(scope), node):
                 if tokens[p+2].character != '"':
                     if tokens[p+2].kind == 'digit':
                         print('Type Error: Variable "' + tokens[p].character + '" is originally defined as a string in scope ' + str(scope) + ', but is assigned a int on line ' + str(tokens[p].lineNum))
