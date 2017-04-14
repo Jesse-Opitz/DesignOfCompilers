@@ -2,8 +2,16 @@
     boolean a
     string b
     int c
+    a = true
+    b = "here"
+    c = 1
     {
         string a
+        int b
+        a = "no here"
+        print(a)
+        b = 1
+        c = true
     }
-    print(a)
+    print(b)
 }$

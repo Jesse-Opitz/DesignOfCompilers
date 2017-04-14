@@ -16,6 +16,8 @@ scopeParent = ""
 
 progNum = 0
 
+displayTree = False
+
 def createSymbolTree(tokens):
     global SymTree
 
@@ -61,7 +63,7 @@ def runSymTree(tokens):
 
     # Logic for block
     if match(tokens[p].character, '{'):
-        createBlock(tokens)
+        createSymTree(tokens)
         if match(tokens[p].character, '$'):
             print('Symbol Tree --> Symbol Tree Complete\n')
             #try:
@@ -73,7 +75,11 @@ def runSymTree(tokens):
             #    pass
 
 #--------
-def createBlock(tokens):
+# This function is god
+# This function creates a symbol tree, while scope and type checking
+# using tree traversals and regEx and of course dank memes
+#--------
+def createSymTree(tokens):
     global SymTree
     global scope
     global p
@@ -83,7 +89,7 @@ def createBlock(tokens):
         scope = scope + 1
         SymTree.add_node("Scope" + str(scope), scopeParent)
         p = p + 1
-        createBlock(tokens)
+        createSymTree(tokens)
     elif match(tokens[p].kind, 'type') and match(tokens[p + 1].kind, 'char'):
         print('Symbol Tree --> Found varDecl -->' + str(tokens[p].character) + ',' + str(tokens[p+1].character))
 
@@ -93,21 +99,76 @@ def createBlock(tokens):
             #print('Node: ' + node + ' Pattern: ' + pattern)
             if (re.search(charPattern, node, 0) and re.search(scopePattern, node, 0)):
                 print('Scope Error: Variable "', tokens[p+1].character, '" is initialized a second time in the same scope, scope', str(scope), 'on line', tokens[p].lineNum, ':', tokens[p].character, tokens[p+1].character)
+                errorFile = open('errors.txt', 'w')
+                errorFile.write('Error while scope checking')
                 exit()
-
         SymTree.add_node(tokens[p].character + ',' + tokens[p+1].character + ',' + str(scope), "Scope" + str(scope))
         p = p + 1
-        createBlock(tokens)
+        createSymTree(tokens)
+    elif match(tokens[p].kind, 'char') and match(tokens[p+1].kind, 'assign'):
+        boolTypePattern = r'[n][,]' + tokens[p].character + '[,]'
+        stringTypePattern = r'[g][,]' + tokens[p].character + '[,]'
+        intTypePattern = r'[t][,]' + tokens[p].character + '[,]'
+        for node in SymTree.traverse('SymTree' + str(progNum)):
+            if(re.search(boolTypePattern, node))and re.search(r'[,]' + str(scope), node):
+                if tokens[p+2].kind != 'boolval':
+                    if tokens[p+2].character == '"':
+                        print('Type Error: Variable "' + tokens[
+                            p].character + '" is originally defined as a boolean in scope ' + str(
+                            scope) + ', but is assigned a string on line ' + str(
+                            tokens[p].lineNum))
+                    if tokens[p+2].kind == 'digit':
+                        print('Type Error: Variable "' + tokens[
+                            p].character + '" is originally defined as a boolean in scope ' + str(
+                            scope) + ', but is assigned a digit on line ' + str(
+                            tokens[p].lineNum))
+                    errorFile = open('errors.txt', 'w')
+                    errorFile.write('Error while type checking')
+                    exit()
+            if(re.search(stringTypePattern, node))and re.search(r'[,]' + str(scope), node):
+                if tokens[p+2].character != '"':
+                    if tokens[p+2].kind == 'digit':
+                        print('Type Error: Variable "' + tokens[p].character + '" is originally defined as a string in scope ' + str(scope) + ', but is assigned a int on line ' + str(tokens[p].lineNum))
+                    elif tokens[p+2].kind == 'boolval':
+                        print('Type Error: Variable "' + tokens[
+                            p].character + '" is originally defined as a string in scope ' + str(scope) + ', but is assigned a boolval on line ' + str(
+                            tokens[p].lineNum))
+                    errorFile = open('errors.txt', 'w')
+                    errorFile.write('Error while type checking')
+                    exit()
+            elif(re.search(intTypePattern, node))and re.search(r'[,]' + str(scope), node):
+                if tokens[p+2].kind != 'digit':
+                    if tokens[p+2].character == '"':
+                        print('Type Error: Variable "' + tokens[p].character + '" is originally defined as an int in scope ' + str(scope) + ', but is assigned a string on line ' + str(tokens[p].lineNum))
+                    elif tokens[p+2].kind == 'boolval':
+                        print('Type Error: Variable "' + tokens[
+                            p].character + '" is originally defined as an int in scope ' + str(scope) + ', but is assigned a boolval on line ' + str(
+                            tokens[p].lineNum))
+                    errorFile = open('errors.txt', 'w')
+                    errorFile.write('Error while type checking')
+                    exit()
+        if match(tokens[p+2].character, '"'):
+            print('Symbol Tree --> Found assign --> ', tokens[p].character)
+            i = p + 3
+            while not match(tokens[i].character, '"'):
+                print('Symbol Tree --> assigned string:', tokens[i].character)
+                i = i + 1
+            p = i
+
+        else:
+            print('Symbol Tree --> Found assign --> ', tokens[p].character, tokens[p+2].character)
+        p = p + 1
+        createSymTree(tokens)
     elif match(tokens[p].character, '}'):
         print('Symbol Tree --> End Scope Token --> ' + str(tokens[p].character))
         scope = scope - 1
         p = p + 1
-        createBlock(tokens)
+        createSymTree(tokens)
     elif match(tokens[p].character, '$'):
         print('Symbol Tree --> End Symbol Tree creation')
     else:
         print('Symbol Tree --> Ignored Token --> ' + str(tokens[p].character))
         p = p + 1
-        createBlock(tokens)
+        createSymTree(tokens)
 
 #createSymbolTree(tokens)
