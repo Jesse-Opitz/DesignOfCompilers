@@ -2,7 +2,7 @@
 from tree import *
 from node import *
 import os
-from lexer import tokens
+#from lexer import tokens
 
 # Pointer for tokens
 p = 0
@@ -16,8 +16,9 @@ scope = 0
 # Control Parents
 scopeParent = ""
 
+progNum = 0
 
-def createSymbolTree():
+def createSymbolTree(tokens):
     global SymTree
 
     runCreateSymTree = False
@@ -31,7 +32,7 @@ def createSymbolTree():
     # If there are no errors continue to SymTree creation
     if runCreateSymTree:
         # Start creating the SymTree
-        runSymTree()
+        runSymTree(tokens)
 
         # Displays the SymTree after completion
         SymTree.display('SymTree')
@@ -46,48 +47,52 @@ def match(currTok, projectedTok):
 
 
 # Function to begin recursively creating SymTree
-def runSymTree():
+def runSymTree(tokens):
     global SymTree
     global scopeParent
     global p
+    global progNum
 
     # Create SymTree node
-    SymTree.add_node('SymTree')
+    SymTree.add_node('SymTree' + progNum)
 
-    scopeParent = 'SymTree'
+    scopeParent = 'SymTree' + progNum
 
     # Logic for block
     if match(tokens[p].character, '{'):
-        createBlock()
-        # createStatementList()
+        createBlock(tokens)
+        print('here', tokens[p].character)
         if match(tokens[p].character, '$'):
             print('SymTree Creation --> SymTree Complete\n')
 
+
 #--------
-def createBlock():
+def createBlock(tokens):
     global SymTree
     global scope
     global p
 
     if match(tokens[p].character, '{'):
-        print('Symbol Tree --> Token >> ' + str(tokens[p].character))
+        print('Symbol Tree --> New Scope Token >> ' + str(tokens[p].character))
         scope = scope + 1
         SymTree.add_node("Scope" + str(scope), scopeParent)
         p = p + 1
-        createBlock()
+        createBlock(tokens)
     elif match(tokens[p].kind, 'type') and match(tokens[p + 1].kind, 'char'):
-        print('Symbol Tree --> Found varDecl, ' + str(tokens[p].character))
+        print('Symbol Tree --> Found varDecl -->' + str(tokens[p].character))
         SymTree.add_node(tokens[p].character + ',' + tokens[p+1].character + ',' + str(scope), "Scope" + str(scope))
         p = p + 1
-        createBlock()
+        createBlock(tokens)
     elif match(tokens[p].character, '}'):
+        print('Symbol Tree --> End Scope Token >> ' + str(tokens[p].character))
         scope = scope - 1
         p = p + 1
+        createBlock(tokens)
     elif match(tokens[p].character, '$'):
         print('Symbol Tree --> End Symbol Tree creation')
     else:
-        print('Symbol Tree --> Token >> ' + str(tokens[p].character))
+        print('Symbol Tree --> Ignored Token --> ' + str(tokens[p].character))
         p = p + 1
-        createBlock()
+        createBlock(tokens)
 
-createSymbolTree()
+#createSymbolTree(tokens)

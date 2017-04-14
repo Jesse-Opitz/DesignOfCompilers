@@ -51,9 +51,13 @@ def createAST(tokens):
     if runCreateAST:
         # Start creating the AST
         startCreateAST(tokens)
-
+        i = 0
+        print('\nAST Below\n')
         # Displays the AST after completion
-        ast.display('Program' + str(progNum))
+        #while (i <= progNum):
+        ast.display("Program" + str(i))
+        #    print("\n")
+        #    i = i + 1
 
 # Match tokens and prints out if there's a match
 def match(currTok, projectedTok):
@@ -81,13 +85,16 @@ def startCreateAST(tokens):
         #createStatementList()
         if match(tokens[p].character,'$'):
             ast.add_node(tokens[p].character, 'Program' + str(progNum))
-            print('AST Creation --> AST Complete\n')
-            p = p + 1
-            #if match(tokens[p].character, '{'):
-                #print('HERE ----------------', p)
-                #progNum = progNum + 1
-                #startCreateAST(tokens)
-
+            print('AST Creation --> AST Complete')
+            #-- I am not sure why this breaks block -- for now can not create AST for multiple programs, only the first one
+            '''try:
+                if(tokens[p+1].character == '{'):
+                    progNum = progNum + 1
+                    p = p + 1
+                    print(tokens[p].character)
+                    startCreateAST(tokens)
+            except IndexError:
+                pass'''
 
 def createBlock(tokens):
     #global scope

@@ -3,15 +3,10 @@
 
     {
         string a
-
     }
     print(a)
 }$
-
 {
-
-    string b
-    b = "hello"
-    print(b)
-
+    int b
+    b = 2
 }$

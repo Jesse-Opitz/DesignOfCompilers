@@ -90,7 +90,6 @@ def match(token, expected):
 def parseStart(token):
     global cst
     global blockParent
-    global blockNum
     global progNum
     global p
 
@@ -99,16 +98,16 @@ def parseStart(token):
     # Parse for Block
     if(parseBlock(token)):
         if (match(token[p].kind, 'endProgram')):
-            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
-            print("Parser --> Complete for Program " + str(progNum))
+            print(token[p].character)
+            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Program" + str(progNum))
+            print("Parser --> Program " + str(progNum) + " parse complete")
             try:
-                if(token[p+1].character == '{'):
-                    progNum = progNum + 1
+                if token[p+1].character == '{':
                     p = p + 1
+                    progNum = progNum + 1
                     parseStart(token)
             except IndexError:
                 pass
-            
         else:
             print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
             endParse()
@@ -137,8 +136,8 @@ def parseBlock(token):
             p = p + 1
             if(parseStatementList(token)):
                 if(match(token[p].character, '}')):                    
-                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(maxBlock))
-                    maxBlock = maxBlock - 1
+                    cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
+                    blockNum = blockNum - 1
                     p = p + 1
                     return True
                 else:
