@@ -408,13 +408,24 @@ def createStringExpr(tokens):
     # Skip open quote
     p = p + 1
 
+    stringList = []
+
     # String goes to exprParent
-    print('AST Creation --> Token --> ' + tokens[p].character)
-    stringNum = stringNum + 1
-    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(stringNum), exprParent)
+    while(tokens[p].character != '"'):
+        print('AST Creation --> Token --> ' + tokens[p].character)
+        stringNum = stringNum + 1
+        stringList.append(tokens[p].character)
+        p = p + 1
+
+    stringCombine = ''
+    for x in stringList:
+        stringCombine = stringCombine + x
+
+    print('AST Creation --> Token --> ' + stringCombine)
+    ast.add_node(stringCombine + ',' + str(tokens[p].lineNum) + ',' + str(stringNum), exprParent)
 
     # Skip end quote
-    p = p + 2
+    p = p + 1
 
     print('AST Creation --> Token --> ' + tokens[p].character)
 

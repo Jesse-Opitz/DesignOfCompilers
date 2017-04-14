@@ -20,8 +20,9 @@ def endAll():
 
 # ---Start Semantic Analysis---
 #if(os.stat("errors.txt").st_size == 0):
-    #print("\nAST Creation\n")
-    #createAST(tokens)
+#    print("\nAST Creation\n")
+#    createAST(tokens)
+
 if(os.stat("errors.txt").st_size == 0):
     print("\nSymbol Tree and Table Creation\n")
     createSymbolTree(tokens)

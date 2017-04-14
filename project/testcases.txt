@@ -1,5 +1,5 @@
 # Shouldn't work
---Issue with c = true
+--Issue with c = true, c is an int
 {
     boolean a
     string b
@@ -18,7 +18,7 @@
     print(b)
 }$
 
---Issue with b = "hello"
+--Issue with b = "hello", b is an int
 {
     boolean a
     string b
@@ -34,4 +34,45 @@
         b = "hello"
     }
     print(b)
+}$
+
+--Issue with a = "hey there", a is a boolean
+{
+    boolean a
+    string b
+    int c
+    a = true
+    b = "here"
+    c = 1
+    if(c == 1){
+        int b
+        a = "hey there"
+        print(a)
+        b = 1
+    }
+    print(b)
+}$
+
+# Should Work
+{
+    boolean a
+    string b
+    int c
+    a = true
+    b = "here"
+    c = 1
+    if(c == 1){
+        string a
+        int b
+        a = "no here"
+        print(a)
+        b = 1
+    }
+    print(b)
+}$
+
+{
+    string q
+    q = "hello is it me youre looking for"
+    print(q)
 }$
