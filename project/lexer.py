@@ -80,7 +80,7 @@ def writeTokens(wordList, errors):
     operatorPattern = r'[+]'
     eopPattern = r'[$]'
     quotePattern = r'["]'
-    nonTokenBlankSpacePattern = r'[\n]|[\t]|[ ]'
+    nonTokenBlankSpacePattern = r'[\t]|[ ]'
     invalStrBlanks = r'[\n]|[\t]'
     
     line = 0
@@ -108,35 +108,37 @@ def writeTokens(wordList, errors):
                     errorLine = 'Error: Unexpected syntax ' + str(uncheckedWord) + ' at line ' + str(line)
                     errors.append(errorLine)
             elif re.match(charPattern, uncheckedWord, 0)  and quoteCount % 2 == 0:
-                newTok = token('char', uncheckedWord, line + 1)
+                newTok = token('char', uncheckedWord, line)
                 tokens.append(newTok)
             elif re.match(numPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
-                newTok = token('digit', uncheckedWord, line + 1)
+                newTok = token('digit', uncheckedWord, line)
                 tokens.append(newTok)
             elif re.match(comparePattern, uncheckedWord, 0) and quoteCount % 2 == 0:
-                newTok = token('compare', uncheckedWord, line + 1)
+                newTok = token('compare', uncheckedWord, line)
                 tokens.append(newTok)
             elif re.match(assignPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
-                newTok = token('assign', uncheckedWord, line + 1)
+                newTok = token('assign', uncheckedWord, line)
                 tokens.append(newTok)
             elif re.match(bracketPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
-                newTok = token('bracket', uncheckedWord, line + 1)
+                newTok = token('bracket', uncheckedWord, line)
                 tokens.append(newTok)
             elif re.match(parenPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
-                newTok = token('paren', uncheckedWord, line + 1)
+                newTok = token('paren', uncheckedWord, line)
                 tokens.append(newTok)
             elif re.match(operatorPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
-                newTok = token('operator', uncheckedWord, line + 1)
+                newTok = token('operator', uncheckedWord, line)
                 tokens.append(newTok)
             elif re.match(quotePattern, uncheckedWord, 0):
                 quoteCount = quoteCount + 1
-                newTok = token('quote', uncheckedWord, line + 1)
+                newTok = token('quote', uncheckedWord, line)
                 tokens.append(newTok)
             elif re.match(eopPattern, uncheckedWord, 0) and quoteCount % 2 == 0:
-                newTok = token('endProgram', uncheckedWord, (line + 1))
+                newTok = token('endProgram', uncheckedWord, (line))
                 tokens.append(newTok)
             elif re.match(nonTokenBlankSpacePattern, uncheckedWord, 0) and quoteCount % 2 == 0:
                 continue
+            elif re.match('\n', uncheckedWord, 0):
+                lineNum = lineNum + 1
             elif quoteCount % 2 == 1:
                 #print(uncheckedWord)
                 #print('first c is ' + c)

@@ -1,14 +1,12 @@
 # This file will create the SymTree from the tokens
 from tree import *
+import re
 from node import *
 import os
 #from lexer import tokens
 
 # Pointer for tokens
 p = 0
-
-# Numbers to keep unique names
-
 
 # Scope number
 scope = 0
@@ -35,7 +33,10 @@ def createSymbolTree(tokens):
         runSymTree(tokens)
 
         # Displays the SymTree after completion
-        SymTree.display('SymTree')
+        i = 0
+        while(i <= progNum):
+            SymTree.display('SymTree' + str(i))
+            i = i + 1
 
 
 # Match tokens and prints out if there's a match
@@ -54,17 +55,22 @@ def runSymTree(tokens):
     global progNum
 
     # Create SymTree node
-    SymTree.add_node('SymTree' + progNum)
+    SymTree.add_node('SymTree' + str(progNum))
 
-    scopeParent = 'SymTree' + progNum
+    scopeParent = 'SymTree' + str(progNum)
 
     # Logic for block
     if match(tokens[p].character, '{'):
         createBlock(tokens)
-        print('here', tokens[p].character)
         if match(tokens[p].character, '$'):
-            print('SymTree Creation --> SymTree Complete\n')
-
+            print('Symbol Tree --> Symbol Tree Complete\n')
+            #try:
+            #    if tokens[p + 1].character == '{':
+            #        p = p + 1
+            #        progNum = progNum + 1
+            #        runSymTree(tokens)
+            #except IndexError:
+            #    pass
 
 #--------
 def createBlock(tokens):
@@ -79,12 +85,21 @@ def createBlock(tokens):
         p = p + 1
         createBlock(tokens)
     elif match(tokens[p].kind, 'type') and match(tokens[p + 1].kind, 'char'):
-        print('Symbol Tree --> Found varDecl -->' + str(tokens[p].character))
+        print('Symbol Tree --> Found varDecl -->' + str(tokens[p].character) + ',' + str(tokens[p+1].character))
+
+        for node in SymTree.traverse('SymTree' + str(progNum)):
+            charPattern = r'[,][' + tokens[p+1].character + '][,]'
+            scopePattern = r'[,]' + str(scope)
+            #print('Node: ' + node + ' Pattern: ' + pattern)
+            if (re.search(charPattern, node, 0) and re.search(scopePattern, node, 0)):
+                print('Scope Error: Variable "', tokens[p+1].character, '" is initialized a second time in the same scope, scope', str(scope), 'on line', tokens[p].lineNum, ':', tokens[p].character, tokens[p+1].character)
+                exit()
+
         SymTree.add_node(tokens[p].character + ',' + tokens[p+1].character + ',' + str(scope), "Scope" + str(scope))
         p = p + 1
         createBlock(tokens)
     elif match(tokens[p].character, '}'):
-        print('Symbol Tree --> End Scope Token >> ' + str(tokens[p].character))
+        print('Symbol Tree --> End Scope Token --> ' + str(tokens[p].character))
         scope = scope - 1
         p = p + 1
         createBlock(tokens)

@@ -1,12 +1,9 @@
 {
     boolean a
-
+    string b
+    int c
     {
         string a
     }
     print(a)
-}$
-{
-    int b
-    b = 2
 }$
