@@ -1,4 +1,4 @@
-# Shouldn't work
+# -----------------------Shouldn't work-----------------------
 --Issue with c = true, c is an int
 {
     boolean a
@@ -16,6 +16,18 @@
         c = true
     }
     print(b)
+}$
+
+--Issue with comparing bool to a string
+{
+    boolean b
+    {
+        string b
+        if(true == b){
+            print(b)
+        }
+    }
+
 }$
 
 --Issue with b = "hello", b is an int
@@ -61,7 +73,22 @@
     }
 }$
 
-# Should Work
+--Issue comparing int and string variables
+{
+    {
+        int b
+        string a
+        if(b == a){
+            print(b)
+        }
+    }
+
+}$
+
+
+
+
+# -----------------------Should Work-----------------------
 {
     boolean a
     string b
@@ -91,4 +118,61 @@
     if("hi" == b){
         print(b)
     }
+}$
+
+{
+    boolean b
+    {
+        string b
+    }
+
+    if(true == b){
+        print(b)
+    }
+
+}$
+
+{
+    int b
+    {
+        string b
+        if("hell" == b){
+            print(b)
+        }
+    }
+
+}$
+
+{
+    {
+        int b
+        int a
+        if(b == a){
+            print(b)
+        }
+    }
+
+}$
+
+{
+    int b
+    int a
+    {
+        if(b == a){
+            print(b)
+        }
+    }
+
+}$
+
+{
+    int a
+    {
+        int b
+
+        if(a == b){
+            print(b)
+        }
+    }
+
 }$

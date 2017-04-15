@@ -215,7 +215,7 @@ def createSymTree(tokens):
                             errorFile = open('errors.txt', 'w')
                             errorFile.write('Error while type checking')
                             exit()
-                    elif re.search('[,][' + tokens[p].character + '][,]', node) and inSameScope:
+                    elif re.search('[,][' + tokens[p].character + '][,][' + str(scope) + ']', node):
                         print('Type Error: Type mismatch on line: ' + str(tokens[p].lineNum) + ', variable "' +
                               tokens[p].character + '" can not compare to an int! "' + tokens[
                                   p].character + '" is a ' + node)
@@ -233,6 +233,7 @@ def createSymTree(tokens):
             while(tokens[p].character != '"'):
                 p = p + 1
 
+            print('Symbol Tree --> Compare Strings --> ' + str(tokens[p].character))
             # Skip end "
             p = p + 1
             print('Symbol Tree --> Compare Strings --> ' + str(tokens[p].character))
@@ -291,15 +292,250 @@ def createSymTree(tokens):
                             errorFile = open('errors.txt', 'w')
                             errorFile.write('Error while type checking')
                             exit()
-                    elif re.search('[,][' + tokens[p].character + '][,]', node) and inSameScope:
+                    elif re.search('[,][' + tokens[p].character + '][,][' + str(scope) + ']', node):
                         print('Type Error: Type mismatch on line: ' + str(tokens[p].lineNum) + ', variable "' +
                               tokens[p].character + '" can not compare to a string! "' + tokens[
                                   p].character + '" is a ' + node)
                         errorFile = open('errors.txt', 'w')
                         errorFile.write('Error while type checking')
                         exit()
+        # Comparing boolval to Expr
+        elif(match(tokens[p].kind, 'boolval')):
+            #print('here')
+            print('Symbol Tree --> Compare Booleans --> ' + tokens[p].character)
+
+            # Skip boolval
+            p = p + 1
+            print('Symbol Tree --> Compare Booleans --> ' + str(tokens[p].character))
+
+            # Skip the compare operator
+            p = p + 1
+            #print('Token:' + tokens[p].character)
+            if(match(tokens[p].kind, 'boolval')):
+                print('Symbol Tree --> Compare Booleans --> ' + str(tokens[p].character))
+
+                p = p + 1
+
+                print('Symbol Tree --> Compare Booleans --> ' + str(tokens[p].character))
+                print('Symbol Tree --> Types match!')
+                # Skip end )
+                p = p + 1
+            elif(match(tokens[p].kind, 'char')):
+                print('Symbol Tree --> Compare Booleans --> ' + str(tokens[p].character))
+                print('Symbol Tree --> Checking variable type...')
+                inSameScope = False
+                for node in SymTree.traverse('SymTree' + str(progNum)):
+                    #print(node)
+                    if tokens[p].character + ',' + str(scope) in node:
+                        inSameScope = True
+                for node in SymTree.traverse('SymTree' + str(progNum)):
+                    #print(node)
+                    #print(tokens[p].character + ',' + str(scope))
+
+                    # IF id is in same scope and is correct kind
+                    if match('boolean,' + tokens[p].character + ',' + str(scope), node):
+                        print('Symbol Tree --> Types match! Found ' + node + '!')
+                        # skip over id and )
+                        p = p + 2
+                        break
+                    # IF id is NOT in same scope, but is in a parent scope and correct kind
+                    elif re.search('[,][' + tokens[p].character + '][,]', node) and not inSameScope:
+                        if re.search('[b][o][o][l][e][a][n][,]', node):
+                            print('Symbol Tree --> Types match!')
+                            # skip over id and )
+                            p = p + 2
+                            break
+                        else:
+                            print('Type Error: Type mismatch on line: ' + str(tokens[p].lineNum) + ', variable "' +
+                                  tokens[p].character + '" can not compare to a boolean! "' + tokens[
+                                      p].character + '" is a ' + node)
+                            errorFile = open('errors.txt', 'w')
+                            errorFile.write('Error while type checking')
+                            exit()
+                    elif re.search('[,][' + tokens[p].character + '][,][' + str(scope) + ']', node):
+                        print('Type Error: Type mismatch on line: ' + str(tokens[p].lineNum) + ', variable "' +
+                              tokens[p].character + '" can not compare to a boolean! "' + tokens[
+                                  p].character + '" is a ' + node)
+                        errorFile = open('errors.txt', 'w')
+                        errorFile.write('Error while type checking')
+                        exit()
+        # Comparing id to id/Expr
+        elif (match(tokens[p].kind, 'char')):
+            # print('here')
+            firstVarType = ''
+            print('Symbol Tree --> Compare Variables --> ' + tokens[p].character)
+            print('Symbol Tree --> Checking variable type...')
+            # Getting first variable type
+            inSameScope = False
+            for node in SymTree.traverse('SymTree' + str(progNum)):
+                # print(node)
+                if tokens[p].character + ',' + str(scope) in node:
+                    inSameScope = True
+                    if re.search('[b][o][o][l][e][a][n][,]', node):
+                        firstVarType = 'boolean'
+                    elif re.search('[s][t][r][i][n][g][,]', node):
+                        firstVarType = 'string'
+                    elif re.search('[i][n][t][,]', node):
+                        firstVarType = 'int'
+                    print('Symbol Tree --> Variable type found! Type for "' + tokens[p].character + '" is ' + firstVarType + '.')
+                    # Skip id and compare operator
+                    p = p + 1
+
+                    print('Symbol Tree --> Compare Variables --> ' + tokens[p].character)
+                    p = p + 1
+
+                    break
+            # IF the first variable is in the same scope
+            if inSameScope:
+                print('Symbol Tree --> Compare Variables --> ' + tokens[p].character)
+                if match(tokens[p].kind, 'char'):
+                    inSameScope2 = False
+                    secondVarType = ''
+                    for node in SymTree.traverse('SymTree' + str(progNum)):
+                        #print(node)
+                        if tokens[p].character + ',' + str(scope) in node:
+                            inSameScope2 = True
+                            if re.search('[b][o][o][l][e][a][n][,]', node):
+                                secondVarType = 'boolean'
+                            elif re.search('[s][t][r][i][n][g][,]', node):
+                                secondVarType = 'string'
+                            elif re.search('[i][n][t][,]', node):
+                                secondVarType = 'int'
+                            print('Symbol Tree --> Variable type found! Type for "' + tokens[p].character + '" is ' + secondVarType + '.')
+                            break
+                    if inSameScope2:
+                        if firstVarType == secondVarType:
+                            print('Symbol Tree --> Types match!')
+                            p = p + 2
+                        else:
+                            print('Type Error: Type mismatch on line: ' + str(tokens[p].lineNum) + ', variable "' +
+                                  tokens[p].character + '" can not compare to a ' + firstVarType + '! "' + tokens[
+                                      p].character + '" is a ' + secondVarType)
+                            errorFile = open('errors.txt', 'w')
+                            errorFile.write('Error while type checking')
+                            exit()
+                    else:
+                        for node in SymTree.traverse('SymTree' + str(progNum)):
+                            #print(node)
+                            tempBreak = False
+                            tempScope = scope - 1
+                            while tempScope > 0:
+                                #print('[,][' + tokens[p].character + '][,][' + str(tempScope) + ']', node)
+                                if re.search('[,][' + tokens[p].character + '][,][' + str(tempScope) + ']',node):
+                                    if re.search('[b][o][o][l][e][a][n][,]', node):
+                                        secondVarType = 'boolean'
+                                    elif re.search('[s][t][r][i][n][g][,]', node):
+                                        secondVarType = 'string'
+                                    elif re.search('[i][n][t][,]', node):
+                                        secondVarType = 'int'
+                                    print('Symbol Tree -->2nd Variable type found! Type for "' + tokens[
+                                        p].character + '" is ' + secondVarType + '.')
+                                    tempBreak = True
+                                    break
+                                tempScope = tempScope - 1
+                            if tempBreak:
+                                break
+
+                        if firstVarType == secondVarType:
+                            print('Symbol Tree --> Types match!')
+                            p = p + 2
+                        else:
+                            print('Type Error: Type mismatch on line: ' + str(tokens[p].lineNum) + ', variable "' +
+                                  tokens[p].character + '" can not compare to a ' + firstVarType + '! "' + tokens[
+                                      p].character + '" is a ' + secondVarType)
+                            errorFile = open('errors.txt', 'w')
+                            errorFile.write('Error while type checking')
+                            exit()
 
 
+                elif match(tokens[p].kind, 'boolval') or match(tokens[p].character, '('):
+                    print('A fucking bool Expr')
+                elif match(tokens[p].character, '"'):
+                    print('Great a string')
+
+            else:
+                print('Symbol Tree --> Compare Variables --> ' + tokens[p].character)
+                firstVarType = ''
+                for node in SymTree.traverse('SymTree' + str(progNum)):
+                    # print(node)
+                    tempBreak = False
+                    tempScope = scope - 1
+                    while tempScope > 0:
+                        # print('[,][' + tokens[p].character + '][,][' + str(tempScope) + ']', node)
+                        if re.search('[,][' + tokens[p].character + '][,][' + str(tempScope) + ']', node):
+                            if re.search('[b][o][o][l][e][a][n][,]', node):
+                                firstVarType = 'boolean'
+                            elif re.search('[s][t][r][i][n][g][,]', node):
+                                firstVarType = 'string'
+                            elif re.search('[i][n][t][,]', node):
+                                firstVarType = 'int'
+                            print('Symbol Tree --> Variable type found! Type for "' + tokens[
+                                p].character + '" is ' + firstVarType + '.')
+                            tempBreak = True
+                            break
+                        tempScope = tempScope - 1
+                    if tempBreak:
+                        break
+
+                # Skip first id
+                p = p + 1
+                print('Symbol Tree --> Compare Variables --> ' + tokens[p].character)
+
+                # Skip compare operator
+                p = p + 1
+                print('Symbol Tree --> Compare Variables --> ' + tokens[p].character)
+
+                secondVarType = ''
+
+                if match(tokens[p].kind, 'char'):
+                    inSameScope2 = False
+                    secondVarType = ''
+                    for node in SymTree.traverse('SymTree' + str(progNum)):
+                        #print(node)
+                        if tokens[p].character + ',' + str(scope) in node:
+                            inSameScope2 = True
+                            if re.search('[b][o][o][l][e][a][n][,]', node):
+                                secondVarType = 'boolean'
+                            elif re.search('[s][t][r][i][n][g][,]', node):
+                                secondVarType = 'string'
+                            elif re.search('[i][n][t][,]', node):
+                                secondVarType = 'int'
+                            print('Symbol Tree --> Variable type found! Type for "' + tokens[p].character + '" is ' + secondVarType + '.')
+                            break
+
+                    else:
+                        for node in SymTree.traverse('SymTree' + str(progNum)):
+                            #print(node)
+                            tempBreak = False
+                            tempScope = scope - 1
+                            while tempScope > 0:
+                                #print('[,][' + tokens[p].character + '][,][' + str(tempScope) + ']', node)
+                                if re.search('[,][' + tokens[p].character + '][,][' + str(tempScope) + ']',node):
+                                    if re.search('[b][o][o][l][e][a][n][,]', node):
+                                        secondVarType = 'boolean'
+                                    elif re.search('[s][t][r][i][n][g][,]', node):
+                                        secondVarType = 'string'
+                                    elif re.search('[i][n][t][,]', node):
+                                        secondVarType = 'int'
+                                    print('Symbol Tree -->2nd Variable type found! Type for "' + tokens[
+                                        p].character + '" is ' + secondVarType + '.')
+                                    tempBreak = True
+                                    break
+                                tempScope = tempScope - 1
+                            if tempBreak:
+                                break
+
+
+                if firstVarType == secondVarType:
+                    print('Symbol Tree --> Types match!')
+                    p = p + 2
+                else:
+                    print('Type Error: Type mismatch on line: ' + str(tokens[p].lineNum) + ', variable "' +
+                          tokens[p].character + '" can not compare to a ' + firstVarType + '! "' + tokens[
+                              p].character + '" is a ' + secondVarType)
+                    errorFile = open('errors.txt', 'w')
+                    errorFile.write('Error while type checking')
+                    exit()
 
         createSymTree(tokens)
 

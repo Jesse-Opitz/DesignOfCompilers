@@ -1,7 +1,9 @@
 {
-    int b
+    int a
     {
-        if("hi" == b){
+        int b
+
+        if(a == b){
             print(b)
         }
     }

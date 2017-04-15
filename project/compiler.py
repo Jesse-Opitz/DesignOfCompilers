@@ -15,8 +15,12 @@ def endAll():
 # ---Lexer runs when tokens are imported---
 
 # ---Start Parse---
-# runParse currently does not work, not sure why?!?!?
+# runParse currently does not import or execute using exec() command, not sure why?!?!?
 #runParse(tokens)
+#exec('parser.py')
+
+# For some reason, parser.py refuses to be imported. Input command to execute parser.py below
+#os.system('python parser.py')
 
 # ---Start Semantic Analysis---
 #if(os.stat("errors.txt").st_size == 0):
