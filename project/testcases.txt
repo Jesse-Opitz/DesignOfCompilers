@@ -1,4 +1,22 @@
 # -----------------------Shouldn't work-----------------------
+--Issue with b = 1
+{
+    int a
+    string b
+    {
+        b = 1
+        if(b == 1){
+            print(b)
+        }
+    }
+
+}$
+
+{
+    int a
+    a = 1
+}$
+
 --Issue with c = true, c is an int
 {
     boolean a

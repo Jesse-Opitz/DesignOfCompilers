@@ -1,7 +1,7 @@
 # This file will create the SymTree from the tokens
 from tree import *
 import re
-from node import *
+#from node import *
 import os
 #from lexer import tokens
 
@@ -15,6 +15,9 @@ scope = 0
 scopeParent = ""
 
 progNum = 0
+
+listOfAssignedVars = []
+listOfDeclaredVars = []
 
 displayTree = False
 
@@ -101,6 +104,10 @@ def createSymTree(tokens):
         createSymTree(tokens)
     # VarDecl Statements
     elif match(tokens[p].kind, 'type') and match(tokens[p + 1].kind, 'char'):
+        global listOfDeclaredVars
+
+        listOfDeclaredVars.append(tokens[p+1].character + ',' + str(scope))
+
         print('Symbol Tree --> Found varDecl -->' + str(tokens[p].character) + ',' + str(tokens[p+1].character))
 
         for node in SymTree.traverse('SymTree' + str(progNum)):
@@ -117,10 +124,20 @@ def createSymTree(tokens):
         createSymTree(tokens)
     # Assign Statements
     elif match(tokens[p].kind, 'char') and match(tokens[p+1].kind, 'assign'):
+        global listOfAssignedVars
+
+        listOfAssignedVars.append(tokens[p].character + ',' + str(scope))
+        varType = ''
         boolTypePattern = r'[n][,]' + tokens[p].character + '[,]'
         stringTypePattern = r'[g][,]' + tokens[p].character + '[,]'
         intTypePattern = r'[t][,]' + tokens[p].character + '[,]'
+        inSameScope = False
         for node in SymTree.traverse('SymTree' + str(progNum)):
+            if(re.search(r'[,][' + tokens[p].character + '][,][' + str(scope) + ']' , node)):
+                inSameScope = True
+                #print('insamescope')
+        for node in SymTree.traverse('SymTree' + str(progNum)):
+            # Check symbol tree for boolean declaration in same scope
             if(re.search(boolTypePattern, node))and re.search(r'[,]' + str(scope), node):
                 if tokens[p+2].kind != 'boolval':
                     if tokens[p+2].character == '"':
@@ -136,6 +153,7 @@ def createSymTree(tokens):
                     errorFile = open('errors.txt', 'w')
                     errorFile.write('Error while type checking')
                     exit()
+            # Check symbol tree for string declaration in same scope
             elif(re.search(stringTypePattern, node))and re.search(r'[,]' + str(scope), node):
                 if tokens[p+2].character != '"':
                     if tokens[p+2].kind == 'digit':
@@ -147,6 +165,7 @@ def createSymTree(tokens):
                     errorFile = open('errors.txt', 'w')
                     errorFile.write('Error while type checking')
                     exit()
+            # Check symbol tree for int declaration in same scope
             elif(re.search(intTypePattern, node))and re.search(r'[,]' + str(scope), node):
                 if tokens[p+2].kind != 'digit':
                     if tokens[p+2].character == '"':
@@ -158,17 +177,48 @@ def createSymTree(tokens):
                     errorFile = open('errors.txt', 'w')
                     errorFile.write('Error while type checking')
                     exit()
-        if match(tokens[p+2].character, '"'):
+            elif(re.search(r'[,][' + tokens[p].character + '][,]' , node)):
+                print('Symbol Tree --> Found assign --> ', tokens[p].character)
+                if re.search('[b][o][o][l][e][a][n][,]', node):
+                    varType = 'boolean'
+                elif re.search('[s][t][r][i][n][g][,]', node):
+                    varType = 'string'
+                elif re.search('[i][n][t][,]', node):
+                    varType = 'int'
+                print('Symbol Tree --> Variable type found! Type for "' + tokens[p].character + '" is ' + varType + '.')
+                #p = p + 1
+                #print('Symbol Tree --> Found assign --> ', tokens[p].character)
+
+
+
+
+        if match(tokens[p+2].character, '"') and varType == 'string':
             print('Symbol Tree --> Found assign --> ', tokens[p].character)
             i = p + 3
             while not match(tokens[i].character, '"'):
-                print('Symbol Tree --> assigned string:', tokens[i].character)
+                print('Symbol Tree --> Assigned String:', tokens[i].character)
                 i = i + 1
             p = i
+            print('Symbol Tree --> Assignment correct type!')
+        elif match(tokens[p+2].kind, 'digit') and varType == 'int':
+            print('Symbol Tree --> Found assign between ', tokens[p].character, ',', tokens[p+2].character)
+            print('Symbol Tree --> Assigned correct type!')
+            p = p + 2
+        elif match(tokens[p+2].kind, 'boolval') and varType == 'boolean':
+            print('Symbol Tree --> Found assign between ', tokens[p].character, ',', tokens[p + 2].character)
+            print('Symbol Tree --> Assign correct type!')
+            p = p + 2
 
         else:
-            print('Symbol Tree --> Found assign --> ', tokens[p].character, tokens[p+2].character)
+            print('Symbol Tree --> Found assign --> ', tokens[p].character, str(tokens[p+2].character))
+            print('Type Error: Assigned incorrect type on line ' + str(tokens[p].lineNum) + '! Variable ' + tokens[p].character + ' is an ' + varType + '!')
+            errorFile = open('errors.txt', 'w')
+            errorFile.write('Error while type checking')
+            exit()
+            exit()
         p = p + 1
+
+
         createSymTree(tokens)
     # Bool Expr statements
     elif match(tokens[p].character, '(') and (match(tokens[p-1].character, 'if') or match(tokens[p-1].character, 'while')):
@@ -486,6 +536,7 @@ def createSymTree(tokens):
                 print('Symbol Tree --> Compare Variables --> ' + tokens[p].character)
 
                 secondVarType = ''
+                fullString = ''
 
                 if match(tokens[p].kind, 'char'):
                     inSameScope2 = False
@@ -524,15 +575,29 @@ def createSymTree(tokens):
                                 tempScope = tempScope - 1
                             if tempBreak:
                                 break
-
+                # ID compared to string
+                elif(match(tokens[p].character, '"')):
+                    secondVarType = 'string'
+                    p = p + 1
+                    #print(tokens[p].character)
+                    while tokens[p].character != '"':
+                        fullString = fullString + tokens[p].character
+                        p = p + 1
+                # ID compared to boolean value
+                elif(match(tokens[p].kind, 'boolval')):
+                    secondVarType = 'boolean'
+                elif(match(tokens[p].kind, 'digit')):
+                    secondVarType = 'int'
 
                 if firstVarType == secondVarType:
                     print('Symbol Tree --> Types match!')
                     p = p + 2
                 else:
-                    print('Type Error: Type mismatch on line: ' + str(tokens[p].lineNum) + ', variable "' +
-                          tokens[p].character + '" can not compare to a ' + firstVarType + '! "' + tokens[
-                              p].character + '" is a ' + secondVarType)
+                    if fullString == '':
+                        print('Type Error: Type mismatch on line: ' + str(tokens[p].lineNum) + ',' + secondVarType + ' can not compare to a ' + firstVarType + '! "' + tokens[
+                                  p].character + '" is a ' + secondVarType)
+                    else:
+                        print('Type Error: Type mismatch on line: ' + str(tokens[p].lineNum) + ', a string can not compare to a ' + firstVarType + '! "' + fullString + '" is a ' + secondVarType)
                     errorFile = open('errors.txt', 'w')
                     errorFile.write('Error while type checking')
                     exit()
