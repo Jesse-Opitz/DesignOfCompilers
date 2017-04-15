@@ -52,6 +52,14 @@
     }
     print(b)
 }$
+--Comparing string to an int b
+{
+    int b
+
+    if("hi" == b){
+        print(b)
+    }
+}$
 
 # Should Work
 {
@@ -75,4 +83,12 @@
     string q
     q = "hello is it me youre looking for"
     print(q)
+}$
+
+{
+    string b
+
+    if("hi" == b){
+        print(b)
+    }
 }$

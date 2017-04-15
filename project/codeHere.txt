@@ -1,17 +1,9 @@
 {
-    string a
-    string b
-    int c
-    b = "here"
-    c = 1
+    int b
     {
-        int a
-        if(1 == a){
-            int b
-            a = "hey there"
-            print(a)
-            b = 1
+        if("hi" == b){
+            print(b)
         }
     }
-    print(b)
+
 }$
