@@ -7,14 +7,14 @@
     <bookmark url="file://$PROJECT_DIR$/createAST.py" line="207" />
     <bookmark url="file://$PROJECT_DIR$/createAST.py" line="482" />
     <bookmark url="file://$PROJECT_DIR$/createAST.py" line="485" />
-    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="103" />
-    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="98" />
+    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="122" />
+    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="117" />
     <bookmark url="file://$PROJECT_DIR$/compiler.py" line="18" />
     <bookmark url="file://$PROJECT_DIR$/parser.py" line="53" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="2" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="1" />
-    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="85" />
-    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="86" />
+    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="104" />
+    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="105" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="5" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="6" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="7" />
@@ -24,11 +24,13 @@
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="10" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="11" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="4" />
-    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="179" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="13" />
-    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="14" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="15" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="16" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="18" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="14" />
+    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="210" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="19" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fe7043f-05a5-4eac-b1a2-dcf5a15af9b1" name="Default" comment="" />
@@ -45,8 +47,8 @@
       <file leaf-file-name="createSymTable.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/createSymTable.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="443">
-              <caret line="216" column="18" lean-forward="false" selection-start-line="216" selection-start-column="18" selection-end-line="216" selection-end-column="18" />
+            <state relative-caret-position="341">
+              <caret line="242" column="67" lean-forward="false" selection-start-line="242" selection-start-column="67" selection-end-line="242" selection-end-column="67" />
               <folding>
                 <element signature="e#52#70#0" expanded="true" />
               </folding>
@@ -57,8 +59,8 @@
       <file leaf-file-name="codeHere.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/codeHere.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="10" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="15" selection-end-column="2" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -74,21 +76,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="scratch.txt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="scratch.txt" pinned="false" current-in-tab="false">
         <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="21" column="50" lean-forward="false" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
+            <state relative-caret-position="387">
+              <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="31" selection-end-column="2" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="testcases.txt" pinned="false" current-in-tab="false">
+      <file leaf-file-name="testcases.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/testcases.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" column="18" lean-forward="false" selection-start-line="1" selection-start-column="18" selection-end-line="1" selection-end-column="18" />
+            <state relative-caret-position="149">
+              <caret line="114" column="26" lean-forward="false" selection-start-line="114" selection-start-column="26" selection-end-line="114" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -97,8 +99,8 @@
       <file leaf-file-name="compiler.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/compiler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+            <state relative-caret-position="327">
+              <caret line="32" column="13" lean-forward="false" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
               <folding>
                 <element signature="e#31#55#0" expanded="true" />
               </folding>
@@ -127,22 +129,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>\n</find>
-      <find>nonTokenBlankSpacePattern</find>
-      <find>line + 1</find>
-      <find>&gt;&gt;</find>
-      <find>symtree creation</find>
-      <find>createBlock</find>
-      <find>endal</find>
-      <find>errors</find>
-      <find>characer</find>
-      <find>here</find>
-      <find>token --&gt;</find>
-      <find>string</find>
-      <find>'</find>
-      <find>compar</find>
-      <find>mismat</find>
-      <find>match()</find>
       <find>def match</find>
       <find>type error</find>
       <find>combine</find>
@@ -151,12 +137,28 @@
       <find>sys</find>
       <find>types match</find>
       <find>&quot;</find>
-      <find>assigned</find>
       <find>listofassi</find>
       <find>[b][o]</find>
-      <find>assign</find>
       <find>found assign</find>
       <find>errorfi</find>
+      <find>listofdeclaredvars</find>
+      <find>listofdeclared</find>
+      <find>listofass</find>
+      <find>assigned</find>
+      <find>compare va</find>
+      <find>assign</find>
+      <find>here</find>
+      <find>compare string</find>
+      <find>bool</find>
+      <find>string</find>
+      <find>type mismat</find>
+      <find>int</find>
+      <find>compare</find>
+      <find>assigned corre</find>
+      <find>elif(re.search(r'[,][' + tokens[p].character + '][,]' , node) and not inSameScope</find>
+      <find>and not</find>
+      <find>for node</find>
+      <find>assigned string</find>
     </findStrings>
     <replaceStrings>
       <replace>'</replace>
@@ -189,10 +191,10 @@
         <option value="$PROJECT_DIR$/createAST.py" />
         <option value="$PROJECT_DIR$/parser.py" />
         <option value="$PROJECT_DIR$/compiler.py" />
-        <option value="$PROJECT_DIR$/codeHere.txt" />
-        <option value="$PROJECT_DIR$/createSymTable.py" />
-        <option value="$PROJECT_DIR$/testcases.txt" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" />
+        <option value="$PROJECT_DIR$/createSymTable.py" />
+        <option value="$PROJECT_DIR$/codeHere.txt" />
+        <option value="$PROJECT_DIR$/testcases.txt" />
       </list>
     </option>
   </component>
@@ -777,6 +779,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/compiler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="327">
+          <caret line="32" column="13" lean-forward="false" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+          <folding>
+            <element signature="e#31#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/parser.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -785,46 +797,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/compiler.py">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding>
-            <element signature="e#31#55#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/codeHere.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="10" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="15" selection-end-column="2" />
+        <state relative-caret-position="387">
+          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="31" selection-end-column="2" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/createSymTable.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="216" column="18" lean-forward="false" selection-start-line="216" selection-start-column="18" selection-end-line="216" selection-end-column="18" />
+        <state relative-caret-position="341">
+          <caret line="242" column="67" lean-forward="false" selection-start-line="242" selection-start-column="67" selection-end-line="242" selection-end-column="67" />
           <folding>
             <element signature="e#52#70#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases.txt">
+    <entry file="file://$PROJECT_DIR$/codeHere.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="18" lean-forward="false" selection-start-line="1" selection-start-column="18" selection-end-line="1" selection-end-column="18" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt">
+    <entry file="file://$PROJECT_DIR$/testcases.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" column="50" lean-forward="false" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
+        <state relative-caret-position="149">
+          <caret line="114" column="26" lean-forward="false" selection-start-line="114" selection-start-column="26" selection-end-line="114" selection-end-column="26" />
           <folding />
         </state>
       </provider>

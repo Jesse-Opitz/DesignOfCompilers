@@ -3,7 +3,7 @@
 from lexer import tokens
 #from parser import runParse
 from createAST import createAST
-from createSymTable import createSymbolTree
+from createSymTable import createSymbolTree, printWarnings
 import os
 
 # Must have end all function of course
@@ -30,6 +30,8 @@ def endAll():
 if(os.stat("errors.txt").st_size == 0):
     print("\nSymbol Tree and Table Creation\n")
     createSymbolTree(tokens)
+    print('\n')
+    printWarnings()
 
 
 # ---Code Gen---

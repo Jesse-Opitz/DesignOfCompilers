@@ -1,4 +1,14 @@
 # -----------------------Shouldn't work-----------------------
+--Issue with comparing string to int
+{
+	int a
+	a = 1
+
+	if("a" == 3) {
+		a = 2
+	}
+}
+
 --Issue with b = 1
 {
     int a
@@ -102,11 +112,36 @@
     }
 
 }$
+-- Credits to Tien on one below
+{
+    int a
+    a = 4
+    int b
+    b = 5
+    if(false != (b == (true == (a == 3+1)))) {
+        print(a)
+    }
+}$
 
 
 
 
 # -----------------------Should Work-----------------------
+-- Credits to Tien on one below
+{
+    int a
+    a = 4
+    boolean b
+    b = true
+    boolean c
+    string d
+    d = "there is no spoon"
+    c = (d != "there is a spoon")
+    if(c == (false != (b == (true == (a == 3+1))))) {
+        print(a)
+    }
+}$
+
 {
     boolean a
     string b
