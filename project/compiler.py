@@ -20,12 +20,12 @@ def endAll():
 #exec('parser.py')
 
 # For some reason, parser.py refuses to be imported. Input command to execute parser.py below
-#os.system('python parser.py')
+os.system('python parser.py')
 
 # ---Start Semantic Analysis---
-#if(os.stat("errors.txt").st_size == 0):
-#    print("\nAST Creation\n")
-#    createAST(tokens)
+if(os.stat("errors.txt").st_size == 0):
+    print("\nAST Creation\n")
+    createAST(tokens)
 
 if(os.stat("errors.txt").st_size == 0):
     print("\nSymbol Tree and Table Creation\n")
@@ -36,6 +36,6 @@ if(os.stat("errors.txt").st_size == 0):
 
 # ---Code Gen---
 
-#endAll()
+endAll()
 
 

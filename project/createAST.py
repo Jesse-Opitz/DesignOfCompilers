@@ -234,6 +234,9 @@ def createAssignmentStmt(tokens):
     elif tokens[p].kind == 'boolval':
         boolParent = exprParent
         createBoolExpr(tokens)
+    elif tokens[p].character == '(':
+        boolParent = exprParent
+        createBoolExpr(tokens)
 
     print('AST Creation --> Token --> ' + tokens[p].character)
     #createStatementList()
