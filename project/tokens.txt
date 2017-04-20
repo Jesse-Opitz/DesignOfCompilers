@@ -71,3 +71,11 @@
 11 bracket }
 12 bracket }
 12 endProgram $
+13 bracket {
+14 type int
+14 char a
+15 char a
+15 assign =
+15 digit 3
+16 bracket }
+16 endProgram $

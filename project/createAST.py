@@ -38,8 +38,47 @@ boolParent = ""
 
 def createAST(tokens):
     global ast
+    global blockNum
+    global stmtNum
+    global printNum
+    global parenNum
+    global assignNum
+    global varDeclNum
+    global typeNum
+    global exprNum
+    global whileNum
+    global boolNum
+    global ifStmtNum
+    global digitNum
+    global ifStmtNum
+    global digitNum
+    global charNum
+    global valNum
+    global stringNum
+    global opNum
 
-    runCreateAST = False
+    # Reset Values
+    blockNum = -1
+    stmtNum = -1
+    printNum = -1
+    parenNum = -1
+    assignNum = -1
+    varDeclNum = -1
+    typeNum = -1
+    exprNum = -1
+    whileNum = -1
+    boolNum = -1
+    ifStmtNum = -1
+    digitNum = -1
+    charNum = -1
+    valNum = -1
+    stringNum = -1
+    opNum = -1
+
+    # Reset Parents
+    blockParent = "Program" + str(progNum)
+    exprParent = ""
+    boolParent = ""
 
     # Make sure there are no errors in parse and lex before creating tree
     if os.stat('errors.txt').st_size == 0:
@@ -51,13 +90,7 @@ def createAST(tokens):
     if runCreateAST:
         # Start creating the AST
         startCreateAST(tokens)
-        i = 0
-        print('\nAST Below\n')
-        # Displays the AST after completion
-        #while (i <= progNum):
-        ast.display("Program" + str(i))
-        #    print("\n")
-        #    i = i + 1
+
 
 # Match tokens and prints out if there's a match
 def match(currTok, projectedTok):
@@ -74,7 +107,8 @@ def startCreateAST(tokens):
     global blockNum
     global progNum
 
-    print('Program', progNum, '\n')
+    print('\nProgram', progNum, '\n')
+
 
     # Create  + str(progNum) node
     ast.add_node('Program' + str(progNum))
@@ -86,15 +120,18 @@ def startCreateAST(tokens):
         if match(tokens[p].character,'$'):
             ast.add_node(tokens[p].character, 'Program' + str(progNum))
             print('AST Creation --> AST Complete')
+            print('\nAST ' + str(progNum) + ' Below\n')
+            ast.display("Program" + str(progNum))
             #-- I am not sure why this breaks block -- for now can not create AST for multiple programs, only the first one
-            '''try:
+            try:
                 if(tokens[p+1].character == '{'):
                     progNum = progNum + 1
+                    #print('here')
                     p = p + 1
-                    print(tokens[p].character)
+                   #print(tokens[p].character)
                     startCreateAST(tokens)
             except IndexError:
-                pass'''
+                pass
 
 def createBlock(tokens):
     #global scope
