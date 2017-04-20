@@ -61,6 +61,7 @@ def createSymbolTree(tokens):
         # Displays the SymTree after completion
         i = 0
         while(i <= progNum):
+            print('\n')
             SymTree.display('SymTree' + str(i))
             i = i + 1
 
@@ -89,14 +90,7 @@ def runSymTree(tokens):
     if match(tokens[p].character, '{'):
         createSymTree(tokens)
         if match(tokens[p].character, '$'):
-            print('Symbol Tree --> Symbol Tree Complete\n')
-            #try:
-            #    if tokens[p + 1].character == '{':
-            #        p = p + 1
-            #        progNum = progNum + 1
-            #        runSymTree(tokens)
-            #except IndexError:
-            #    pass
+            print('Symbol Tree --> Symbol Tree Complete')
 
 #--------
 # This function is god
@@ -113,6 +107,7 @@ def createSymTree(tokens):
     global SymTree
     global scope
     global p
+    global progNum
 
     # Block statements
     if match(tokens[p].character, '{'):
@@ -715,6 +710,8 @@ def createSymTree(tokens):
                     errorFile = open('errors.txt', 'w')
                     errorFile.write('Error while type checking')
                     exit()
+        createSymTree(tokens)
+
     elif tokens[p].character == 'print':
         print('Symbol Tree --> Found Print statement')
         # Skip print
@@ -748,6 +745,15 @@ def createSymTree(tokens):
     # End program
     elif match(tokens[p].character, '$'):
         print('Symbol Tree --> End Symbol Token --> ' + str(tokens[p].character))
+        try:
+            #print(tokens[p+1].character == '{')
+            if tokens[p+1].character == '{':
+                progNum = progNum + 1
+                p = p + 1
+                runSymTree(tokens)
+        except IndexError:
+            pass
+
     else:
         print('Symbol Tree --> Ignored Token --> ' + str(tokens[p].character))
         p = p + 1

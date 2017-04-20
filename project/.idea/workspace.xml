@@ -7,14 +7,14 @@
     <bookmark url="file://$PROJECT_DIR$/createAST.py" line="244" />
     <bookmark url="file://$PROJECT_DIR$/createAST.py" line="522" />
     <bookmark url="file://$PROJECT_DIR$/createAST.py" line="525" />
-    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="122" />
     <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="117" />
+    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="112" />
     <bookmark url="file://$PROJECT_DIR$/compiler.py" line="18" />
     <bookmark url="file://$PROJECT_DIR$/parser.py" line="53" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="2" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="1" />
-    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="104" />
-    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="105" />
+    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="98" />
+    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="99" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="5" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="6" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="8" />
@@ -28,7 +28,7 @@
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="16" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="18" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="14" />
-    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="210" />
+    <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="205" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="19" />
     <bookmark url="file://$PROJECT_DIR$/compiler.py" line="22" />
   </component>
@@ -44,11 +44,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="createAST.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="createAST.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/createAST.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="268" column="125" lean-forward="false" selection-start-line="268" selection-start-column="125" selection-end-line="268" selection-end-column="125" />
+            <state relative-caret-position="340">
+              <caret line="128" column="21" lean-forward="true" selection-start-line="128" selection-start-column="21" selection-end-line="128" selection-end-column="21" />
               <folding>
                 <element signature="e#48#66#0" expanded="true" />
               </folding>
@@ -59,18 +59,18 @@
       <file leaf-file-name="codeHere.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/codeHere.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="2" lean-forward="false" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
+            <state relative-caret-position="136">
+              <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="createSymTable.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="createSymTable.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/createSymTable.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="341">
-              <caret line="242" column="67" lean-forward="false" selection-start-line="242" selection-start-column="67" selection-end-line="242" selection-end-column="67" />
+            <state relative-caret-position="177">
+              <caret line="748" column="13" lean-forward="false" selection-start-line="748" selection-start-column="13" selection-end-line="748" selection-end-column="13" />
               <folding>
                 <element signature="e#52#70#0" expanded="true" />
               </folding>
@@ -101,9 +101,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>type error</find>
-      <find>combine</find>
-      <find>an bool</find>
       <find>an boolean</find>
       <find>sys</find>
       <find>types match</find>
@@ -131,6 +128,9 @@
       <find>for node</find>
       <find>assigned string</find>
       <find>createassi</find>
+      <find>error</find>
+      <find>display</find>
+      <find>symbol tree comple</find>
     </findStrings>
     <replaceStrings>
       <replace>'</replace>
@@ -160,7 +160,6 @@
         <option value="$PROJECT_DIR$/lexer.py" />
         <option value="$PROJECT_DIR$/parser2.py" />
         <option value="$PROJECT_DIR$/parser.py" />
-        <option value="$PROJECT_DIR$/createSymTable.py" />
         <option value="$PROJECT_DIR$/testcases.txt" />
         <option value="$PROJECT_DIR$/compiler.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" />
@@ -168,6 +167,7 @@
         <option value="$PROJECT_DIR$/readme.txt" />
         <option value="$PROJECT_DIR$/codeHere.txt" />
         <option value="$PROJECT_DIR$/createAST.py" />
+        <option value="$PROJECT_DIR$/createSymTable.py" />
       </list>
     </option>
   </component>
@@ -384,6 +384,9 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="5fe7043f-05a5-4eac-b1a2-dcf5a15af9b1" name="Default" comment="" />
@@ -401,7 +404,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36624205" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290735" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3491892" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3491892" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -780,16 +783,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/createSymTable.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="242" column="67" lean-forward="false" selection-start-line="242" selection-start-column="67" selection-end-line="242" selection-end-column="67" />
-          <folding>
-            <element signature="e#52#70#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/compiler.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -802,18 +795,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/codeHere.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="2" lean-forward="false" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
+        <state relative-caret-position="136">
+          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/createAST.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="268" column="125" lean-forward="false" selection-start-line="268" selection-start-column="125" selection-end-line="268" selection-end-column="125" />
+        <state relative-caret-position="340">
+          <caret line="128" column="21" lean-forward="true" selection-start-line="128" selection-start-column="21" selection-end-line="128" selection-end-column="21" />
           <folding>
             <element signature="e#48#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/createSymTable.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="748" column="13" lean-forward="false" selection-start-line="748" selection-start-column="13" selection-end-line="748" selection-end-column="13" />
+          <folding>
+            <element signature="e#52#70#0" expanded="true" />
           </folding>
         </state>
       </provider>
