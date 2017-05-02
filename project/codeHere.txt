@@ -2,4 +2,7 @@
     int a
     string b
     boolean c
+
+    a = 1
+    c = true
 }$

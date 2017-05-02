@@ -5,5 +5,11 @@
 2 char b
 3 type boolean
 3 char c
-4 bracket }
-4 endProgram $
+5 char a
+5 assign =
+5 digit 1
+6 char c
+6 assign =
+6 boolval true
+7 bracket }
+7 endProgram $
