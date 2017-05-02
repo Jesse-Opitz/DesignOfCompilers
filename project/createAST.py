@@ -35,6 +35,8 @@ blockParent = "Program" + str(progNum)
 exprParent = ""
 boolParent = ""
 
+# Tree var
+ast = Tree()
 
 def createAST(tokens):
     global ast
@@ -84,7 +86,6 @@ def createAST(tokens):
     if os.stat('errors.txt').st_size == 0:
         runCreateAST = True
 
-    ast = Tree()
 
     # If there are no errors continue to AST creation
     if runCreateAST:
@@ -103,7 +104,7 @@ def match(currTok, projectedTok):
 def startCreateAST(tokens):
     global ast
     global p
-    #global scope
+    # global scope
     global blockNum
     global progNum
 
@@ -134,6 +135,7 @@ def startCreateAST(tokens):
                 pass
 
 def createBlock(tokens):
+    global ast
     #global scope
     global blockNum
     global p
@@ -153,9 +155,12 @@ def createBlock(tokens):
     # Add 1 to get past end bracket
     p = p + 1
 
+    #scope = scope - 1
+
     blockNum = blockNum - 1
 
 def createStatementList(tokens):
+    global ast
     global p
 
     firstSet = ('keyword', 'char', 'type', 'while', 'if', '{')
@@ -167,6 +172,7 @@ def createStatementList(tokens):
         createStatement(tokens)
 
 def createStatement(tokens):
+    global ast
     global blockParent
     global p
 
@@ -211,6 +217,7 @@ def createStatement(tokens):
 # Adds Expr as child to print
 #-------
 def createPrintStmt(tokens):
+    global ast
     global printNum
     global exprParent
     global p
@@ -239,6 +246,7 @@ def createPrintStmt(tokens):
 # When adding value to tree, it is added as <value>,<lineNum>,<uniqueID>
 #-------
 def createAssignmentStmt(tokens):
+    global ast
     global assignNum
     global charNum
     global valNum
@@ -281,9 +289,10 @@ def createAssignmentStmt(tokens):
 #------
 # When adding varDecl to the tree, it is added as varDecl,<uniqueID>
 # When adding variable type to the tree, it is added as <type>,<lineNum>,<uniqueID>
-# When adding char to tree, it is added as <char>,<lineNum>,<uniqueID>
+# When adding char to tree, it is added as <char>,<lineNum>,<uniqueID>,s<scope>
 #------
 def createVarDeclStmt(tokens):
+    global ast
     global typeNum
     global varDeclNum
     global charNum
@@ -309,6 +318,7 @@ def createVarDeclStmt(tokens):
 
 #------
 def createWhileStmnt(tokens):
+    global ast
     global whileNum
     global p
     global blockParent
@@ -334,6 +344,7 @@ def createWhileStmnt(tokens):
 # Adds if statement tree under block
 #------
 def createIfStmnt(tokens):
+    global ast
     global ifStmtNum
     global opNum
     global boolParent
@@ -363,6 +374,7 @@ def createIfStmnt(tokens):
 # Figures out which expression it should go to
 #------
 def createExpr(tokens):
+    global ast
     global boolParent
     print('AST Creation --> in Expr')
     print('AST Creation --> Token --> ' + tokens[p].character)
@@ -392,6 +404,7 @@ def createExpr(tokens):
 # Expr is added using createExpr function
 #------
 def createIntExpr(tokens):
+    global ast
     global p
     global digitNum
     global idParent
@@ -423,6 +436,7 @@ def createIntExpr(tokens):
 # Adds the char ID under exprParent
 #------
 def createId(tokens):
+    global ast
     global p
     global charNum
 
@@ -439,6 +453,7 @@ def createId(tokens):
 # Adds the string expression under exprParent
 #------
 def createStringExpr(tokens):
+    global ast
     global p
     global stringNum
 
@@ -473,6 +488,7 @@ def createStringExpr(tokens):
 # Adds a bool expression that is either just <boolval> or (<expr><boolop><expr>)
 #------
 def createBoolExpr(tokens):
+    global ast
     global p
     global boolNum
     global opNum

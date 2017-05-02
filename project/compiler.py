@@ -2,8 +2,9 @@
 
 from lexer import tokens
 #from parser import runParse
-from createAST import createAST
-from createSymTable import createSymbolTree, printWarnings
+from createAST import createAST, ast
+from createSymTable import createSymbolTree, printWarnings, SymTree
+from codeGen import runCodeGenerator
 import os
 
 # Must have end all function of course
@@ -35,7 +36,10 @@ if(os.stat("errors.txt").st_size == 0):
 
 
 # ---Code Gen---
+if(os.stat("errors.txt").st_size == 0):
+    print("\nCode Generator\n")
+    runCodeGenerator(ast, SymTree)
 
-endAll()
+#endAll()
 
 

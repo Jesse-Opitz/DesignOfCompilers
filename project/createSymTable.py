@@ -23,6 +23,8 @@ displayTree = False
 
 comparisonFirstSet = ['digit', '"', '(', 'boolval', 'char']
 
+SymTree = Tree()
+
 def createSymbolTree(tokens):
     global SymTree
     global p
@@ -51,7 +53,6 @@ def createSymbolTree(tokens):
     if os.stat('errors.txt').st_size == 0:
         runCreateSymTree = True
 
-    SymTree = Tree()
 
     # If there are no errors continue to SymTree creation
     if runCreateSymTree:

@@ -1,13 +1,5 @@
 {
     int a
-    a = 4
-    boolean b
-    b = true
+    string b
     boolean c
-    string d
-    d = "there is no spoon"
-    c = false
-    if(b == c) {
-        print(a)
-    }
 }$
