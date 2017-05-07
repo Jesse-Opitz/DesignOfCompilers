@@ -1,5 +1,6 @@
 {
-    string a
-    a = "hi"
-    print(a)
+    print(true)
+    print(false)
+    print("hi")
+    print(1)
 }$

@@ -28,6 +28,7 @@ stringStartList = []
 inVarDecl = False
 inAssign = False
 inPrint = False
+inIf = False
 
 # Creates 6502alan Machine Language Instructions from a depth-first in-order traversal of an AST
 def runCodeGenerator(ast, symTable):
@@ -39,6 +40,7 @@ def runCodeGenerator(ast, symTable):
     global inVarDecl
     global inAssign
     global inPrint
+    global inIf
 
     print("Let's gen code hoe!!!!")
 
@@ -61,13 +63,18 @@ def runCodeGenerator(ast, symTable):
         elif re.search('Print[0-9]', node):
             print('Code Gen --> Found Print!')
             inPrint = True
+        elif re.search('if,[0-9]', node):
+            print('Code Gen --> Found If!')
+            inIf = True
 
         if inVarDecl:
             generateVarDecl(node, prev)
         elif inAssign:
             generateAssign(node, prev, ast)
         elif inPrint:
-            generatePrint(node, prev, ast)
+            generatePrint(node, ast)
+        elif inIf:
+            generateIf(node, ast)
 
 
         #print('Present: ' + node)
@@ -253,18 +260,23 @@ def generateAssign(node, prev, ast):
         print('Code Gen --> Generating code for string...')
         tempCharList = list(varValue)
 
-        i = 0
+        i = len(tempCharList) - 1
         #spaceSlash = ''
         #stringStartList.append(hex(dp).split('x')[1])
         print('Temp char list' + str(tempCharList))
-        while i < len(tempCharList):
+        while i >= 0: # len(tempCharList):
             #print('i: ' + str(i))
-            temp = hex(ord(tempCharList[i]))
-            temp = temp.split('x')
-            temp = temp[1]
-            code[dp] = temp
-            dp = dp - 1
-            i = i + 1
+            try:
+                temp = hex(ord(tempCharList[i]))
+                temp = temp.split('x')
+                temp = temp[1]
+                code[dp] = temp
+                dp = dp - 1
+                i = i - 1
+            except IndexError:
+                print('eh whatever')
+                pass
+
         #stringStartList.append(hex(dp+1).split('x')[1])
         code[p] = hex(dp+1).split('x')[1].upper()
         dp = dp - 1
@@ -336,42 +348,84 @@ def generateAssign(node, prev, ast):
 
     inAssign = False
 
-def generatePrint(node, prev, ast):
+def generatePrint(node, ast):
     #***** CAN PRINT INTS/BOOLS *******
     global inPrint
     global p
+    global dp
     inPrint = False
+    nonVarString = False
     print('Code Gen --> Generating code for printing this list of children ' + str(ast.__getitem__(node).children))
     if len(ast.__getitem__(node).children) == 1:
         #print('1 child')
         # Load Y register from memory
         code[p] = 'AC'
         p = p + 1
-
         temp = ast.__getitem__(node).children[0].split(',')
         checkString = ''
-        for x in varList:
-            # Choose constant from memory
-            # Stored as <type>:<id>@<scope>,T<tempLocID>XX
-            if re.search(temp[0] + '[@]' + str(scope),x):
-                print(x)
-                t = x.split(',')
-                #print(str(t) + 'here')
-                checkString = t[0].split(':')[0]
-                t = t[1]
-                t = t.split(' ')
-                t = t[0]
-                #print(code[p])
-                code[p] = t
-                #print(code[p])
-                p = p + 1
-                #print(t)
+        if len(temp[0]) > 1 and temp[0] != 'true' and temp[0] != 'false' and temp[0]:
+            isVar = False
+            print('not var')
+            tempCharList = list(temp[0])
 
+            i = len(tempCharList) - 1
+            # spaceSlash = ''
+            # stringStartList.append(hex(dp).split('x')[1])
+            print('Temp char list' + str(tempCharList))
+            while i >= 0:  # len(tempCharList):
+                # print('i: ' + str(i))
+                try:
+                    temp = hex(ord(tempCharList[i]))
+                    temp = temp.split('x')
+                    temp = temp[1]
+                    code[dp] = temp
+                    dp = dp - 1
+                    i = i - 1
+                except IndexError:
+                    print('eh whatever')
+                    pass
 
-        if checkString == 'string':
+            # stringStartList.append(hex(dp+1).split('x')[1])
+            code[p] = hex(dp + 1).split('x')[1].upper()
+            dp = dp - len(tempCharList)
+            nonVarString = True
+        elif temp[0] == 'true':
+            print('prints true')
+            code[p] = '01'
+            isVar = False
+        elif temp[0] == 'false':
+            print('prints false')
+            code[p] = '00'
+            isVar = False
+        elif re.match('[0-9]', temp[0]):
+            print('prints int')
+            code[p] = '0' + temp[0]
+            isVar = False
+        else:
+            isVar = True
+
+        if isVar:
+            for x in varList:
+                # Choose constant from memory
+                # Stored as <type>:<id>@<scope>,T<tempLocID>XX
+                if re.search(temp[0] + '[@]' + str(scope),x):
+                    print(x)
+                    t = x.split(',')
+                    #print(str(t) + 'here')
+                    checkString = t[0].split(':')[0]
+                    t = t[1]
+                    t = t.split(' ')
+                    t = t[0]
+                    #print(code[p])
+                    code[p] = t
+                    #print(code[p])
+                    p = p + 1
+                    #print(t)
+
+        if checkString == 'string' and isVar:
             print('here' + str(p))
             # Load X register with 01
-           # p = p + 1
+            # p = p + 1
             p = p + 1
             code[p] = 'A2'
             p = p + 1
@@ -381,7 +435,38 @@ def generatePrint(node, prev, ast):
 
             code[p] = '02'
             p = p + 1
+        elif not isVar and nonVarString:
+            #print('notvar')
+            # Load X register with 01
+            # p = p + 1
+            p = p + 1
+            #code[p] = '00'
+            #p = p + 1
+            code[p] = 'A2'
+            p = p + 1
+            #p = p + 1
+            # Load Y register as constant
+            code[p - 3] = 'A0'
+            #code[p - 1] = '00'
 
+            code[p] = '02'
+            p = p + 1
+        elif not isVar and not nonVarString:
+            #print('notvar')
+            # Load X register with 01
+            # p = p + 1
+            p = p + 1
+            # code[p] = '00'
+            # p = p + 1
+            code[p] = 'A2'
+            p = p + 1
+            # p = p + 1
+            # Load Y register as constant
+            code[p - 3] = 'A0'
+            # code[p - 1] = '00'
+
+            code[p] = '01'
+            p = p + 1
         else:
             code[p] = '00'
             p = p + 1
@@ -475,8 +560,6 @@ def generateAddition(node, ast):
         p = p + 1
 
         #print(numbersToAdd)
-
-
 '''        # Load accumulator with constant
         code[p] = 'A9'
         p = p + 1
@@ -488,9 +571,6 @@ def generateAddition(node, ast):
         p = p + 1
         print('here')
 '''
-
-
-
 '''
     if re.search('[0-9],', ast.__getitem__(ast.__getitem__(node).children[1]).children[0]):
         print('its int')
@@ -510,5 +590,9 @@ def generateAddition(node, ast):
     else:
         print('Nested +')'''
 
+def generateIf(node, ast):
+    global inIf
+    print('Code Gen --> Generating code for If...')
 
+    inIf = False
 
