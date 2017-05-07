@@ -17,6 +17,7 @@ varList = []
 
 inVarDecl = False
 inAssign = False
+inPrint = False
 
 # Creates 6502alan Machine Language Instructions from a depth-first in-order traversal of an AST
 def runCodeGenerator(ast, symTable):
@@ -27,6 +28,7 @@ def runCodeGenerator(ast, symTable):
     global varList
     global inVarDecl
     global inAssign
+    global inPrint
 
     print("Let's gen code hoe!!!!")
 
@@ -56,16 +58,25 @@ def runCodeGenerator(ast, symTable):
         elif re.search('Assign[0-9]', node):
             print('Code Gen --> Found Assign!')
             inAssign = True
+        elif re.search('Print[0-9]', node):
+            print('Code Gen --> Found Print!')
+            inPrint = True
 
         if inVarDecl:
             generateVarDecl(node, prev)
         elif inAssign:
             generateAssign(node, prev, ast)
+        elif inPrint:
+            generatePrint(node, prev, ast)
 
 
         #print('Present: ' + node)
         #print('Previous: ' + prev)
         prev = node
+
+    getTempLocVars()
+
+    replaceTempLocVars()
 
     x = 0
     for i in range(0,8):
@@ -81,6 +92,48 @@ def runCodeGenerator(ast, symTable):
 
     #print(x, end='')
 
+# Gets all Temp locations used for variables, replaces them with actual locations
+def getTempLocVars():
+    global p
+    global locList
+    staticVarNum = p
+    i = 0
+    p = p + 1
+
+    locList = []
+
+    while i < len(varList):
+        # <type>:<id>@<scope>,T<tempVarNum>XX
+        checkString = varList[i].split(':')
+        if checkString[0] != 'string':
+            temp = varList[i].split(',')
+            temp = temp[1]
+            temp = temp.split(' ')
+            tempHex = str(hex(p))
+            tempHex = tempHex.split('x')
+            tempHex = tempHex[1].upper()
+            locList.append(str(temp[0]) + ',' + tempHex)
+            p = p + 1
+        i = i + 1
+    print(locList)
+
+def replaceTempLocVars():
+    #global p
+    global locList
+    i = 0
+    while i < len(code):
+        if re.match('T[0-9]', code[i]):
+            for x in locList:
+                if re.match(code[i], x):
+                    temp = x.split(',')
+                    #print(temp[1])
+                    if len(temp[1]) == 1:
+                        temp[1] = '0' + temp[1]
+                    code[i] = temp[1]
+                    code[i+1] = '00'
+        i = i + 1
+
+# Generates Op codes for Variable Declaration Statements
 def generateVarDecl(node, prev):
     global code
     global p
@@ -116,6 +169,7 @@ def generateVarDecl(node, prev):
         varType = currVarTypeList[0]
 
         # Stores the variable name customized for var table
+        # Stored as <type>:<id>@<scope>,T<tempLocID>XX
         varName = str(varType) + ':' + str(currVar) + '@' + str(scope) + ',' + 'T' + str(tempVarNum) + ' XX'
 
 
@@ -127,17 +181,20 @@ def generateVarDecl(node, prev):
 
         inVarDecl = False
 
+# Generates Op Codes for Assign statement
 def generateAssign(node, prev, ast):
-    # ***********Currently only works for INTS**************
+    # ***********Currently only works for INTS and BOOLS**************
     global code
     global p
     global inAssign
+
+    addValues = []
 
     print('Code Gen --> Generating code for assign statement...')
     # Load the accumulator
     code[p] = 'A9'
     p = p + 1
-
+    print('Code Gen --> Looking at children... --> ' + str(ast.__getitem__(node).children))
     varNameList = ast.__getitem__(node).children[0].split(',')
     varName = varNameList[0]
 
@@ -151,12 +208,12 @@ def generateAssign(node, prev, ast):
         notString = True
         notBool = True
     elif re.match('true', varValue):
-        code[p] = '0T'
+        code[p] = '01'
         notInt = True
         notString = True
         notBool = False
     elif re.match('false', varValue):
-        code[p] = '0F'
+        code[p] = '00'
         notInt = True
         notString = True
         notBool = False
@@ -167,7 +224,10 @@ def generateAssign(node, prev, ast):
         notInt = True
         notString = False
         notBool = True
+    elif re.match('[+]', varValue):
+        print('Code Gen --> Hold up, there is an addition in here...')
     else:
+        print(varValue)
         # THIS CASE SHOULDN'T HAPPEN
         notInt = True
         notString = True
@@ -222,9 +282,47 @@ def generateAssign(node, prev, ast):
 
                 tempScope = tempScope - 1
 
-
-
-
-
-
     inAssign = False
+
+def generatePrint(node, prev, ast):
+    #***** CAN PRINT INTS/BOOLS *******
+    global inPrint
+    global p
+    inPrint = False
+    print(str(ast.__getitem__(node).children))
+    if len(ast.__getitem__(node).children) == 1:
+        print('1 child')
+        # Load Y register with constant
+        code[p] = 'AC'
+        p = p + 1
+
+
+        temp = ast.__getitem__(node).children[0].split(',')
+        for x in varList:
+            # Choose constant from memory
+            # Stored as <type>:<id>@<scope>,T<tempLocID>XX
+            if re.search(temp[0] + '[@]' + str(scope),x):
+                t = x.split(',')
+                t = t[1]
+                t = t.split(' ')
+                t = t[0]
+                #print(code[p])
+                code[p] = t
+                #print(code[p])
+                p = p + 1
+                #print(t)
+        code[p] = '00'
+        p = p + 1
+
+        # Load X register with 01
+        code[p] = 'A2'
+        p = p + 1
+
+        code[p] = '01'
+        p = p + 1
+
+        #print(code[p])
+        code[p] = 'FF'
+        print(code[p])
+        p = p + 1
+        inPrint = False

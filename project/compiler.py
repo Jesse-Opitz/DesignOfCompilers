@@ -25,15 +25,15 @@ os.system('python parser.py')
 
 # ---Start Semantic Analysis---
 if(os.stat("errors.txt").st_size == 0):
-    print("\nAST Creation\n")
-    createAST(tokens)
-
-if(os.stat("errors.txt").st_size == 0):
     print("\nSymbol Tree and Table Creation\n")
     createSymbolTree(tokens)
     print('\n')
     printWarnings()
 
+# Create AST
+if(os.stat("errors.txt").st_size == 0):
+    print("\nAST Creation\n")
+    createAST(tokens)
 
 # ---Code Gen---
 if(os.stat("errors.txt").st_size == 0):

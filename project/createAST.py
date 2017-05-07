@@ -1,5 +1,6 @@
 # This file will create the AST from the tokens
 from tree import *
+import re
 import os
 #from lexer import tokens
 
@@ -26,6 +27,9 @@ charNum = -1
 valNum = -1
 stringNum = -1
 opNum = -1
+plusNum = -1
+
+tempAddDigit = ''
 
 # Program number
 progNum = 0
@@ -274,7 +278,7 @@ def createAssignmentStmt(tokens):
     # If value is a digit
     elif tokens[p].kind == 'digit':
         valNum = valNum + 1
-        ast.add_node(str(tokens[p].character) + ',' + str(tokens[p].lineNum)  + ',' + str(valNum), 'Assign' + str(assignNum))
+        parseDigit(tokens)
         p = p + 1
     elif tokens[p].kind == 'boolval':
         boolParent = exprParent
@@ -283,13 +287,15 @@ def createAssignmentStmt(tokens):
         boolParent = exprParent
         createBoolExpr(tokens)
 
+
+
     print('AST Creation --> Token --> ' + tokens[p].character)
     #createStatementList()
 
 #------
 # When adding varDecl to the tree, it is added as varDecl,<uniqueID>
 # When adding variable type to the tree, it is added as <type>,<lineNum>,<uniqueID>
-# When adding char to tree, it is added as <char>,<lineNum>,<uniqueID>,s<scope>
+# When adding char to tree, it is added as <char>,<lineNum>,<uniqueID>
 #------
 def createVarDeclStmt(tokens):
     global ast
@@ -541,4 +547,41 @@ def createBoolExpr(tokens):
         # Skip )
         p = p + 1
 
+def parseDigit(tokens):
+    global p
+    global tempAddDigit
+    #print(tokens[p].character)
+    print(tokens[p + 1].character)
+    if tokens[p+1].character == '+':
+        parsePlus(tokens)
+    elif tokens[p+1].character != '+':
+        #print('no')
+        #print('here')
+        #print(tokens[p-1].character)
+        print(tokens[p].character)
+        #print(tokens[p + 1].character)
+        ast.add_node(str(tokens[p].character) + ',' + str(tokens[p].lineNum) + ',' + str(valNum),
+                     'Assign' + str(assignNum))
+
+def parsePlus(tokens):
+    global p
+    global plusNum
+    global exprParent
+    #print('plus here')
+
+    if tokens[p+1].character == '+':
+        plusNum = plusNum + 1
+        if plusNum > 0:
+            plusParent = str(tokens[p+1].character + ',' + str(tokens[p+1].lineNum)) + ',' + str(plusNum-1)
+            print('hi')
+        else:
+            plusParent = exprParent
+        print(tokens[p+1].character, plusParent)
+        ast.add_node(str(tokens[p+1].character + ',' + str(tokens[p+1].lineNum)) + ',' + str(plusNum), plusParent)
+        ast.add_node(str(tokens[p].character + ',' + str(tokens[p].lineNum)) , str(tokens[p+1].character + ',' + str(tokens[p+1].lineNum)) + ',' + str(plusNum) )
+        p = p + 2
+        ast.add_node(str(tokens[p].character + ',' + str(tokens[p].lineNum)), str(tokens[p-1].character + ',' + str(tokens[p-1].lineNum)) + ',' + str(plusNum) )
+        parsePlus(tokens)
+
+        #ast.display("Program0")
 #createAST(tokens)

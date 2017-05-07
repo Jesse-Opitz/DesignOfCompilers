@@ -1,8 +1,5 @@
 {
-    int a
-    string b
-    boolean c
-
-    a = 1
-    c = true
+    boolean a
+    a = true
+    print(a)
 }$

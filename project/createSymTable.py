@@ -233,14 +233,64 @@ def createSymTree(tokens):
                 i = i + 1
             p = i
             print('Symbol Tree --> Assignment correct type!')
-            p = p + 1
+            #print('h')
+            #p = p + 1
 
         elif match(tokens[p+2].kind, 'digit') and varType == 'int':
-            print('Symbol Tree --> Found assign between ', tokens[p].character, ',', tokens[p+2].character)
+            print('Symbol Tree --> Found assign with id', tokens[p].character)
             if tokens[p+3].character == '+':
+                print('here')
                 if tokens[p+4].kind == 'digit':
                     print('Symbol Tree --> Assigned correct type!')
-                elif tokens[p+4].character == '"':
+                elif tokens[p+4].kind == 'char':
+                    inSameScope = False
+                    neverDecl = True
+                    for node in SymTree.traverse('SymTree' + str(progNum)):
+                        if tokens[p+4].character + ',' + str(scope) in node:
+                            inSameScope = True
+                            neverDecl = False
+                    for node in SymTree.traverse('SymTree' + str(progNum)):
+                        # print(node)
+                        # print(tokens[p].character + ',' + str(scope))
+                        # IF id is in same scope and is correct kind
+                        if match('int,' + tokens[p+4].character + ',' + str(scope), node):
+                            print('Symbol Tree --> Types match! Found ' + node + '!')
+                            # skip over id and )
+                            p = p + 2
+                            neverDecl = False
+                            break
+                        # IF id is NOT in same scope, but is in a parent scope and correct kind
+                        elif re.search('[,][' + tokens[p+4].character + '][,]', node) and not inSameScope:
+                            if re.search('[i][n][t][,][a-z][,][0-' + str(scope) + ']', node):
+                                print('Symbol Tree --> Types match!')
+                                # skip over id and )
+                                p = p + 2
+                                neverDecl = False
+                                break
+                            else:
+                                print('Type Error: Type mismatch on line: ' + str(tokens[p+4].lineNum) + ', variable "' +
+                                      tokens[p+4].character + '" can not compare to an int! "' + tokens[
+                                          p+4].character + '" is a ' + node)
+                                errorFile = open('errors.txt', 'w')
+                                errorFile.write('Error while type checking')
+                                exit()
+                        elif re.search('[,][' + tokens[p+4].character + '][,][' + str(scope) + ']', node):
+                            print('Type Error: Type mismatch on line: ' + str(tokens[p+4].lineNum) + ', variable "' +
+                                  tokens[p].character + '" can not compare to an int! "' + tokens[
+                                      p+4].character + '" is a ' + node)
+                            errorFile = open('errors.txt', 'w')
+                            errorFile.write('Error while type checking')
+                            exit()
+
+                    if neverDecl:
+                        print('Type Error: Type mismatch on line: ' + str(tokens[p + 4].lineNum) + ', variable "' +
+                              tokens[p].character + '" can not compare to an int! "' + tokens[
+                                  p + 4].character + '" does not exist')
+                        errorFile = open('errors.txt', 'w')
+                        errorFile.write('Error while type checking')
+                        exit()
+
+                else:
                     print('Type Error: Error on line ' + str(tokens[p+4].lineNum) + '. Can not assign a string to an int!')
                     errorFile = open('errors.txt', 'w')
                     errorFile.write('Error while type checking')
@@ -724,8 +774,11 @@ def createSymTree(tokens):
             print('Symbol Tree --> Print statement Variable --> ' + tokens[p].character)
             isFound = False
             for node in SymTree.traverse('SymTree' + str(progNum)):
-                if re.search('[,][' + tokens[p].character + '][,][0-' + str(scope-1) + ']', node):
+                print(node)
+                #print(tokens[p].character)
+                if re.search('[,][' + tokens[p].character + '][,][0-' + str(scope) + ']', node):
                     isFound = True
+
             if isFound:
                 print('Symbol Tree --> Print statement variable --> Variable exists!')
             else:

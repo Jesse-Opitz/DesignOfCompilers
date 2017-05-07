@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="239" />
-    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="408" />
-    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="120" />
-    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="244" />
-    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="522" />
-    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="525" />
+    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="243" />
+    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="414" />
+    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="124" />
+    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="248" />
+    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="528" />
+    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="531" />
     <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="117" />
     <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="112" />
     <bookmark url="file://$PROJECT_DIR$/compiler.py" line="18" />
@@ -31,6 +31,12 @@
     <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="205" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="19" />
     <bookmark url="file://$PROJECT_DIR$/compiler.py" line="22" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="2" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="3" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="4" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="7" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="8" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="9" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fe7043f-05a5-4eac-b1a2-dcf5a15af9b1" name="Default" comment="" />
@@ -44,11 +50,21 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="createSymTable.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/createSymTable.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="305">
+              <caret line="777" column="17" lean-forward="false" selection-start-line="777" selection-start-column="17" selection-end-line="777" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="createAST.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/createAST.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-6512">
-              <caret line="104" column="14" lean-forward="false" selection-start-line="104" selection-start-column="14" selection-end-line="104" selection-end-column="14" />
+            <state relative-caret-position="390">
+              <caret line="453" column="88" lean-forward="true" selection-start-line="453" selection-start-column="88" selection-end-line="453" selection-end-column="88" />
               <folding>
                 <element signature="e#48#66#0" expanded="true" />
               </folding>
@@ -59,8 +75,8 @@
       <file leaf-file-name="codeHere.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/codeHere.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="12" lean-forward="false" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
+            <state relative-caret-position="34">
+              <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -69,18 +85,18 @@
       <file leaf-file-name="codeGen.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/codeGen.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="718">
-              <caret line="226" column="0" lean-forward="true" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
+            <state relative-caret-position="640">
+              <caret line="327" column="23" lean-forward="true" selection-start-line="327" selection-start-column="23" selection-end-line="327" selection-end-column="23" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tree.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tree.py">
+      <file leaf-file-name="scratch_1.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="29" column="6" lean-forward="false" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="6" />
+            <state relative-caret-position="102">
+              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -89,8 +105,8 @@
       <file leaf-file-name="compiler.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/compiler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="373">
-              <caret line="40" column="33" lean-forward="false" selection-start-line="40" selection-start-column="33" selection-end-line="40" selection-end-column="33" />
+            <state relative-caret-position="249">
+              <caret line="29" column="15" lean-forward="true" selection-start-line="29" selection-start-column="15" selection-end-line="29" selection-end-column="15" />
               <folding>
                 <element signature="e#31#55#0" expanded="true" />
               </folding>
@@ -109,36 +125,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>listofdeclaredvars</find>
-      <find>listofdeclared</find>
-      <find>listofass</find>
-      <find>assigned</find>
-      <find>compare va</find>
-      <find>here</find>
-      <find>compare string</find>
-      <find>bool</find>
-      <find>string</find>
-      <find>type mismat</find>
-      <find>int</find>
-      <find>compare</find>
-      <find>assigned corre</find>
-      <find>elif(re.search(r'[,][' + tokens[p].character + '][,]' , node) and not inSameScope</find>
-      <find>and not</find>
-      <find>for node</find>
-      <find>assigned string</find>
-      <find>createassi</find>
-      <find>error</find>
-      <find>display</find>
-      <find>symbol tree comple</find>
-      <find>vardecl</find>
-      <find>assign</find>
-      <find>def</find>
-      <find>SymTree</find>
       <find>i</find>
       <find>varList</find>
       <find>split</find>
       <find>scope</find>
       <find>print</find>
+      <find>parseDigit</find>
+      <find>found assign</find>
+      <find>found assign between</find>
+      <find>here</find>
+      <find>found assi</find>
+      <find>varType</find>
+      <find>in the</find>
+      <find>Variable types match!</find>
+      <find>print('here')</find>
+      <find>found assign with id</find>
+      <find>plusNum</find>
+      <find>generating code for assign</find>
+      <find>F</find>
+      <find>adding in</find>
+      <find>varlist</find>
+      <find>print(''</find>
+      <find>generating code for as</find>
+      <find>not found!</find>
+      <find>childre</find>
+      <find>print here</find>
+      <find>generat</find>
+      <find>inprint</find>
+      <find>vardecl</find>
+      <find>assign</find>
+      <find>createid</find>
     </findStrings>
     <replaceStrings>
       <replace>'</replace>
@@ -172,17 +188,20 @@
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" />
         <option value="$PROJECT_DIR$/tokens.txt" />
         <option value="$PROJECT_DIR$/readme.txt" />
-        <option value="$PROJECT_DIR$/createAST.py" />
-        <option value="$PROJECT_DIR$/createSymTable.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" />
         <option value="$PROJECT_DIR$/compiler.py" />
-        <option value="$PROJECT_DIR$/codeHere.txt" />
+        <option value="$PROJECT_DIR$/createSymTable.py" />
+        <option value="$PROJECT_DIR$/createAST.py" />
         <option value="$PROJECT_DIR$/codeGen.py" />
+        <option value="$PROJECT_DIR$/codeHere.txt" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="960" />
-    <option name="height" value="1046" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1938" />
+    <option name="height" value="1064" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -406,18 +425,19 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="960" height="1046" extended-state="0" />
+    <frame x="-9" y="-9" width="1938" height="1064" extended-state="7" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36624205" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290735" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35567567" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35418877" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -458,23 +478,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/createSymTable.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7548">
-          <caret line="447" column="34" lean-forward="false" selection-start-line="447" selection-start-column="34" selection-end-line="447" selection-end-column="34" />
-          <folding>
-            <element signature="e#52#70#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/codeHere.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -769,56 +772,70 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tree.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="6" lean-forward="false" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2017.1/system/python_stubs/-261570511/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="3582" column="8" lean-forward="false" selection-start-line="3582" selection-start-column="8" selection-end-line="3582" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/compiler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="373">
-          <caret line="40" column="33" lean-forward="false" selection-start-line="40" selection-start-column="33" selection-end-line="40" selection-end-column="33" />
+        <state relative-caret-position="249">
+          <caret line="29" column="15" lean-forward="true" selection-start-line="29" selection-start-column="15" selection-end-line="29" selection-end-column="15" />
           <folding>
             <element signature="e#31#55#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/createSymTable.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="777" column="17" lean-forward="false" selection-start-line="777" selection-start-column="17" selection-end-line="777" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/createAST.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6512">
-          <caret line="104" column="14" lean-forward="false" selection-start-line="104" selection-start-column="14" selection-end-line="104" selection-end-column="14" />
+        <state relative-caret-position="390">
+          <caret line="453" column="88" lean-forward="true" selection-start-line="453" selection-start-column="88" selection-end-line="453" selection-end-column="88" />
           <folding>
             <element signature="e#48#66#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tree.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="29" column="6" lean-forward="false" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/createSymTable.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="127" column="62" lean-forward="true" selection-start-line="127" selection-start-column="8" selection-end-line="127" selection-end-column="62" />
-          <folding>
-            <element signature="e#52#70#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/codeHere.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="12" lean-forward="false" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
+        <state relative-caret-position="34">
+          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/codeGen.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="718">
-          <caret line="226" column="0" lean-forward="true" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
+        <state relative-caret-position="640">
+          <caret line="327" column="23" lean-forward="true" selection-start-line="327" selection-start-column="23" selection-end-line="327" selection-end-column="23" />
           <folding />
         </state>
       </provider>
