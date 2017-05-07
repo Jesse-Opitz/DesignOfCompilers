@@ -2,15 +2,15 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/createAST.py" line="243" />
-    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="414" />
-    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="124" />
+    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="413" />
+    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="121" />
     <bookmark url="file://$PROJECT_DIR$/createAST.py" line="248" />
-    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="528" />
-    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="531" />
+    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="523" />
+    <bookmark url="file://$PROJECT_DIR$/createAST.py" line="526" />
     <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="117" />
     <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="112" />
     <bookmark url="file://$PROJECT_DIR$/compiler.py" line="18" />
-    <bookmark url="file://$PROJECT_DIR$/parser.py" line="53" />
+    <bookmark url="file://$PROJECT_DIR$/parser.py" line="54" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="2" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="1" />
     <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="98" />
@@ -31,11 +31,13 @@
     <bookmark url="file://$PROJECT_DIR$/createSymTable.py" line="205" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" line="19" />
     <bookmark url="file://$PROJECT_DIR$/compiler.py" line="22" />
-    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="2" />
-    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="3" />
-    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="4" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="5" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="7" />
-    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="8" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="12" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="13" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="14" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="2" />
+    <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="25" />
     <bookmark url="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" line="9" />
   </component>
   <component name="ChangeListManager">
@@ -53,8 +55,8 @@
       <file leaf-file-name="createSymTable.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/createSymTable.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="305">
-              <caret line="777" column="17" lean-forward="false" selection-start-line="777" selection-start-column="17" selection-end-line="777" selection-end-column="17" />
+            <state relative-caret-position="237">
+              <caret line="323" column="55" lean-forward="false" selection-start-line="323" selection-start-column="55" selection-end-line="323" selection-end-column="55" />
               <folding />
             </state>
           </provider>
@@ -63,8 +65,8 @@
       <file leaf-file-name="createAST.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/createAST.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="453" column="88" lean-forward="true" selection-start-line="453" selection-start-column="88" selection-end-line="453" selection-end-column="88" />
+            <state relative-caret-position="521">
+              <caret line="601" column="27" lean-forward="false" selection-start-line="601" selection-start-column="27" selection-end-line="601" selection-end-column="27" />
               <folding>
                 <element signature="e#48#66#0" expanded="true" />
               </folding>
@@ -75,8 +77,18 @@
       <file leaf-file-name="codeHere.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/codeHere.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+            <state relative-caret-position="51">
+              <caret line="3" column="12" lean-forward="false" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="scratch_2.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_2.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="18" column="2" lean-forward="false" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
               <folding />
             </state>
           </provider>
@@ -85,8 +97,8 @@
       <file leaf-file-name="codeGen.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/codeGen.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="640">
-              <caret line="327" column="23" lean-forward="true" selection-start-line="327" selection-start-column="23" selection-end-line="327" selection-end-column="23" />
+            <state relative-caret-position="306">
+              <caret line="269" column="19" lean-forward="true" selection-start-line="269" selection-start-column="19" selection-end-line="269" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -95,8 +107,8 @@
       <file leaf-file-name="scratch_1.txt" pinned="false" current-in-tab="false">
         <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+            <state relative-caret-position="17">
+              <caret line="1" column="10" lean-forward="true" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -125,36 +137,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>i</find>
-      <find>varList</find>
-      <find>split</find>
-      <find>scope</find>
-      <find>print</find>
-      <find>parseDigit</find>
-      <find>found assign</find>
-      <find>found assign between</find>
-      <find>here</find>
-      <find>found assi</find>
-      <find>varType</find>
-      <find>in the</find>
-      <find>Variable types match!</find>
-      <find>print('here')</find>
-      <find>found assign with id</find>
-      <find>plusNum</find>
-      <find>generating code for assign</find>
-      <find>F</find>
-      <find>adding in</find>
-      <find>varlist</find>
-      <find>print(''</find>
-      <find>generating code for as</find>
-      <find>not found!</find>
-      <find>childre</find>
-      <find>print here</find>
-      <find>generat</find>
-      <find>inprint</find>
-      <find>vardecl</find>
+      <find>stringList</find>
       <find>assign</find>
-      <find>createid</find>
+      <find>found assign</find>
+      <find>string</find>
+      <find>notString</find>
+      <find>locList</find>
+      <find>8d</find>
+      <find>length:</find>
+      <find>here')</find>
+      <find>stringStartList</find>
+      <find>print('here')</find>
+      <find>print</find>
+      <find>print('string</find>
+      <find>dp</find>
+      <find>ac</find>
+      <find>ac'</find>
+      <find>generatePrint</find>
+      <find>A2</find>
+      <find>A0</find>
+      <find>dp - 1</find>
+      <find>found varde</find>
+      <find>'a9'</find>
+      <find>'a</find>
+      <find>a9</find>
+      <find>if</find>
+      <find>generate</find>
+      <find>generatea</find>
+      <find>stringlist</find>
+      <find>'a0'</find>
+      <find>while</find>
     </findStrings>
     <replaceStrings>
       <replace>'</replace>
@@ -169,6 +181,8 @@
       <replace>line</replace>
       <replace>createSymTree</replace>
       <replace>a boolean</replace>
+      <replace>'Block' + str(blockNum) + ',' + str(scope)</replace>
+      <replace>varLocList</replace>
     </replaceStrings>
   </component>
   <component name="HighlightingSettingsPerFile">
@@ -183,17 +197,18 @@
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.py" />
         <option value="$PROJECT_DIR$/lexer.py" />
         <option value="$PROJECT_DIR$/parser2.py" />
-        <option value="$PROJECT_DIR$/parser.py" />
         <option value="$PROJECT_DIR$/testcases.txt" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.txt" />
         <option value="$PROJECT_DIR$/tokens.txt" />
         <option value="$PROJECT_DIR$/readme.txt" />
-        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" />
         <option value="$PROJECT_DIR$/compiler.py" />
         <option value="$PROJECT_DIR$/createSymTable.py" />
+        <option value="$PROJECT_DIR$/parser.py" />
         <option value="$PROJECT_DIR$/createAST.py" />
-        <option value="$PROJECT_DIR$/codeGen.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_2.txt" />
         <option value="$PROJECT_DIR$/codeHere.txt" />
+        <option value="$PROJECT_DIR$/codeGen.py" />
       </list>
     </option>
   </component>
@@ -425,7 +440,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1064" extended-state="7" />
+    <frame x="-9" y="-9" width="1938" height="1064" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36624205" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
@@ -478,14 +493,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/codeHere.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="5" lean-forward="true" selection-start-line="2" selection-start-column="5" selection-end-line="3" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/parser.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -730,13 +737,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/parser2.py" />
-    <entry file="file://$PROJECT_DIR$/parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/testcases.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -788,14 +788,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/compiler.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="249">
@@ -808,16 +800,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/createSymTable.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="777" column="17" lean-forward="false" selection-start-line="777" selection-start-column="17" selection-end-line="777" selection-end-column="17" />
+        <state relative-caret-position="237">
+          <caret line="323" column="55" lean-forward="false" selection-start-line="323" selection-start-column="55" selection-end-line="323" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="606" column="0" lean-forward="true" selection-start-line="606" selection-start-column="0" selection-end-line="606" selection-end-column="0" />
+          <folding>
+            <element signature="e#51#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="10" lean-forward="true" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_2.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="2" lean-forward="false" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/createAST.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="453" column="88" lean-forward="true" selection-start-line="453" selection-start-column="88" selection-end-line="453" selection-end-column="88" />
+        <state relative-caret-position="521">
+          <caret line="601" column="27" lean-forward="false" selection-start-line="601" selection-start-column="27" selection-end-line="601" selection-end-column="27" />
           <folding>
             <element signature="e#48#66#0" expanded="true" />
           </folding>
@@ -826,16 +844,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/codeHere.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+        <state relative-caret-position="51">
+          <caret line="3" column="12" lean-forward="false" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/codeGen.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="640">
-          <caret line="327" column="23" lean-forward="true" selection-start-line="327" selection-start-column="23" selection-end-line="327" selection-end-column="23" />
+        <state relative-caret-position="306">
+          <caret line="269" column="19" lean-forward="true" selection-start-line="269" selection-start-column="19" selection-end-line="269" selection-end-column="19" />
           <folding />
         </state>
       </provider>

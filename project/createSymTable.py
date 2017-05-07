@@ -320,7 +320,9 @@ def createSymTree(tokens):
         p = p + 1
         #print(tokens[p].character)
         # If comparison starts with a digit
-        if match(tokens[p].kind, 'digit'):
+        if match(tokens[p].kind, 'boolval') and match(tokens[p+1].character, ')'):
+            print('Symbol Tree --> Found single boolval')
+        elif match(tokens[p].kind, 'digit'):
             print('Symbol Tree --> Compare Ints/digits --> ' + tokens[p].character)
             p = p + 1
             print('Symbol Tree --> Compare Ints/digits --> ' + str(tokens[p].character))

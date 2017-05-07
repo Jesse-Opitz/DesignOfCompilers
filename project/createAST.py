@@ -2,13 +2,14 @@
 from tree import *
 import re
 import os
-#from lexer import tokens
+
+# from lexer import tokens
 
 # Pointer for tokens
 p = 0
 
 # Pointer for scope
-#scope = -1
+# scope = -1
 
 # Numbers to keep unique names
 blockNum = -1
@@ -41,6 +42,7 @@ boolParent = ""
 
 # Tree var
 ast = Tree()
+
 
 def createAST(tokens):
     global ast
@@ -90,7 +92,6 @@ def createAST(tokens):
     if os.stat('errors.txt').st_size == 0:
         runCreateAST = True
 
-
     # If there are no errors continue to AST creation
     if runCreateAST:
         # Start creating the AST
@@ -99,10 +100,11 @@ def createAST(tokens):
 
 # Match tokens and prints out if there's a match
 def match(currTok, projectedTok):
-    if(currTok is projectedTok or currTok == projectedTok):
+    if (currTok is projectedTok or currTok == projectedTok):
         print("AST Creation --> Matched --> " + currTok)
         return True
     return False
+
 
 # Function to begin recursively creating AST
 def startCreateAST(tokens):
@@ -114,38 +116,38 @@ def startCreateAST(tokens):
 
     print('\nProgram', progNum, '\n')
 
-
     # Create  + str(progNum) node
     ast.add_node('Program' + str(progNum))
 
     # Logic for block
     if match(tokens[p].character, '{'):
         createBlock(tokens)
-        #createStatementList()
-        if match(tokens[p].character,'$'):
+        # createStatementList()
+        if match(tokens[p].character, '$'):
             ast.add_node(tokens[p].character, 'Program' + str(progNum))
             print('AST Creation --> AST Complete')
             print('\nAST ' + str(progNum) + ' Below\n')
             ast.display("Program" + str(progNum))
-            #-- I am not sure why this breaks block -- for now can not create AST for multiple programs, only the first one
+            # -- I am not sure why this breaks block -- for now can not create AST for multiple programs, only the first one
             try:
-                if(tokens[p+1].character == '{'):
+                if (tokens[p + 1].character == '{'):
                     progNum = progNum + 1
-                    #print('here')
+                    # print('here')
                     p = p + 1
-                   #print(tokens[p].character)
+                    # print(tokens[p].character)
                     startCreateAST(tokens)
             except IndexError:
                 pass
 
+
 def createBlock(tokens):
     global ast
-    #global scope
+    # global scope
     global blockNum
     global p
 
     # Increment scope when creating a block
-    #scope = scope + 1
+    # scope = scope + 1
 
     blockNum = blockNum + 1
 
@@ -159,9 +161,10 @@ def createBlock(tokens):
     # Add 1 to get past end bracket
     p = p + 1
 
-    #scope = scope - 1
+    # scope = scope - 1
 
     blockNum = blockNum - 1
+
 
 def createStatementList(tokens):
     global ast
@@ -172,8 +175,9 @@ def createStatementList(tokens):
     print('AST Creation --> in StatementList')
     print('AST Creation --> Token --> ' + tokens[p].character)
 
-    if(tokens[p].character in firstSet or tokens[p].kind in firstSet):
+    if (tokens[p].character in firstSet or tokens[p].kind in firstSet):
         createStatement(tokens)
+
 
 def createStatement(tokens):
     global ast
@@ -184,42 +188,43 @@ def createStatement(tokens):
     print('AST Creation --> Token --> ' + tokens[p].character)
     # Go to print stmnt
     if match(tokens[p].character, 'print'):
-        #print('if print')
+        # print('if print')
         createPrintStmt(tokens)
 
     # Go to assign stmnt
     elif match(tokens[p].kind, 'char') and match(tokens[p + 1].kind, 'assign'):
-        #print('if assign')
+        # print('if assign')
         createAssignmentStmt(tokens)
 
     # Go to varDecl stmnt
     elif match(tokens[p].kind, 'type') and match(tokens[p + 1].kind, 'char'):
-        #print('if vardecl')
+        # print('if vardecl')
         createVarDeclStmt(tokens)
 
     # Go to while stmnt
     elif match(tokens[p].character, 'while'):
-        #print('if while')
+        # print('if while')
         createWhileStmnt(tokens)
 
     # Go to if stmnt
     elif match(tokens[p].character, 'if'):
-        #print('if if')
+        # print('if if')
         createIfStmnt(tokens)
 
     # Go to block
     elif match(tokens[p].character, '{'):
-        #print('if block')
+        # print('if block')
         blockParent = "Block" + str(blockNum)
         createBlock(tokens)
 
     createStatementList(tokens)
 
-#-------
+
+# -------
 # Adds print to the AST as Print<uniqueID>
 # Changes parent of Expr to Print<uniqueID>
 # Adds Expr as child to print
-#-------
+# -------
 def createPrintStmt(tokens):
     global ast
     global printNum
@@ -230,7 +235,7 @@ def createPrintStmt(tokens):
     print('AST Creation --> Token --> ' + tokens[p].character)
 
     printNum = printNum + 1
-    ast.add_node('Print' + str(printNum),'Block' + str(blockNum))
+    ast.add_node('Print' + str(printNum), 'Block' + str(blockNum))
 
     # Have to skip over open paren
     p = p + 2
@@ -245,10 +250,11 @@ def createPrintStmt(tokens):
     # Have to skip over closing paren
     p = p + 1
 
-#-------
+
+# -------
 # When adding char to tree, it is added as <char>,<lineNum>,<uniqueID>
 # When adding value to tree, it is added as <value>,<lineNum>,<uniqueID>
-#-------
+# -------
 def createAssignmentStmt(tokens):
     global ast
     global assignNum
@@ -261,10 +267,10 @@ def createAssignmentStmt(tokens):
     print('AST Creation --> in assign')
 
     assignNum = assignNum + 1
-    ast.add_node('Assign' + str(assignNum),'Block' + str(blockNum))
+    ast.add_node('Assign' + str(assignNum), 'Block' + str(blockNum))
     print('AST Creation --> Token --> ' + tokens[p].character)
     charNum = charNum + 1
-    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum)  + ',' + str(charNum) ,'Assign' + str(assignNum))
+    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(charNum), 'Assign' + str(assignNum))
 
     p = p + 2
 
@@ -287,16 +293,15 @@ def createAssignmentStmt(tokens):
         boolParent = exprParent
         createBoolExpr(tokens)
 
-
-
     print('AST Creation --> Token --> ' + tokens[p].character)
-    #createStatementList()
+    # createStatementList()
 
-#------
+
+# ------
 # When adding varDecl to the tree, it is added as varDecl,<uniqueID>
 # When adding variable type to the tree, it is added as <type>,<lineNum>,<uniqueID>
 # When adding char to tree, it is added as <char>,<lineNum>,<uniqueID>
-#------
+# ------
 def createVarDeclStmt(tokens):
     global ast
     global typeNum
@@ -310,19 +315,22 @@ def createVarDeclStmt(tokens):
     ast.add_node('varDecl' + ',' + str(varDeclNum), 'Block' + str(blockNum))
     print('AST Creation --> Token --> ' + tokens[p].character)
     typeNum = typeNum + 1
-    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(typeNum), 'varDecl' + ',' + str(varDeclNum))
+    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(typeNum),
+                 'varDecl' + ',' + str(varDeclNum))
 
     p = p + 1
 
     print('AST Creation --> Token --> ' + tokens[p].character)
     charNum = charNum + 1
-    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(charNum), 'varDecl' + ',' + str(varDeclNum))
+    ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(charNum),
+                 'varDecl' + ',' + str(varDeclNum))
 
     p = p + 1
 
-    #createStatementList()
+    # createStatementList()
 
-#------
+
+# ------
 def createWhileStmnt(tokens):
     global ast
     global whileNum
@@ -345,10 +353,9 @@ def createWhileStmnt(tokens):
     createBlock(tokens)
 
 
-
-#------
+# ------
 # Adds if statement tree under block
-#------
+# ------
 def createIfStmnt(tokens):
     global ast
     global ifStmtNum
@@ -373,31 +380,32 @@ def createIfStmnt(tokens):
 
     print('AST Creation --> Token --> ' + tokens[p].character)
 
-
     createBlock(tokens)
 
-#------
+
+# ------
 # Figures out which expression it should go to
-#------
+# ------
 def createExpr(tokens):
     global ast
     global boolParent
     print('AST Creation --> in Expr')
     print('AST Creation --> Token --> ' + tokens[p].character)
 
-    #exprFirstSet = ('digit', 'char', '"', '(', 'boolval')
+    # exprFirstSet = ('digit', 'char', '"', '(', 'boolval')
 
-    if(tokens[p].kind == 'digit'):
+    if (tokens[p].kind == 'digit'):
         createIntExpr(tokens)
-    elif(tokens[p].kind == 'char'):
+    elif (tokens[p].kind == 'char'):
         createId(tokens)
-    elif(tokens[p].character == '"'):
+    elif (tokens[p].character == '"'):
         createStringExpr(tokens)
-    elif(tokens[p].character == '(' or tokens[p].kind == 'boolval'):
+    elif (tokens[p].character == '(' or tokens[p].kind == 'boolval'):
         boolParent = exprParent
         createBoolExpr(tokens)
 
-#------
+
+# ------
 # The only <operator> possible is +, in the AST it is changed to 'Add' to follow the principle that
 # a language should not be shown in the AST.
 #
@@ -408,7 +416,7 @@ def createExpr(tokens):
 # Digit is added as <digit>,<lineNum>,<uniqueID>
 # Operator is added as Add,<lineNum>,<uniqueID>
 # Expr is added using createExpr function
-#------
+# ------
 def createIntExpr(tokens):
     global ast
     global p
@@ -418,7 +426,7 @@ def createIntExpr(tokens):
     print('AST Creation --> in intExpr')
     print('AST Creation --> Token --> ' + tokens[p].character)
 
-    if(tokens[p].kind == 'digit' and tokens[p + 1].kind == 'operator'):
+    if (tokens[p].kind == 'digit' and tokens[p + 1].kind == 'operator'):
         # Add the digit to tree under exprParent
         ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(digitNum), exprParent)
 
@@ -433,14 +441,15 @@ def createIntExpr(tokens):
         # Must go back to Expr
         createExpr(tokens)
 
-    elif(tokens[p].kind == 'digit'):
+    elif (tokens[p].kind == 'digit'):
         digitNum = digitNum + 1
         ast.add_node(tokens[p].character + ',' + str(tokens[p].lineNum) + ',' + str(digitNum), exprParent)
         p = p + 1
 
-#------
+
+# ------
 # Adds the char ID under exprParent
-#------
+# ------
 def createId(tokens):
     global ast
     global p
@@ -455,9 +464,10 @@ def createId(tokens):
 
     p = p + 1
 
-#------
+
+# ------
 # Adds the string expression under exprParent
-#------
+# ------
 def createStringExpr(tokens):
     global ast
     global p
@@ -472,7 +482,7 @@ def createStringExpr(tokens):
     stringList = []
 
     # String goes to exprParent
-    while(tokens[p].character != '"'):
+    while (tokens[p].character != '"'):
         print('AST Creation --> Token --> ' + tokens[p].character)
         stringNum = stringNum + 1
         stringList.append(tokens[p].character)
@@ -490,16 +500,17 @@ def createStringExpr(tokens):
 
     print('AST Creation --> Token --> ' + tokens[p].character)
 
-#------
+
+# ------
 # Adds a bool expression that is either just <boolval> or (<expr><boolop><expr>)
-#------
+# ------
 def createBoolExpr(tokens):
     global ast
     global p
     global boolNum
     global opNum
     global exprParent
-    
+
     print('AST Creation --> in bool expr')
     print('AST Creation --> Token --> ' + tokens[p].character)
     if match(tokens[p].kind, 'boolval'):
@@ -547,41 +558,45 @@ def createBoolExpr(tokens):
         # Skip )
         p = p + 1
 
+
 def parseDigit(tokens):
     global p
     global tempAddDigit
-    #print(tokens[p].character)
+    # print(tokens[p].character)
     print(tokens[p + 1].character)
-    if tokens[p+1].character == '+':
+    if tokens[p + 1].character == '+':
         parsePlus(tokens)
-    elif tokens[p+1].character != '+':
-        #print('no')
-        #print('here')
-        #print(tokens[p-1].character)
+    elif tokens[p + 1].character != '+':
+        # print('no')
+        # print('here')
+        # print(tokens[p-1].character)
         print(tokens[p].character)
-        #print(tokens[p + 1].character)
+        # print(tokens[p + 1].character)
         ast.add_node(str(tokens[p].character) + ',' + str(tokens[p].lineNum) + ',' + str(valNum),
                      'Assign' + str(assignNum))
+
 
 def parsePlus(tokens):
     global p
     global plusNum
     global exprParent
-    #print('plus here')
+    # print('plus here')
 
-    if tokens[p+1].character == '+':
+    if tokens[p + 1].character == '+':
         plusNum = plusNum + 1
         if plusNum > 0:
-            plusParent = str(tokens[p+1].character + ',' + str(tokens[p+1].lineNum)) + ',' + str(plusNum-1)
+            plusParent = str(tokens[p + 1].character + ',' + str(tokens[p + 1].lineNum)) + ',' + str(plusNum - 1)
             print('hi')
         else:
             plusParent = exprParent
-        print(tokens[p+1].character, plusParent)
-        ast.add_node(str(tokens[p+1].character + ',' + str(tokens[p+1].lineNum)) + ',' + str(plusNum), plusParent)
-        ast.add_node(str(tokens[p].character + ',' + str(tokens[p].lineNum)) , str(tokens[p+1].character + ',' + str(tokens[p+1].lineNum)) + ',' + str(plusNum) )
+        print(tokens[p + 1].character, plusParent)
+        ast.add_node(str(tokens[p + 1].character + ',' + str(tokens[p + 1].lineNum)) + ',' + str(plusNum), plusParent)
+        ast.add_node(str(tokens[p].character + ',' + str(tokens[p].lineNum)),
+                     str(tokens[p + 1].character + ',' + str(tokens[p + 1].lineNum)) + ',' + str(plusNum))
         p = p + 2
-        ast.add_node(str(tokens[p].character + ',' + str(tokens[p].lineNum)), str(tokens[p-1].character + ',' + str(tokens[p-1].lineNum)) + ',' + str(plusNum) )
+        ast.add_node(str(tokens[p].character + ',' + str(tokens[p].lineNum)),
+                     str(tokens[p - 1].character + ',' + str(tokens[p - 1].lineNum)) + ',' + str(plusNum))
         parsePlus(tokens)
 
-        #ast.display("Program0")
-#createAST(tokens)
+        # ast.display("Program0")
+        # createAST(tokens)
