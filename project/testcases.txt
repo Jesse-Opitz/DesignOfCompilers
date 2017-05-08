@@ -1,3 +1,68 @@
+Test Cases for Code Gen
+{
+    int a
+    string b
+    boolean c
+
+    a = 1
+    b = "hi"
+    c = true
+
+    print(a)
+    print(b)
+    print(c)
+
+}$
+
+{
+    print(1+1)
+}$
+
+{
+    print(true)
+    print(false)
+    print("hi")
+    print(1)
+}$
+
+{
+    int a
+    a = 2 + 1
+    print(a)
+}$
+
+{
+    string a
+    a = "hey"
+    {
+        string a
+        a = "hi"
+        print(a)
+    }
+    print(a)
+
+}$
+
+{
+  int a
+  a = 0
+  boolean b
+  b = false
+  boolean c
+  c = true
+  while((b != c) == true)
+  {
+    print("a")
+    string d
+    d = "yes"
+    print(d)
+    {
+      int a
+      a = 5
+    }
+  }
+}$
+
 # -----------------------Shouldn't work-----------------------
 --Issue with comparing string to int
 {

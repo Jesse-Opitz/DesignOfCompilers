@@ -11,6 +11,10 @@ class Node:
     def identifier(self):
         return self.__identifier
 
+    @identifier.setter
+    def set_identifier(self, newID):
+        self.__identifier = newID
+
     @property
     def children(self):
         return self.__children

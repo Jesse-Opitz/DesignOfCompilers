@@ -51,25 +51,24 @@ progNum = 0
 
 cst = Tree()
 
-
 def runParse(tokens):
     global cst
     canRunParse = False
 
     # Checks if errors file is empty
     # If errors file is empty, lexer had no errors
-    if (os.stat("errors.txt").st_size == 0):
+    if(os.stat("errors.txt").st_size == 0):
         canRunParse = True
 
     # Parse if there are no errors in the lexer
-    if (canRunParse):
+    if(canRunParse):
         print("\n")
         parseStart(tokens)
-        if (os.stat("errors.txt").st_size == 0):
+        if(os.stat("errors.txt").st_size == 0):
             print("\nCST Below\n")
             i = 0
 
-            while (i <= progNum):
+            while(i <= progNum):
                 cst.display("Program" + str(i))
                 print("\n")
                 i = i + 1
@@ -78,8 +77,7 @@ def runParse(tokens):
     else:
         print("Error in lexer, can not run parse.")
 
-        # input("Press any key to end program")
-
+    #input("Press any key to end program")
 
 def match(token, expected):
     if token == expected:
@@ -88,7 +86,6 @@ def match(token, expected):
 
     return False
 
-
 # Begin parse: Block $
 def parseStart(token):
     global cst
@@ -96,16 +93,16 @@ def parseStart(token):
     global progNum
     global p
 
-    cst.add_node("Program" + str(progNum))  # root node
+    cst.add_node("Program" + str(progNum)) # root node
     blockParent = 'Program' + str(progNum)
     # Parse for Block
-    if (parseBlock(token)):
+    if(parseBlock(token)):
         if (match(token[p].kind, 'endProgram')):
             print(token[p].character)
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Program" + str(progNum))
             print("Parser --> Program " + str(progNum) + " parse complete")
             try:
-                if token[p + 1].character == '{':
+                if token[p+1].character == '{':
                     p = p + 1
                     progNum = progNum + 1
                     parseStart(token)
@@ -114,7 +111,6 @@ def parseStart(token):
         else:
             print("Error on line " + str(token.lineNum) + ". Expecting '$', got " + token[p].character + ".")
             endParse()
-
 
 # Block Parse: { StatementList }
 def parseBlock(token):
@@ -127,19 +123,19 @@ def parseBlock(token):
     global maxBlock
 
     maxBlock = maxBlock + 1
-    # print('BlockParent =', blockParent)
+    #print('BlockParent =', blockParent)
     print('Parser --> Block', token[p].kind, token[p].character)
     parseBlockFirstSet = ['{']
     if token[p].character in parseBlockFirstSet:
         blockNum = blockNum + 1
-        # print('BlockParent =', blockParent)
+        #print('BlockParent =', blockParent)
         cst.add_node("Block" + str(blockNum), blockParent)
-        if (match(token[p].character, '{')):
+        if(match(token[p].character, '{')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
             brackNum = brackNum + 1
             p = p + 1
-            if (parseStatementList(token)):
-                if (match(token[p].character, '}')):
+            if(parseStatementList(token)):
+                if(match(token[p].character, '}')):
                     cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "Block" + str(blockNum))
                     blockNum = blockNum - 1
                     p = p + 1
@@ -155,7 +151,6 @@ def parseBlock(token):
             endParse()
     return False
 
-
 # StatementList Parse: Statement StatementList OR Epsilon/Lambda
 def parseStatementList(token):
     global cst
@@ -163,12 +158,12 @@ def parseStatementList(token):
 
     print('Parser --> Statement List ', token[p].kind, token[p].character)
 
-    statementListFirstSet = ['keyword', 'char', 'type', 'digit', '"', '(', '==', '!=', '{']
+    statementListFirstSet = ['keyword','char','type', 'digit', '"', '(', '==', '!=', '{']
     if token[p].kind in statementListFirstSet or token[p].character in statementListFirstSet:
         stmtListNum = stmtListNum + 1
         cst.add_node("StatementList" + str(stmtListNum), "Block" + str(blockNum))
-        if (parseStatement(token)):
-            if (parseStatementList(token)):
+        if(parseStatement(token)):
+            if(parseStatementList(token)):
                 return True
             else:
                 print('Error on line', str(token[p].lineNum), '. Unexpected token:', str(token[p].character))
@@ -181,7 +176,6 @@ def parseStatementList(token):
     else:
         return True
 
-
 # Statement Parse: PrintStatement OR AssignemntStatement OR VarDecl OR WhileStatement OR IfStatement OR Block
 def parseStatement(token):
     global cst
@@ -190,41 +184,39 @@ def parseStatement(token):
     global blockParent
 
     print('Parser --> Statement ', token[p].kind, token[p].character)
-    statementListFirstSet = ['keyword', 'char', 'type', 'quote', '{']
+    statementListFirstSet = ['keyword','char','type', 'quote', '{']
     if token[p].kind in statementListFirstSet or token[p].character in statementListFirstSet:
-        # cst.create_node("Statement", "statement" + str(stmtNum), parent='block' + str(blockNum))
+        #cst.create_node("Statement", "statement" + str(stmtNum), parent='block' + str(blockNum))
         stmtNum = stmtNum + 1
         cst.add_node("Statement" + str(stmtNum), "StatementList" + str(stmtListNum))
-        if (parsePrintStatement(token)):
+        if(parsePrintStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
-        # print(' IS ---- 1 ')
-        if (parseAssignmentStatement(token)):
+        #print(' IS ---- 1 ')
+        if(parseAssignmentStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
-        # print(' IS ---- 2 ')
-        if (parseVarDecl(token)):
+        #print(' IS ---- 2 ')
+        if(parseVarDecl(token)):
             stmtListNum = stmtListNum + 1
             return True
-        # print(' IS ---- 3 ')
-        if (parseWhileStatement(token)):
+        #print(' IS ---- 3 ')
+        if(parseWhileStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
-        # print(' IS ---- 4 ')
-        if (parseIfStatement(token)):
+        #print(' IS ---- 4 ')
+        if(parseIfStatement(token)):
             stmtListNum = stmtListNum + 1
             return True
-        # print(' IS ---- 5 ')
+        #print(' IS ---- 5 ')
         blockParent = "Statement" + str(stmtNum)
-        if (parseBlock(token)):
+        if(parseBlock(token)):
             stmtListNum = stmtListNum + 1
             return True
     else:
-        print('Error on line', str(token[p].lineNum), ': Expecting a keyword, char, type, quote or start brace, got:',
-              token[p].character)
+        print('Error on line', str(token[p].lineNum), ': Expecting a keyword, char, type, quote or start brace, got:', token[p].character)
         endParse()
     return False
-
 
 # PrintStatement Parse: print ( Expr )
 def parsePrintStatement(token):
@@ -241,27 +233,25 @@ def parsePrintStatement(token):
     if token[p].character in printStatementFirstSet:
         printStmtNum = printStmtNum + 1
         cst.add_node("PrintStmt" + str(printStmtNum), "Statement" + str(stmtNum))
-        if (match(token[p].character, 'print')):
+        if(match(token[p].character, 'print')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
             p = p + 1
-            if (match(token[p].character, '(')):
+            if(match(token[p].character, '(')):
                 cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
                 p = p + 1
                 exprParent = "PrintStmt" + str(printStmtNum)
-                if (parseExpr(token)):
-                    if (match(token[p].character, ')')):
+                if(parseExpr(token)):
+                    if(match(token[p].character, ')')):
                         cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "PrintStmt" + str(printStmtNum))
                         p = p + 1
                         return True
                     else:
-                        print("Error on line " + str(token[p].lineNum) + ". Expecting ')', got " + token[
-                            p].character + ".")
+                        print("Error on line " + str(token[p].lineNum) + ". Expecting ')', got " + token[p].character + ".")
                         endParse()
             else:
                 print("Error on line " + str(token[p].lineNum) + ". Expecting '(', got " + token[p].character + ".")
                 endParse()
     return False
-
 
 # AssignmentStatement Parse: Id = Expr
 def parseAssignmentStatement(token):
@@ -278,22 +268,19 @@ def parseAssignmentStatement(token):
         # Changed assignment parent to statement
         cst.add_node("AssignmentStmt" + str(assignNum), "Statement" + str(stmtNum))
         idParent = "AssignmentStmt" + str(assignNum)
-        if (parseId(token)):
-            if (match(token[p].character, '=')):
+        if(parseId(token)):
+            if(match(token[p].character, '=')):
                 cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "AssignmentStmt" + str(assignNum))
                 p = p + 1
                 exprParent = "AssignmentStmt" + str(assignNum)
-                if (parseExpr(token)):
+                if(parseExpr(token)):
                     return True
-            elif (token[p].character is not '=' or token[p].character is not '+'):
-                print("Error on line " + str(token[
-                                                 p].lineNum) + ". Expecting '=' or '+' or there needs to be a variable type ['string', 'int', 'boolean'] before, got " +
-                      token[p].character + ".")
+            elif(token[p].character is not '=' or token[p].character is not '+'):
+                print("Error on line " + str(token[p].lineNum) + ". Expecting '=' or '+' or there needs to be a variable type ['string', 'int', 'boolean'] before, got " + token[p].character + ".")
                 endParse()
     return False
 
-
-# VarDecl Parse: type Id
+#VarDecl Parse: type Id
 def parseVarDecl(token):
     global cst
     global p
@@ -305,17 +292,15 @@ def parseVarDecl(token):
     if token[p].kind in varDeclFirstSet:
         idParent = "VarDecl" + str(varDeclNum)
         cst.add_node("VarDecl" + str(varDeclNum), "Statement" + str(stmtNum))
-        if (match(token[p].kind, 'type')):
+        if(match(token[p].kind, 'type')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "VarDecl" + str(varDeclNum))
             p = p + 1
-            if (parseId(token)):
+            if(parseId(token)):
                 return True
         else:
-            print("Error on line " + str(token[p].lineNum) + ". Expecting 'int', 'string' or 'boolean', got " + token[
-                p].character + ".")
+            print("Error on line " + str(token[p].lineNum) + ". Expecting 'int', 'string' or 'boolean', got " + token[p].character + ".")
             endParse()
     return False
-
 
 # WhileStatement Parse: while BooleanExpr Block
 def parseWhileStatement(token):
@@ -331,20 +316,19 @@ def parseWhileStatement(token):
     if token[p].character in whileStatementFirstSet:
         whileNum = whileNum + 1
         cst.add_node("WhileStmt" + str(whileNum), "Statement" + str(stmtNum))
-        if (match(token[p].character, 'while')):
+        if(match(token[p].character, 'while')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "WhileStmt" + str(whileNum))
             p = p + 1
             boolExprParent = "WhileStmt" + str(whileNum)
-            if (parseBooleanExpr(token)):
+            if(parseBooleanExpr(token)):
                 blockParent = "WhileStmt" + str(whileNum)
-                # print("Here -----------------", blockParent)
-                if (parseBlock(token)):
+                #print("Here -----------------", blockParent)
+                if(parseBlock(token)):
                     return True
         else:
             print("Error on line " + str(token[p].lineNum) + ". Expecting 'while', got " + token[p].character + ".")
             endParse()
     return False
-
 
 # IfStatement Parse: if BooleanExpr Block
 def parseIfStatement(token):
@@ -359,19 +343,18 @@ def parseIfStatement(token):
     if token[p].character in ifStatementFirstSet:
         ifStmtNum = ifStmtNum + 1
         cst.add_node("ifStmt" + str(ifStmtNum), "Statement" + str(stmtNum))
-        if (match(token[p].character, 'if')):
+        if(match(token[p].character, 'if')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "ifStmt" + str(ifStmtNum))
             p = p + 1
             boolExprParent = "ifStmt" + str(ifStmtNum)
-            if (parseBooleanExpr(token)):
+            if(parseBooleanExpr(token)):
                 blockParent = "ifStmt" + str(ifStmtNum)
-                if (parseBlock(token)):
+                if(parseBlock(token)):
                     return True
         else:
             print("Error on line " + str(token[p].lineNum) + ". Expecting 'if', got " + token[p].character + ".")
             endParse()
     return False
-
 
 # Expr Parse: IntExpr OR StringExpr OR BooleanExpr OR Id
 def parseExpr(token):
@@ -382,22 +365,21 @@ def parseExpr(token):
 
     print('Parser --> Expr', token[p].kind, token[p].character)
     exprFirstSet = ['digit', 'quote', '(', 'boolval', 'char']
-    if (token[p].character in exprFirstSet or token[p].kind in exprFirstSet):
+    if(token[p].character in exprFirstSet or token[p].kind in exprFirstSet):
         exprNum = exprNum + 1
         idParent = "Expr" + str(exprNum)
         boolExprParent = "Expr" + str(exprNum)
         cst.add_node("Expr" + str(exprNum), exprParent)
-        if (parseIntExpr(token)):
+        if(parseIntExpr(token)):
             return True
-        elif (parseStringExpr(token)):
+        elif(parseStringExpr(token)):
             return True
-        elif (parseBooleanExpr(token)):
+        elif(parseBooleanExpr(token)):
             return True
-        elif (parseId(token)):
+        elif(parseId(token)):
             return True
 
     return False
-
 
 # IntExpr Parse: digit intop Expr OR digit
 def parseIntExpr(token):
@@ -411,28 +393,27 @@ def parseIntExpr(token):
     print('Parser --> Int Expr', token[p].kind, token[p].character)
 
     intExprFirstSet = ['digit']
-    if (token[p].kind in intExprFirstSet):
+    if(token[p].kind in intExprFirstSet):
         # Added intExprNum = intExprNum + 1
         intExprNum = intExprNum + 1
-        cst.add_node("IntExpr" + str(intExprNum), "Expr" + str(exprNum))
-        if (match(token[p].kind, 'digit')):
-            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "IntExpr" + str(intExprNum))
+        cst.add_node("IntExpr" + str(intExprNum),"Expr" + str(exprNum))
+        if(match(token[p].kind, 'digit')):
+            cst.add_node(str(token[p].lineNum)+ ',' + token[p].character, "IntExpr" + str(intExprNum))
             digitBool = True
             p = p + 1
             # Checks for intop Expr, if they are there, return True
-            if (parseIntOp(token)):
-                if (parseExpr(token)):
+            if(parseIntOp(token)):
+                if(parseExpr(token)):
                     return True
         else:
             print("Error on line " + str(token[p].lineNum) + ". Expecting a digit 0-9, got " + token[p].character + ".")
             endParse()
 
     # Since intop Expr is not there, we only need to check the digit
-    if (digitBool):
+    if(digitBool):
         return True
 
     return False
-
 
 # StringExpr Parse: " CharList "
 def parseStringExpr(token):
@@ -445,28 +426,26 @@ def parseStringExpr(token):
     print('Parser --> String Expr', token[p].kind, token[p].character)
 
     strExprFirstSet = ['"']
-    if (token[p].character in strExprFirstSet):
+    if(token[p].character in strExprFirstSet):
         # Change: Add 1 here
         stringExprNum = stringExprNum + 1
         # cst.add_node("stringExpr" + str(strExprNum), "Expr" + str(exprNum))
         # Changed to cst.add_node("stringExpr" + str(stringExprNum), "Expr" + str(exprNum))
         cst.add_node("stringExpr" + str(stringExprNum), "Expr" + str(exprNum))
-        if (match(token[p].character, '"')):
+        if(match(token[p].character, '"')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "stringExpr" + str(stringExprNum))
             p = p + 1
-            if (parseCharList(token)):
-                if (match(token[p].character, '"')):
+            if(parseCharList(token)):
+                if(match(token[p].character, '"')):
                     cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "stringExpr" + str(stringExprNum))
                     p = p + 1
                     return True
                 else:
-                    print(
-                        "Error on line " + str(token[p].lineNum) + '. Expecting \'"\', got ' + token[p].character + ".")
+                    print("Error on line " + str(token[p].lineNum) + '. Expecting \'"\', got ' + token[p].character + ".")
         else:
             print("Error on line " + str(token[p].lineNum) + '. Expecting \'"\', got ' + token[p].character + ".")
 
     return False
-
 
 # BooleanExpr Parse: ( Expr boolop Expr )
 def parseBooleanExpr(token):
@@ -481,46 +460,43 @@ def parseBooleanExpr(token):
     print('Parser --> Boolean Expr', token[p].kind, token[p].character)
 
     boolExprFirstSet = ['(', 'true', 'false']
-    if (token[p].character in boolExprFirstSet):
+    if(token[p].character in boolExprFirstSet):
         boolExprNum = boolExprNum + 1
         cst.add_node("BoolExpr" + str(boolExprNum), boolExprParent)
         originalBoolExprNum = boolExprNum
-        if (match(token[p].character, '(')):
+        print(token[p+2].character != ')')
+        if(match(token[p].character, '(') and token[p+2].character != ')'):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolExpr" + str(boolExprNum))
             p = p + 1
             exprParent = "BoolExpr" + str(boolExprNum)
-            if (parseExpr(token)):
-                if (match(token[p].kind, 'compare')):
+            if(parseExpr(token)):
+
+                if(match(token[p].kind, 'compare')):
                     cst.add_node("BoolOp" + str(boolOpNum), "BoolExpr" + str(boolExprNum))
                     cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolOp" + str(boolOpNum))
                     boolOpNum = boolOpNum + 1
                     p = p + 1
                     exprParent = "BoolExpr" + str(boolExprNum)
-                    if (parseExpr(token)):
-                        if (match(token[p].character, ')')):
-                            cst.add_node(str(token[p].lineNum) + ',' + token[p].character,
-                                         "BoolExpr" + str(originalBoolExprNum))
+                    if(parseExpr(token)):
+                        if(match(token[p].character, ')')):
+                            cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolExpr" + str(originalBoolExprNum))
                             p = p + 1
                             return True
                         else:
-                            print("Error on line " + str(token[p].lineNum) + ". Expecting ')', got " + token[
-                                p].character + ".")
+                            print("Error on line " + str(token[p].lineNum) + ". Expecting ')', got " + token[p].character + ".")
                             endParse()
                 else:
-                    print("Error on line " + str(token[p].lineNum) + ". Expecting '==' or '!=', got " + token[
-                        p].character + ".")
+                    print("Error on line " + str(token[p].lineNum) + ". Expecting '==' or '!=', got " + token[p].character + ".")
                     endParse()
-        elif (match(token[p].kind, 'boolval')):
+        elif(match(token[p].kind, 'boolval')):
             cst.add_node("BoolVal" + str(boolValNum), "BoolExpr" + str(boolExprNum))
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "BoolVal" + str(boolValNum))
             p = p + 1
             return True
         else:
-            print("Error on line " + str(token[p].lineNum) + ". Expecting '(' or boolval, got " + token[
-                p].character + ".")
+            print("Error on line " + str(token[p].lineNum) + ". Expecting '(' or boolval, got " + token[p].character + ".")
             endParse()
     return False
-
 
 # Id Parse: char
 # Did not return parseChar(token) because I only want to return True or False, not a possible error message
@@ -532,15 +508,14 @@ def parseId(token):
     print('Parser --> ID', token[p].kind, token[p].character)
 
     idFirstSet = ['char']
-    if (token[p].kind in idFirstSet):
+    if(token[p].kind in idFirstSet):
         idNum = idNum + 1
         charParent = "Id" + str(idNum)
         cst.add_node("Id" + str(idNum), idParent)
-        if (parseChar(token)):
+        if(parseChar(token)):
             return True
 
     return False
-
 
 # CharList Parse: char CharList OR space CharList OR Epsilon/Lambda
 # I will not need to verify 'space CharList' b/c spaces inside strings are recognized as char's in my lexer
@@ -552,19 +527,18 @@ def parseCharList(token):
     print('Parser --> CharList', token[p].kind, token[p].character)
 
     charListFirstSet = ['char']
-    if (token[p].kind in charListFirstSet):
+    if(token[p].kind in charListFirstSet):
         charListNum = charListNum + 1
         cst.add_node("CharList" + str(charListNum), "stringExpr" + str(stringExprNum))
         charParent = "CharList" + str(charListNum)
-        if (match(token[p].kind, 'char')):
+        if(match(token[p].kind, 'char')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "CharList" + str(charListNum))
             p = p + 1
-            if (parseCharList(token)):
+            if(parseCharList(token)):
                 return True
     else:
         # Epsilon/Lambda
         return True
-
 
 # Char Parse: a-z
 def parseChar(token):
@@ -574,15 +548,14 @@ def parseChar(token):
     print('Parser --> Char', token[p].kind, token[p].character)
 
     charFirstSet = ['char']
-    if (token[p].kind in charFirstSet):
+    if(token[p].kind in charFirstSet):
         cst.add_node('char' + str(charNum), charParent)
-        if (match(token[p].kind, 'char')):
+        if(match(token[p].kind, 'char')):
             cst.add_node(str(token[p].lineNum) + ',' + token[p].character, 'char' + str(charNum))
             p = p + 1
             return True
 
     return False
-
 
 # IntOp Parse: +
 # This is here in case the language needs more operators
@@ -592,18 +565,17 @@ def parseIntOp(token):
 
     print('Parser --> Int Op', token[p].kind, token[p].character)
 
-    if (match(token[p].kind, 'operator')):
+    if(match(token[p].kind, 'operator')):
         # Changed: lower case I in intExpr to IntExpr
         cst.add_node(str(token[p].lineNum) + ',' + token[p].character, "IntExpr" + str(intExprNum))
         p = p + 1
         return True
-    elif (token[p].kind is 'assign'):
+    elif(token[p].kind is 'assign'):
         return True
-        # else: # Will need to add operators to error message if more operators are added
-        # print("Error on line " + str(token[p].lineNum) + ". Expecting '=' or '+', got " + token[p].character + ".")
+    #else: # Will need to add operators to error message if more operators are added
+        #print("Error on line " + str(token[p].lineNum) + ". Expecting '=' or '+', got " + token[p].character + ".")
 
     return False
-
 
 def endParse():
     print('Parse Failed')
@@ -611,5 +583,5 @@ def endParse():
     errorsFile.write('Error in parse')
     sys.exit('Parse Failed')
 
-
 runParse(tokens)
+

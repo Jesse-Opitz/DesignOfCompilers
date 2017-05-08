@@ -2,7 +2,8 @@
 
 from lexer import tokens
 #from parser import runParse
-from createAST import createAST, ast
+#from createAST import createAST, ast
+from testingASTStuff import createAST, ast
 from createSymTable import createSymbolTree, printWarnings, SymTree
 from codeGen import runCodeGenerator
 import os

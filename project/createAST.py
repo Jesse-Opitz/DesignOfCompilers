@@ -9,7 +9,7 @@ import os
 p = 0
 
 # Pointer for scope
-# scope = -1
+scope = -1
 
 # Numbers to keep unique names
 blockNum = -1
@@ -122,7 +122,6 @@ def startCreateAST(tokens):
     # Logic for block
     if match(tokens[p].character, '{'):
         createBlock(tokens)
-        # createStatementList()
         if match(tokens[p].character, '$'):
             ast.add_node(tokens[p].character, 'Program' + str(progNum))
             print('AST Creation --> AST Complete')
@@ -142,12 +141,12 @@ def startCreateAST(tokens):
 
 def createBlock(tokens):
     global ast
-    # global scope
+    global scope
     global blockNum
     global p
 
     # Increment scope when creating a block
-    # scope = scope + 1
+    scope = scope + 1
 
     blockNum = blockNum + 1
 
@@ -158,12 +157,15 @@ def createBlock(tokens):
 
     createStatementList(tokens)
 
+    if tokens[p].character == '}':
+        print('end brace')
+        scope = scope - 1
+
+        blockNum = blockNum - 1
     # Add 1 to get past end bracket
     p = p + 1
 
-    # scope = scope - 1
 
-    blockNum = blockNum - 1
 
 
 def createStatementList(tokens):
@@ -381,6 +383,7 @@ def createIfStmnt(tokens):
     print('AST Creation --> Token --> ' + tokens[p].character)
 
     createBlock(tokens)
+    #blockNum = blockNum - 1
 
 
 # ------

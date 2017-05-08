@@ -1,6 +1,11 @@
 {
-    print(true)
-    print(false)
-    print("hi")
-    print(1)
+    string a
+    a = "hey"
+    {
+        string a
+        a = "hi"
+        print(a)
+    }
+    print(a)
+
 }$

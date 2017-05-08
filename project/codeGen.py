@@ -12,13 +12,25 @@ dp = 254
 tempVarNum = 0
 tempAddNum = 0
 tempStringNum = 0
+tempNonVarLoc = 0
 
 # Scope - used to keep track of scope
-scope = -1
+scope = 0
+
+# Keeps track of jumps
+jumpNum = 0
+
+# Jump table
+# Jumps stored as <statement>:J<jumpNum>
+jumpTable = []
 
 # Table for variables stored as:
 # <type>:<id>@<scope>,T<tempVarNum>XX
 varList = []
+
+# Table for non-variable references stored as:
+# <value>:N<tempNonVarLoc>VV
+storedVals = []
 
 # Table for strings stored as:
 # <type>:<id>@<scope>,T<tempStringNum>XX
@@ -45,32 +57,35 @@ def runCodeGenerator(ast, symTable):
     print("Let's gen code hoe!!!!")
 
     prev = ''
-    for node in ast.traverse('Program0'):
+    for node in ast.traverse('Program'):
         #print(node)
+        if re.match('[a-z]@[0-9]', node):
+            print('Code Gen --> Check Scope: ' + str(node.split('@')[1]))
+            scope = node.split('@')[1]
         print('Code Gen --> Pointer --> ' + node + ' in scope ' + str(scope))
-        if re.search('Block[0-9]', node):
-            scope = scope + 1
-            print('Code Gen --> Found a new scope')
+        #if re.search('Block[0-9]', node):
+            #scope = scope + 1
+            #print('Code Gen --> Found a new scope')
         # ******Multi-line comment code goes here, when I adjust AST******* IDK WHAT THIS MEANS??????
-        elif re.search('varDecl,[0-9]', node):
+        if re.search('VarDecl@[0-9]', node):
             print('Code Gen --> Found VarDecl!')
             #This is a way to get children --REMEMBER THIS
             #print(ast.__getitem__(node).children[1])
             inVarDecl = True
-        elif re.search('Assign[0-9]', node):
+        elif re.search('Assign@[0-9]', node):
             print('Code Gen --> Found Assign!')
             inAssign = True
-        elif re.search('Print[0-9]', node):
+        elif re.search('Print@[0-9]', node):
             print('Code Gen --> Found Print!')
             inPrint = True
-        elif re.search('if,[0-9]', node):
+        elif re.search('if@[0-9]', node):
             print('Code Gen --> Found If!')
             inIf = True
 
         if inVarDecl:
             generateVarDecl(node, prev)
         elif inAssign:
-            generateAssign(node, prev, ast)
+            generateAssign(node, ast)
         elif inPrint:
             generatePrint(node, ast)
         elif inIf:
@@ -106,21 +121,19 @@ def getTempLocVars():
     global p
     global dp
     global varLocList
+    global nonVarLocList
+
     staticVarNum = p
     i = 0
     t = 0
     p = p + 1
 
     varLocList = []
+    nonVarLocList = []
 
     while i < len(varList):
         # <type>:<id>@<scope>,T<tempVarNum>XX
-        checkString = varList[i].split(':')
-        '''if checkString[0] == 'string':
-            #print('string')
-            #print(str(stringStartList))
-            varLocList.append((varList[i].split(',')[1].split(' ')[0] + ',' + stringStartList[t]).upper())
-        else:'''
+        #checkString = varList[i].split(':')
         temp = varList[i].split(',')
         temp = temp[1]
         temp = temp.split(' ')
@@ -130,25 +143,53 @@ def getTempLocVars():
         varLocList.append(str(temp[0]) + ',' + tempHex)
         p = p + 1
         i = i + 1
-    #print('Var List: ' + str(varLocList))
+    print('Var List: ' + str(varLocList))
+
+    while t < len(storedVals):
+        #print()
+        temp = storedVals[t].split(':')
+        #print(temp)
+        temp = temp[1]
+        temp = temp.split(' ')
+        tempHex = str(hex(p))
+        tempHex = tempHex.split('x')
+        tempHex = tempHex[1].upper()
+        nonVarLocList.append(str(temp[0]) + ',' + tempHex)
+        p = p + 1
+        t = t + 1
+    print('Non-var LocList: ' + str(nonVarLocList))
+
 
 def replaceTempLocVars():
     #global p
     global varLocList
-    global strLocList
+    global nonVarLocList
+    #global strLocList
     i = 0
     while i < len(code):
         if re.match('T[0-9]', code[i]):
             for x in varLocList:
+                #print('Here x: ' + x)
                 if re.match(code[i], x):
                     temp = x.split(',')
                     #print(temp[1])
                     if len(temp[1]) == 1:
                         temp[1] = '0' + temp[1]
                     code[i] = temp[1]
-                    print('HERE: ' + code[i+1])
+                    #print('HERE: ' + code[i+1])
                     if code[i+1] == 'XX':
                         code[i+1] = '00'
+        elif re.match('N[0-9]', code[i]):
+            for y in nonVarLocList:
+                if re.match(code[i], y):
+                    temp = y.split(',')
+                    # print(temp[1])
+                    if len(temp[1]) == 1:
+                        temp[1] = '0' + temp[1]
+                    code[i] = temp[1]
+                    #print('HERE: ' + code[i + 1])
+                    if code[i + 1] == 'VV':
+                        code[i + 1] = '00'
         i = i + 1
 
 
@@ -162,20 +203,23 @@ def generateVarDecl(node, prev):
     global tempStringNum
     global stringList
 
-    if re.search('[a-z][a-z]+,[0-9]', node):
+    if re.search('[a-z][a-z]+', node):
         print('Code Gen --> Found variable type --> ' + node)
-    if re.match('[a-z],[0-9],[0-9]', node):
+    if re.match('[a-z]@[0-9]', node):
         print('Code Gen --> Generating code for VarDecl --> ' + node)
         # --Generating op codes for Var Decl
-
+        #print(node)
         # Stores the actual variable
-        currVarList = node.split(',')
-        currVar = currVarList[0]
+        #currVarList = node
+        #print(currVarList)
+        currVar = node
+
 
         # Stores the variable type
         currVarTypeList = prev.split(',')
+        #print(currVarTypeList)
         varType = currVarTypeList[0]
-
+        #print(varType)
         # Clear the accumulator
         code[p] = 'A9'
         p = p + 1
@@ -193,7 +237,8 @@ def generateVarDecl(node, prev):
 
         # Stores the variable name customized for var table
         # Stored as <type>:<id>@<scope>,T<tempLocID>XX
-        varName = str(varType) + ':' + str(currVar) + '@' + str(scope) + ',' + 'T' + str(tempVarNum) + ' XX'
+        #print(currVar)
+        varName = str(varType) + ':' + str(currVar) + ',' + 'T' + str(tempVarNum) + ' XX'
 
         # Add variable's temporary variable to table
         varList.append(varName)
@@ -204,22 +249,22 @@ def generateVarDecl(node, prev):
         inVarDecl = False
 
 # Generates Op Codes for Assign statement
-def generateAssign(node, prev, ast):
+def generateAssign(node, ast):
     # ***********Currently only works for INTS and BOOLS**************
     global code
     global p
     global dp
     global inAssign
     global stringList
-    generateAddRan = False
+    generateAddRun = False
     addValues = []
 
     print('Code Gen --> Generating code for assign statement...')
     if re.search('[+]', ast.__getitem__(node).children[0]) or re.search('[+]', ast.__getitem__(node).children[1]):
         print('Dont load acc, need to add first')
-        generateAddRan = True
+        generateAddRun = True
     else:
-        print('here' + ast.__getitem__(node).children[0] + ast.__getitem__(node).children[1])
+        #print('here' + ast.__getitem__(node).children[0] + ast.__getitem__(node).children[1])
         # Load the accumulator
         code[p] = 'A9'
         p = p + 1
@@ -263,7 +308,7 @@ def generateAssign(node, prev, ast):
         i = len(tempCharList) - 1
         #spaceSlash = ''
         #stringStartList.append(hex(dp).split('x')[1])
-        print('Temp char list' + str(tempCharList))
+        #print('Temp char list' + str(tempCharList))
         while i >= 0: # len(tempCharList):
             #print('i: ' + str(i))
             try:
@@ -289,14 +334,14 @@ def generateAssign(node, prev, ast):
         print('Code Gen --> Hold up, there is an addition in here...')
         generateAddition(node, ast)
     else:
-        print(varValue)
+        #print(varValue)
         # THIS CASE SHOULDN'T HAPPEN
         notInt = True
         notString = True
         notBool = True
         exit('WTF did you do?!?!?!? You broke everything...')
 
-    if not generateAddRan:
+    if not generateAddRun:
         #print('here')
         p = p + 1
 
@@ -308,8 +353,12 @@ def generateAssign(node, prev, ast):
         #print(varValue)
 
         # Add's location of variable to code table if it is in same scope
+
         for i in range(0, len(varList)):
-            if re.search(varName + '@' + str(scope), varList[i]):
+            #print('here: ' + varList[i])
+            #print(varName)
+            if re.search(varName, varList[i]):
+
                 #print(varList[i])
                 temp = varList[i].split(',')
                 temp = temp[1]
@@ -356,22 +405,84 @@ def generatePrint(node, ast):
     inPrint = False
     nonVarString = False
     print('Code Gen --> Generating code for printing this list of children ' + str(ast.__getitem__(node).children))
-    if len(ast.__getitem__(node).children) == 1:
+    if re.search('[+][|]', ast.__getitem__(node).children[0]):
+        print(ast.__getitem__(ast.__getitem__(node).children[0]).children)
+        i = 0
+        print('CurrNode: ' + node)
+        print('CurrChildren: ' + str(ast.__getitem__(node).children))
+        print('CurrChildrenChildren: ' + str(ast.__getitem__(ast.__getitem__(node).children[0]).children))
+        IntsToAdd = ast.__getitem__(ast.__getitem__(node).children[0]).children
+        code[p] = 'A9'
+        p = p + 1
+        code[p] = '0' + IntsToAdd[0]
+        p = p + 1
+        code[p] = '8D'
+        p = p + 1
+        code[p] = 'FF'
+        p = p + 1
+        code[p] = '00'
+        p = p + 1
+        code[p] = 'A9'
+        p = p + 1
+        code[p] = '0' + IntsToAdd[1]
+        p = p + 1
+        code[p] = '6D'
+        p = p + 1
+        code[p] = 'FF'
+        p = p + 1
+        code[p] = '00'
+        p = p + 1
+        code[p] = '8D'
+        p = p + 1
+        code[p] = 'FF'
+        p = p + 1
+        code[p] = '00'
+        p = p + 1
+        code[p] = 'A2'
+        p = p + 1
+        code[p] = '01'
+        p = p + 1
+        code[p] = 'AC'
+        p = p + 1
+        code[p] = 'FF'
+        p = p + 1
+        code[p] = '00'
+        p = p + 1
+        code[p] = 'A9'
+        p = p + 1
+        code[p] = '00'
+        p = p + 1
+        code[p] = '8D'
+        p = p + 1
+        code[p] = 'FF'
+        p = p + 1
+        code[p] = '00'
+        p = p + 1
+        code[p] = 'FF'
+        p = p + 1
+
+            #generateAddition(node, ast)
+        #exit()
+    elif len(ast.__getitem__(node).children) == 1:
         #print('1 child')
         # Load Y register from memory
         code[p] = 'AC'
         p = p + 1
-        temp = ast.__getitem__(node).children[0].split(',')
+        temp = ast.__getitem__(node).children[0].split('@')
+        #print('hi: ' + str(temp))
         checkString = ''
-        if len(temp[0]) > 1 and temp[0] != 'true' and temp[0] != 'false' and temp[0]:
+        #print(temp[0] + ' here')
+
+        if len(temp[0]) > 1 and temp[0] != 'true' and temp[0] != 'false' and not re.search('[+][|]', temp[0]):
+            #print('here ' + temp[0])
             isVar = False
-            print('not var')
+            #print('not var')
             tempCharList = list(temp[0])
 
             i = len(tempCharList) - 1
             # spaceSlash = ''
             # stringStartList.append(hex(dp).split('x')[1])
-            print('Temp char list' + str(tempCharList))
+            #print('Temp char list' + str(tempCharList))
             while i >= 0:  # len(tempCharList):
                 # print('i: ' + str(i))
                 try:
@@ -390,40 +501,46 @@ def generatePrint(node, ast):
             dp = dp - len(tempCharList)
             nonVarString = True
         elif temp[0] == 'true':
-            print('prints true')
+            #print('prints true')
             code[p] = '01'
             isVar = False
         elif temp[0] == 'false':
-            print('prints false')
+            #print('prints false')
             code[p] = '00'
             isVar = False
         elif re.match('[0-9]', temp[0]):
-            print('prints int')
+            #print('prints int')
             code[p] = '0' + temp[0]
             isVar = False
         else:
             isVar = True
 
         if isVar:
+            print(temp[0] + 'here')
             for x in varList:
                 # Choose constant from memory
                 # Stored as <type>:<id>@<scope>,T<tempLocID>XX
-                if re.search(temp[0] + '[@]' + str(scope),x):
-                    print(x)
-                    t = x.split(',')
+                if re.search(temp[0] + '[@]' + str(temp[1]),x):
+                    #print(x)
+                    t = x.split('@')
                     #print(str(t) + 'here')
                     checkString = t[0].split(':')[0]
+                    t = t[1].split(',')
+                    #print(str(t) + 'here')
                     t = t[1]
+                    #print(str(t) + 'here')
                     t = t.split(' ')
                     t = t[0]
                     #print(code[p])
+
                     code[p] = t
                     #print(code[p])
                     p = p + 1
                     #print(t)
 
+        #print('Here Checkstring: ' + checkString + ' nonVarString: ' + str(nonVarString))
         if checkString == 'string' and isVar:
-            print('here' + str(p))
+            #print('here' + str(p))
             # Load X register with 01
             # p = p + 1
             p = p + 1
@@ -436,6 +553,7 @@ def generatePrint(node, ast):
             code[p] = '02'
             p = p + 1
         elif not isVar and nonVarString:
+
             #print('notvar')
             # Load X register with 01
             # p = p + 1
@@ -452,6 +570,7 @@ def generatePrint(node, ast):
             code[p] = '02'
             p = p + 1
         elif not isVar and not nonVarString:
+            print('h')
             #print('notvar')
             # Load X register with 01
             # p = p + 1
@@ -496,7 +615,7 @@ def generateAddition(node, ast):
     isAPlusNested = False
     while i < len(ast.__getitem__(ast.__getitem__(node).children[1]).children):
         #print('count: ' + str(i))
-        temp = ast.__getitem__(ast.__getitem__(node).children[1]).children[i].split(',')
+        temp = ast.__getitem__(ast.__getitem__(node).children[1]).children[i].split('@')
         temp = temp[0]
         #print(temp)
         if temp != '+':
@@ -516,6 +635,7 @@ def generateAddition(node, ast):
         # Store variable value in a temp location
         code[p] = '8D'
         p = p + 1
+        print('Here ' + str(tempVarNum))
         code[p] = 'T' + str(tempVarNum)
         p = p + 1
         code[p] = 'XX'
@@ -532,7 +652,7 @@ def generateAddition(node, ast):
 
         code[p] = '6D'
         p = p + 1
-
+        print('Hey: ' + str(tempVarNum))
         code[p] = 'T' + str(tempVarNum)
         p = p + 1
 
@@ -544,11 +664,12 @@ def generateAddition(node, ast):
         code[p] = '8D'
         p = p + 1
 
-        print(str(ast.__getitem__(node).children))
+        #print(str(ast.__getitem__(node).children))
         temp = ast.__getitem__(node).children[0]
-        temp = temp.split(',')
+        temp = temp.split('@')
         for x in varList:
             if re.search(temp[0] + '@' + str(scope), x):
+                print('X is ' + x)
                 temp = x.split(',')
                 temp = temp[1]
                 temp = temp.split(' ')
@@ -592,7 +713,77 @@ def generateAddition(node, ast):
 
 def generateIf(node, ast):
     global inIf
+    global p
+    global jumpNum
+    global jumpTable
+    global code
+    global nonVarList
+    global storedVals
+    global tempNonVarLoc
+
+    nonVarList = 0
     print('Code Gen --> Generating code for If...')
+    #print(ast.__getitem__(node).children)
+    childrens = ast.__getitem__(node).children
+    #print(childrens[0])
+    if (re.search('true', childrens[0]) or re.search('false', childrens[0])) and len(childrens) == 2:
+        # Load accumulator with true
+        code[p] = 'A9'
+        p = p + 1
+        # Value is true
+        if re.search('true', childrens[0]):
+            value = '01'
+        else:
+            # Value is false
+            value = '00'
+
+        code[p] = value
+        p = p + 1
+
+        # Store first value
+        code[p] = '8D'
+        p = p + 1
+
+        # Location to store in
+        code[p] = 'N' + str(nonVarList) # Some value for non-vars
+        p = p + 1
+        code[p] = 'VV'
+        p = p + 1
+
+        # Load X with a true constant
+        code[p] = 'A2'
+        p = p + 1
+        code[p] = '01'
+        p = p + 1
+
+        # Compare byte in memory to X-register
+        code[p] = 'EC'
+        p = p + 1
+
+        # Location first var was stored
+        code[p] = 'N' + str(nonVarList) # Some value for non-vars
+        p = p + 1
+        code[p] = 'VV'
+        p = p + 1
+
+        # Table for non-variable references stored as:
+        # <value>:N<tempNonVarLoc>VV
+        storedVals.append(value + ':' + 'N' + str(tempNonVarLoc) + ' VV')
+
+        tempNonVarLoc = tempNonVarLoc + 1
+
+        code[p] = 'D0'
+        p = p + 1
+
+        code[p] = 'J' + str(jumpNum)# Jump number
+
+
+        #Jumps stored as < statement >: J < jumpNum >;<current p in hex>|<end p in hex or END if not defined yet>
+        jumpTable.append(str(ast.__getitem__(node).identifier) + ':J' + str(jumpNum) + ';' + str(hex(p).split('x')[1].upper()) + '|END')
+        print('Code Gen --> If added to jump table -->  ' + str(jumpTable))
+        jumpNum = jumpNum + 1
+
+        p = p + 1
 
     inIf = False
 
