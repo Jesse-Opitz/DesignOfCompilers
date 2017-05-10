@@ -41,6 +41,9 @@ inVarDecl = False
 inAssign = False
 inPrint = False
 inIf = False
+ranBoolExpr = False
+
+boolNum = 1
 
 # Creates 6502alan Machine Language Instructions from a depth-first in-order traversal of an AST
 def runCodeGenerator(ast, symTable):
@@ -53,15 +56,22 @@ def runCodeGenerator(ast, symTable):
     global inAssign
     global inPrint
     global inIf
+    global jumpTable
+    global jumpNum
 
-    print("Let's gen code hoe!!!!")
-
+    origScope = -1
+    ui = ''
     prev = ''
+
     for node in ast.traverse('Program'):
         #print(node)
-        if re.match('[a-z]@[0-9]', node):
-            print('Code Gen --> Check Scope: ' + str(node.split('@')[1]))
+        if re.search('@[0-9]', node):
+            #print(node + '-----------------------------')
             scope = node.split('@')[1]
+            if re.search('[|]', scope):
+                scope = scope.split('|')[0]
+            print('Code Gen --> Check Scope: ' + scope)
+
         print('Code Gen --> Pointer --> ' + node + ' in scope ' + str(scope))
         #if re.search('Block[0-9]', node):
             #scope = scope + 1
@@ -70,7 +80,7 @@ def runCodeGenerator(ast, symTable):
         if re.search('VarDecl@[0-9]', node):
             print('Code Gen --> Found VarDecl!')
             #This is a way to get children --REMEMBER THIS
-            #print(ast.__getitem__(node).children[1])
+            #print(ast.__getitem__(node).children()[1])
             inVarDecl = True
         elif re.search('Assign@[0-9]', node):
             print('Code Gen --> Found Assign!')
@@ -80,7 +90,16 @@ def runCodeGenerator(ast, symTable):
             inPrint = True
         elif re.search('if@[0-9]', node):
             print('Code Gen --> Found If!')
+            origScope = int(scope)+1
+            ui = node.split('|')[1]
+            #jumpTable stored as <keyword>@<scope>|<ui>;<p>:<end>,J<jumpNum>
+            jumpTable.append(node + ';' + str(p) + ':00,J' + str(jumpNum))
             inIf = True
+
+        if inIf:
+            ident = 'if'
+            generateBoolExpr(node, ast, origScope, scope, ident, ui)
+            generateIf(node, ast, origScope, ui)
 
         if inVarDecl:
             generateVarDecl(node, prev)
@@ -88,8 +107,6 @@ def runCodeGenerator(ast, symTable):
             generateAssign(node, ast)
         elif inPrint:
             generatePrint(node, ast)
-        elif inIf:
-            generateIf(node, ast)
 
 
         #print('Present: ' + node)
@@ -99,9 +116,12 @@ def runCodeGenerator(ast, symTable):
     getTempLocVars()
 
     replaceTempLocVars()
-
+    print('Jump Table: ' + str(jumpTable))
     #print(varList)
 
+    if p > dp:
+        print('System Error: Not enough memory for this program!')
+        exit()
     x = 0
     for i in range(0,8):
         #if x != 0:
@@ -126,6 +146,7 @@ def getTempLocVars():
     staticVarNum = p
     i = 0
     t = 0
+    y = 0
     p = p + 1
 
     varLocList = []
@@ -190,6 +211,21 @@ def replaceTempLocVars():
                     #print('HERE: ' + code[i + 1])
                     if code[i + 1] == 'VV':
                         code[i + 1] = '00'
+        elif re.match('J[0-9]', code[i]):
+            for z in jumpTable:
+                print(z)
+                splitComma = z.split(',')
+                #print(splitComma[1])
+                #print(code[i])
+                if re.match(splitComma[1], code[i]):
+                    #print('here')
+                    end = splitComma[0].split(':')
+                    start = end[0].split(';')[1]
+                    end = end[1]
+                    jumpDist = int(end) - int(start)
+                    hexVal = hex(jumpDist).split('x')[1]
+                    code[i] = hexVal
+
         i = i + 1
 
 
@@ -260,21 +296,21 @@ def generateAssign(node, ast):
     addValues = []
 
     print('Code Gen --> Generating code for assign statement...')
-    if re.search('[+]', ast.__getitem__(node).children[0]) or re.search('[+]', ast.__getitem__(node).children[1]):
+    if re.search('[+]', ast.__getitem__(node).children()[0]) or re.search('[+]', ast.__getitem__(node).children()[1]):
         print('Dont load acc, need to add first')
         generateAddRun = True
     else:
-        #print('here' + ast.__getitem__(node).children[0] + ast.__getitem__(node).children[1])
+        #print('here' + ast.__getitem__(node).children()[0] + ast.__getitem__(node).children()[1])
         # Load the accumulator
         code[p] = 'A9'
         p = p + 1
 
-    print('Code Gen --> Looking at children... --> ' + str(ast.__getitem__(node).children))
+    print('Code Gen --> Looking at children... --> ' + str(ast.__getitem__(node).children()))
 
-    varNameList = ast.__getitem__(node).children[0].split(',')
+    varNameList = ast.__getitem__(node).children()[0].split(',')
     varName = varNameList[0]
 
-    varValueList = ast.__getitem__(node).children[1].split(',')
+    varValueList = ast.__getitem__(node).children()[1].split(',')
     varValue = varValueList[0]
 
     notInt = True
@@ -299,7 +335,7 @@ def generateAssign(node, ast):
         notInt = True
         notString = True
         notBool = False
-        print('Code Gen --> Generated "00" for true boolean')
+        print('Code Gen --> Generated "00" for false boolean')
     elif re.match('[a-z]+[/]?', varValue):
         # --------***********NEED TO MAKE STRINGS WORK***********-------
         print('Code Gen --> Generating code for string...')
@@ -404,14 +440,14 @@ def generatePrint(node, ast):
     global dp
     inPrint = False
     nonVarString = False
-    print('Code Gen --> Generating code for printing this list of children ' + str(ast.__getitem__(node).children))
-    if re.search('[+][|]', ast.__getitem__(node).children[0]):
-        print(ast.__getitem__(ast.__getitem__(node).children[0]).children)
+    print('Code Gen --> Generating code for printing this list of children ' + str(ast.__getitem__(node).children()))
+    if re.search('[+][|]', ast.__getitem__(node).children()[0]):
+        print(ast.__getitem__(ast.__getitem__(node).children()[0]).children)
         i = 0
         print('CurrNode: ' + node)
-        print('CurrChildren: ' + str(ast.__getitem__(node).children))
-        print('CurrChildrenChildren: ' + str(ast.__getitem__(ast.__getitem__(node).children[0]).children))
-        IntsToAdd = ast.__getitem__(ast.__getitem__(node).children[0]).children
+        print('CurrChildren: ' + str(ast.__getitem__(node).children()))
+        print('CurrChildrenChildren: ' + str(ast.__getitem__(ast.__getitem__(node).children()[0]).children))
+        IntsToAdd = ast.__getitem__(ast.__getitem__(node).children()[0]).children
         code[p] = 'A9'
         p = p + 1
         code[p] = '0' + IntsToAdd[0]
@@ -463,12 +499,12 @@ def generatePrint(node, ast):
 
             #generateAddition(node, ast)
         #exit()
-    elif len(ast.__getitem__(node).children) == 1:
+    elif len(ast.__getitem__(node).children()) == 1:
         #print('1 child')
         # Load Y register from memory
         code[p] = 'AC'
         p = p + 1
-        temp = ast.__getitem__(node).children[0].split('@')
+        temp = ast.__getitem__(node).children()[0].split('@')
         #print('hi: ' + str(temp))
         checkString = ''
         #print(temp[0] + ' here')
@@ -516,7 +552,7 @@ def generatePrint(node, ast):
             isVar = True
 
         if isVar:
-            print(temp[0] + 'here')
+            #print(temp[0] + 'here')
             for x in varList:
                 # Choose constant from memory
                 # Stored as <type>:<id>@<scope>,T<tempLocID>XX
@@ -609,13 +645,13 @@ def generateAddition(node, ast):
     global tempAddNum
 
     numbersToAdd = []
-    print('Addition' + str(ast.__getitem__(ast.__getitem__(node).children[1]).children))
-    #print(ast.__getitem__(ast.__getitem__(node).children[1]).children[1])
+    print('Addition' + str(ast.__getitem__(ast.__getitem__(node).children()[1]).children))
+    #print(ast.__getitem__(ast.__getitem__(node).children()[1]).children[1])
     i = 0
     isAPlusNested = False
-    while i < len(ast.__getitem__(ast.__getitem__(node).children[1]).children):
+    while i < len(ast.__getitem__(ast.__getitem__(node).children()[1]).children):
         #print('count: ' + str(i))
-        temp = ast.__getitem__(ast.__getitem__(node).children[1]).children[i].split('@')
+        temp = ast.__getitem__(ast.__getitem__(node).children()[1]).children[i].split('@')
         temp = temp[0]
         #print(temp)
         if temp != '+':
@@ -664,8 +700,8 @@ def generateAddition(node, ast):
         code[p] = '8D'
         p = p + 1
 
-        #print(str(ast.__getitem__(node).children))
-        temp = ast.__getitem__(node).children[0]
+        #print(str(ast.__getitem__(node).children()))
+        temp = ast.__getitem__(node).children()[0]
         temp = temp.split('@')
         for x in varList:
             if re.search(temp[0] + '@' + str(scope), x):
@@ -693,97 +729,190 @@ def generateAddition(node, ast):
         print('here')
 '''
 '''
-    if re.search('[0-9],', ast.__getitem__(ast.__getitem__(node).children[1]).children[0]):
+    if re.search('[0-9],', ast.__getitem__(ast.__getitem__(node).children()[1]).children[0]):
         print('its int')
-        temp = ast.__getitem__(ast.__getitem__(node).children[1]).children[0].split(',')
+        temp = ast.__getitem__(ast.__getitem__(node).children()[1]).children[0].split(',')
         temp = temp[0]
         print(temp)
         numbersToAdd.append(temp)
     else:
         print('Nested +')
 
-    if re.search('[0-9],', ast.__getitem__(ast.__getitem__(node).children[1]).children[1]):
+    if re.search('[0-9],', ast.__getitem__(ast.__getitem__(node).children()[1]).children[1]):
         print('its int')
-        temp = ast.__getitem__(ast.__getitem__(node).children[1]).children[1].split(',')
+        temp = ast.__getitem__(ast.__getitem__(node).children()[1]).children[1].split(',')
         temp = temp[0]
         print(temp)
         numbersToAdd.append(temp)
     else:
         print('Nested +')'''
 
-def generateIf(node, ast):
+def generateIf(node, ast, origScope, ui):
+    global ranBoolExpr
     global inIf
     global p
     global jumpNum
     global jumpTable
     global code
-    global nonVarList
     global storedVals
     global tempNonVarLoc
 
-    nonVarList = 0
     print('Code Gen --> Generating code for If...')
-    #print(ast.__getitem__(node).children)
-    childrens = ast.__getitem__(node).children
-    #print(childrens[0])
-    if (re.search('true', childrens[0]) or re.search('false', childrens[0])) and len(childrens) == 2:
-        # Load accumulator with true
-        code[p] = 'A9'
-        p = p + 1
-        # Value is true
-        if re.search('true', childrens[0]):
-            value = '01'
-        else:
-            # Value is false
-            value = '00'
 
-        code[p] = value
-        p = p + 1
+    #print(ranBoolExpr, origScope, scope)
 
-        # Store first value
-        code[p] = '8D'
-        p = p + 1
+    if ranBoolExpr:
+        #print(str(node) + 'Running')
+        if str(origScope) > str(scope):
+            inIf = False
+            print('-------------IF ends here ---------------')
+            for x in range(0, len(jumpTable)):
+                print('should have: ' + jumpTable[x])
+                if re.search('if@' + str(scope) + '[|]' + str(ui),jumpTable[x]):
+                    print(jumpTable[x])
+                    colonTemp = jumpTable[x].split(':')
+                    temp = colonTemp[1].split(',')
+                    startLoc = colonTemp[0].split(';')
+                    #print(temp)
+                    print(jumpTable[x])
+                    print("here: " + str(colonTemp))
+                    temp[0] = str(p)
+                    temp = str(colonTemp[0]) + ':' + str(temp[0]) + ',' + str(temp[1])
+                    jumpTable[x] = temp
+                    #print(temp)
+                    #exit()
+            exit()
+            print('Code Gen --> If added to jump table -->  ' + str(jumpTable))
+            jumpNum = jumpNum + 1
 
-        # Location to store in
-        code[p] = 'N' + str(nonVarList) # Some value for non-vars
-        p = p + 1
-        code[p] = 'VV'
-        p = p + 1
+    #exit()
 
-        # Load X with a true constant
-        code[p] = 'A2'
-        p = p + 1
-        code[p] = '01'
-        p = p + 1
+    #childrens = ast.__getitem__(node).children()
 
-        # Compare byte in memory to X-register
-        code[p] = 'EC'
-        p = p + 1
+    #print('HERE')
 
-        # Location first var was stored
-        code[p] = 'N' + str(nonVarList) # Some value for non-vars
-        p = p + 1
-        code[p] = 'VV'
-        p = p + 1
+def generateBoolExpr(node, ast, origScope, scope, ident, ui):
+    global ranBoolExpr
+    global p
+    global jumpNum
+    print('Code Gen --> Generating code to compare booleans... here: ' + node)
+    if int(scope) == origScope:
+        print('Code Gen --> End boolean expression here: ' + node)
+        ranBoolExpr = True
+    #print('Node: ---------' + node)
+    if re.search('==', node):
+        #print('HERE ---------')
+        #print(ast.__getitem__(node).children())
+        if ast.__getitem__(node).children()[0] == 'true':
+            print('Found First Bool, True!')
+            code[p] = 'A2'
+            p = p + 1
+            code[p] = '01'
+            p = p + 1
+        elif ast.__getitem__(node).children()[0] == 'false':
+            print('Found First Bool, False!')
+            code[p] = 'A2'
+            p = p + 1
+            code[p] = '00'
+            p = p + 1
 
-        # Table for non-variable references stored as:
-        # <value>:N<tempNonVarLoc>VV
-        storedVals.append(value + ':' + 'N' + str(tempNonVarLoc) + ' VV')
+        if ast.__getitem__(node).children()[1] == 'true':
+            print('Found Second Bool, True!')
+            # Stores 01 in last memory slot FF
+            code[p] = 'A9'
+            p = p + 1
+            code[p] = '01'
+            p = p + 1
+            code[p] = '8D'
+            p = p + 1
+            code[p] = 'FF'
+            p = p + 1
+            code[p] = '00'
+            p = p + 1
 
-        tempNonVarLoc = tempNonVarLoc + 1
+            # Compares FF to value in the X register
+            code[p] = 'EC'
+            p = p + 1
+            code[p] = 'FF'
+            p = p + 1
+            code[p] = '00'
+            p = p + 1
 
-        code[p] = 'D0'
-        p = p + 1
+            # Clears memory slot FF
+            code[p] = 'A9'
+            p = p + 1
+            code[p] = '00'
+            p = p + 1
+            code[p] = '8D'
+            p = p + 1
+            code[p] = 'FF'
+            p = p + 1
+            code[p] = '00'
+            p = p + 1
 
-        code[p] = 'J' + str(jumpNum)# Jump number
+            # Branch if Z flag is 0
+            code[p] = 'D0'
+            p = p + 1
+            code[p] = 'J' + str(jumpNum)
+            p = p + 1
+        elif ast.__getitem__(node).children()[1] == 'false':
+            print('Found Second Bool, False!')
+            # Stores 00 in last memory slot FF
+            code[p] = 'A9'
+            p = p + 1
+            code[p] = '00'
+            p = p + 1
+            code[p] = '8D'
+            p = p + 1
+            code[p] = 'FF'
+            p = p + 1
+            code[p] = '00'
+            p = p + 1
 
+            # Compares FF to value in the X register
+            code[p] = 'EC'
+            p = p + 1
+            code[p] = 'FF'
+            p = p + 1
+            code[p] = '00'
+            p = p + 1
 
-        #Jumps stored as < statement >: J < jumpNum >;<current p in hex>|<end p in hex or END if not defined yet>
-        jumpTable.append(str(ast.__getitem__(node).identifier) + ':J' + str(jumpNum) + ';' + str(hex(p).split('x')[1].upper()) + '|END')
-        print('Code Gen --> If added to jump table -->  ' + str(jumpTable))
+            # Clears memory slot FF
+            code[p] = 'A9'
+            p = p + 1
+            code[p] = '00'
+            p = p + 1
+            code[p] = '8D'
+            p = p + 1
+            code[p] = 'FF'
+            p = p + 1
+            code[p] = '00'
+            p = p + 1
+
+            # Branch if Z flag is 0
+            code[p] = 'D0'
+            p = p + 1
+            code[p] = 'J' + str(jumpNum)
+            p = p + 1
+
         jumpNum = jumpNum + 1
+        #print('P: ' + str(p))
 
-        p = p + 1
+        for x in range(0, len(jumpTable)):
+            if re.search(ident + '@' + str(scope) + '[|]' + str(ui),jumpTable[x]):
+                colonTemp = jumpTable[x].split(':')
+                temp = colonTemp[0].split(';')
+                #print(temp)
+                #print(temp[1])
+                temp[1] = str(p)
+                temp = str(temp[0] + ';' + temp[1] + ':' + colonTemp[1])
+                #print('final: ' + temp)
+                jumpTable[x] = temp
+                #print(jumpTable)
+                #exit()
+        #return endOfBoolExpr
+        #ranBoolExpr = True
 
-    inIf = False
+        #exit()
+
 

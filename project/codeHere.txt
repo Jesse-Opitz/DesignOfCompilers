@@ -1,11 +1,12 @@
 {
-    string a
-    a = "hey"
-    {
-        string a
-        a = "hi"
-        print(a)
-    }
-    print(a)
+
+  if(true == false)
+  {
+        print("hey")
+  }
+  if(true == false){
+        print("sup")
+  }
+  print("hi")
 
 }$

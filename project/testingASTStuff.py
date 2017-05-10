@@ -170,7 +170,9 @@ def createWhileStmt(tokens, parent):
 def createIfStmnt(tokens, parent):
     global p
     global ifNum
-    print(tokens[p].character)
+
+    #print(tokens[p].character)
+    ifNum = ifNum + 1
     ast.add_node('if@' + str(scope) + '|' + str(ifNum), parent)
     parent = 'if@' + str(scope) + '|' + str(ifNum)
     p = p + 1
@@ -224,7 +226,6 @@ def createIntExpr(tokens, parent):
                 p = p + 1
                 print(tokens[p].character)
                 createExpr(tokens, parent)
-        else:
             createDigit(tokens, parent)
 
     return
@@ -260,22 +261,26 @@ def createBoolExpr(tokens, parent):
         p = p + 1
 
         compNum = compNum + 1
+        prevParent = parent
         ast.add_node('Comp' + str(compNum), parent)
         parent = 'Comp' + str(compNum)
 
+        if tokens[p].character == '(':
+            print('Boolean Hell is almost as bad as Daniel Craig at playing James Bond, please calm down.')
+
+            exit()
         #print(tokens[p].character)
         createExpr(tokens, parent)
 
-        print('here')
-        print(tokens[p].character)
+        #print('here')
+        #print(tokens[p].character)
         tempNode = Node(tokens[p].character)
-        print(tempNode)
-        print('Comp' + str(compNum))
+        #print(tempNode)
+        #print('Comp' + str(compNum))
 
-        ast.__setitem__('Comp' + str(compNum), tempNode)
+        ast.changeID('Comp' + str(compNum), tokens[p].character + '|' + str(compNum), prevParent)
 
-        #ast.display("Program")
-        #exit()
+        parent = tokens[p].character + '|' + str(compNum)
 
         p = p + 1
         createExpr(tokens, parent)

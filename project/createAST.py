@@ -58,8 +58,7 @@ def createAST(tokens):
     global boolNum
     global ifStmtNum
     global digitNum
-    global ifStmtNum
-    global digitNum
+
     global charNum
     global valNum
     global stringNum
@@ -371,6 +370,7 @@ def createIfStmnt(tokens):
 
     # Add if statement
     ifStmtNum = ifStmtNum + 1
+    #print(ifStmtNum)
     ast.add_node('if,' + str(tokens[p].lineNum) + ',' + str(ifStmtNum), 'Block' + str(blockNum))
     boolParent = 'if,' + str(tokens[p].lineNum) + ',' + str(ifStmtNum)
     blockParent = 'if,' + str(tokens[p].lineNum) + ',' + str(ifStmtNum)
