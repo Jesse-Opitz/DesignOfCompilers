@@ -71,7 +71,8 @@ def runCodeGenerator(ast, symTable):
             if re.search('[|]', scope):
                 scope = scope.split('|')[0]
             print('Code Gen --> Check Scope: ' + scope)
-
+        if ranBoolExpr and str(origScope) != str(scope):
+            inif = False
         print('Code Gen --> Pointer --> ' + node + ' in scope ' + str(scope))
         #if re.search('Block[0-9]', node):
             #scope = scope + 1
@@ -98,8 +99,10 @@ def runCodeGenerator(ast, symTable):
 
         if inIf:
             ident = 'if'
-            generateBoolExpr(node, ast, origScope, scope, ident, ui)
-            generateIf(node, ast, origScope, ui)
+            if not ranBoolExpr:
+                generateBoolExpr(node, ast, origScope, scope, ident, ui)
+            if ranBoolExpr and str(origScope) != str(scope):
+                generateIf(node, ast, origScope, ui)
 
         if inVarDecl:
             generateVarDecl(node, prev)
@@ -758,16 +761,19 @@ def generateIf(node, ast, origScope, ui):
     global tempNonVarLoc
 
     print('Code Gen --> Generating code for If...')
-
+    print('Ran bool expr: ' + str(ranBoolExpr))
     #print(ranBoolExpr, origScope, scope)
 
     if ranBoolExpr:
         #print(str(node) + 'Running')
-        if str(origScope) > str(scope):
+        if str(origScope) != str(scope):
+            #exit()
             inIf = False
+            ranBoolExpr = False
             print('-------------IF ends here ---------------')
             for x in range(0, len(jumpTable)):
-                print('should have: ' + jumpTable[x])
+                #print('should have: ' + jumpTable[x])
+                #print('Looking for: ' + 'if@' + str(scope) + '[|]' + str(ui))
                 if re.search('if@' + str(scope) + '[|]' + str(ui),jumpTable[x]):
                     print(jumpTable[x])
                     colonTemp = jumpTable[x].split(':')
@@ -776,14 +782,17 @@ def generateIf(node, ast, origScope, ui):
                     #print(temp)
                     print(jumpTable[x])
                     print("here: " + str(colonTemp))
+                    print('temp: ' + str(temp))
                     temp[0] = str(p)
+                    print('P: ' + str(p))
+                    print('0: ' + str(temp[0]))
                     temp = str(colonTemp[0]) + ':' + str(temp[0]) + ',' + str(temp[1])
                     jumpTable[x] = temp
                     #print(temp)
                     #exit()
-            exit()
+            #exit()
             print('Code Gen --> If added to jump table -->  ' + str(jumpTable))
-            jumpNum = jumpNum + 1
+            #jumpNum = jumpNum + 1
 
     #exit()
 
@@ -896,7 +905,7 @@ def generateBoolExpr(node, ast, origScope, scope, ident, ui):
             p = p + 1
 
         jumpNum = jumpNum + 1
-        #print('P: ' + str(p))
+        print('Start If Block P: ' + str(p))
 
         for x in range(0, len(jumpTable)):
             if re.search(ident + '@' + str(scope) + '[|]' + str(ui),jumpTable[x]):
