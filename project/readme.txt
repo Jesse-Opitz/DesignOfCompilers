@@ -18,5 +18,3 @@ http://www.quesucede.com/page/show/id/python-3-tree-implementation#tree-class
 ***Not yet implemented:
 AST, Symbol tree, and scope/type checking will only run on the first program currently.
 I am working to resolve this issue, not sure why it's happening.
-
-***Yes, I now hate python too.
